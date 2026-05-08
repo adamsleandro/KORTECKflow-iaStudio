@@ -64,29 +64,29 @@ export function Commercial() {
   const [activeTab, setActiveTab] = useState('pipeline');
 
   return (
-    <div className="p-8 space-y-8 animate-in fade-in slide-in-from-right-4 duration-700">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div className="p-4 md:p-8 space-y-6 md:space-y-8 animate-in fade-in slide-in-from-right-4 duration-700">
+      <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-6">
         <div>
           <div className="flex items-center gap-2 text-[10px] font-bold tracking-[0.2em] text-zinc-500 mb-2 uppercase">
             <Target size={14} /> CRM & COMERCIAL
           </div>
-          <h1 className="text-3xl font-bold tracking-tight text-white">Pipeline de Vendas</h1>
+          <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-white uppercase italic">Pipeline de Vendas</h1>
         </div>
-        <div className="flex items-center gap-3">
-          <div className="relative w-64">
+        <div className="flex flex-wrap items-center gap-3">
+          <div className="relative w-full sm:w-64">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-600" size={16} />
-            <Input className="pl-10 h-10 bg-white/5 border-white/10 text-white placeholder:text-zinc-600 focus-visible:ring-white transition-all" placeholder="Buscar negócios, clientes..." />
+            <Input className="pl-10 h-10 bg-white/5 border-white/10 text-white placeholder:text-zinc-600 focus-visible:ring-white transition-all text-xs" placeholder="Buscar negócios..." />
           </div>
-          <Button variant="outline" className="bg-white/5 border-white/10 hover:bg-white/10 text-white h-10">
-            <Filter size={16} className="mr-2" /> Segmentar
+          <Button variant="outline" className="flex-1 sm:flex-none bg-white/5 border-white/10 hover:bg-white/10 text-white h-10 text-[10px] uppercase font-black tracking-widest">
+            <Filter size={14} className="mr-2" /> Filtros
           </Button>
-          <Button className="bg-white text-black hover:bg-zinc-200 h-10 font-bold px-6">
-            <Plus size={16} className="mr-2" /> Novo Negócio
+          <Button className="flex-1 sm:flex-none bg-white text-black hover:bg-zinc-200 h-10 font-bold px-6 text-[10px] uppercase tracking-widest">
+            <Plus size={14} className="mr-2" /> Novo Lead
           </Button>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {[
           { label: 'Valor Total Funil', value: 'R$ 2.4M', trend: '+R$ 450k/mês', icon: <TrendingUp className="text-emerald-500" /> },
           { label: 'Conversão', value: '28.4%', trend: '+4.2%', icon: <Target className="text-blue-500" /> },
@@ -109,16 +109,16 @@ export function Commercial() {
       </div>
 
       <Tabs defaultValue="pipeline" className="w-full">
-        <TabsList className="bg-transparent border-b border-white/5 w-full justify-start h-12 rounded-none p-0 gap-8 mb-6">
-          <TabsTrigger value="pipeline" className="data-[state=active]:border-white border-b-2 border-transparent h-full rounded-none bg-transparent text-zinc-500 data-[state=active]:text-white font-bold text-xs tracking-widest transition-all">PIPELINE</TabsTrigger>
-          <TabsTrigger value="vendedores" className="data-[state=active]:border-white border-b-2 border-transparent h-full rounded-none bg-transparent text-zinc-500 data-[state=active]:text-white font-bold text-xs tracking-widest transition-all">PERFORMANCE</TabsTrigger>
-          <TabsTrigger value="clientes" className="data-[state=active]:border-white border-b-2 border-transparent h-full rounded-none bg-transparent text-zinc-500 data-[state=active]:text-white font-bold text-xs tracking-widest transition-all">LISTA DE CLIENTES</TabsTrigger>
+        <TabsList className="bg-transparent border-b border-white/5 w-full justify-start h-12 rounded-none p-0 gap-4 md:gap-8 mb-6 overflow-x-auto no-scrollbar flex-nowrap">
+          <TabsTrigger value="pipeline" className="data-[state=active]:border-white border-b-2 border-transparent h-full rounded-none bg-transparent text-zinc-500 data-[state=active]:text-white font-bold text-[10px] tracking-widest transition-all whitespace-nowrap">PIPELINE</TabsTrigger>
+          <TabsTrigger value="vendedores" className="data-[state=active]:border-white border-b-2 border-transparent h-full rounded-none bg-transparent text-zinc-500 data-[state=active]:text-white font-bold text-[10px] tracking-widest transition-all whitespace-nowrap">PERFORMANCE</TabsTrigger>
+          <TabsTrigger value="clientes" className="data-[state=active]:border-white border-b-2 border-transparent h-full rounded-none bg-transparent text-zinc-500 data-[state=active]:text-white font-bold text-[10px] tracking-widest transition-all whitespace-nowrap">LISTA DE CLIENTES</TabsTrigger>
         </TabsList>
 
         <TabsContent value="pipeline" className="mt-0">
-          <div className="flex overflow-x-auto gap-6 pb-6 min-h-[600px]">
+          <div className="flex overflow-x-auto gap-4 md:gap-6 pb-6 min-h-[600px] snap-x snap-mandatory md:snap-none">
             {Object.entries(CRM_PIPELINE).map(([stage, deals], i) => (
-              <div key={stage} className="min-w-[320px] w-[320px] flex flex-col gap-4">
+              <div key={stage} className="min-w-[85vw] sm:min-w-[320px] w-full md:w-[320px] flex flex-col gap-4 snap-center">
                 <div className="flex items-center justify-between px-2">
                   <div className="flex items-center gap-3">
                     <div className="w-2 h-2 rounded-full bg-white/20" />

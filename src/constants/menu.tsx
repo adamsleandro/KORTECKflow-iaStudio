@@ -189,7 +189,7 @@ export const NAVIGATION_STRUCTURE: ModuleSection[] = [
   },
   {
     id: 'hr',
-    label: 'HR',
+    label: 'RH',
     icon: <UsersRound size={20} />,
     description: 'Gestão de colaboradores',
     submenus: [

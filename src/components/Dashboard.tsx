@@ -66,37 +66,37 @@ const dataOSStatus = [
 
 export function Dashboard() {
   return (
-    <div className="p-8 space-y-8 animate-in fade-in slide-in-from-top-4 duration-700 max-w-[1600px] mx-auto">
+    <div className="p-4 md:p-8 space-y-6 md:space-y-8 animate-in fade-in slide-in-from-top-4 duration-700 max-w-[1600px] mx-auto">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-6">
         <div>
           <div className="flex items-center gap-2 text-[10px] font-black tracking-[0.3em] text-zinc-500 mb-2 uppercase">
             <Layout size={14} /> CENTRAL DE INTELIGÊNCIA
           </div>
-          <h1 className="text-4xl font-black text-white uppercase italic tracking-tighter leading-none">Command Center<span className="text-blue-600">.</span></h1>
+          <h1 className="text-3xl md:text-4xl font-black text-white uppercase italic tracking-tighter leading-none">Centro de Comando<span className="text-blue-600">.</span></h1>
         </div>
-        <div className="flex items-center gap-3">
-          <div className="flex -space-x-3 mr-4">
+        <div className="flex flex-wrap items-center gap-3">
+          <div className="hidden sm:flex -space-x-3 mr-4">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="w-9 h-9 rounded-full border-4 border-[#09090b] overflow-hidden bg-zinc-800 ring-1 ring-white/5 shadow-2xl">
+              <div key={i} className="w-9 h-9 rounded-full border-4 border-[#050505] overflow-hidden bg-zinc-800 ring-1 ring-white/5 shadow-2xl">
                 <img src={`https://i.pravatar.cc/100?u=${i + 10}`} alt="User" referrerPolicy="no-referrer" />
               </div>
             ))}
           </div>
-          <Button variant="outline" className="bg-white/5 border-white/10 hover:bg-white/10 hover:border-white/20 text-white font-bold h-11 px-6 text-[10px] uppercase tracking-widest transition-all">
+          <Button variant="outline" className="flex-1 sm:flex-none bg-white/5 border-white/10 hover:bg-white/10 hover:border-white/20 text-white font-bold h-10 md:h-11 px-4 md:px-6 text-[10px] uppercase tracking-widest transition-all">
             Exportar Logs
           </Button>
-          <Button className="bg-blue-600 text-white hover:bg-blue-500 font-bold h-11 px-8 text-[11px] uppercase tracking-[0.1em] shadow-[0_0_25px_rgba(37,99,235,0.25)] transition-all">
+          <Button className="flex-1 sm:flex-none bg-blue-600 text-white hover:bg-blue-500 font-bold h-10 md:h-11 px-6 md:px-8 text-[11px] uppercase tracking-[0.1em] shadow-[0_0_25px_rgba(37,99,235,0.25)] transition-all">
             Nova OS
           </Button>
         </div>
       </div>
 
       {/* KPI Section */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
         {[
           { label: 'OEE GLOBAL', value: '84.2%', trend: '+2.4% ↑', icon: <Cpu className="text-blue-500" />, detail: 'Eficiência Sistêmica' },
-          { label: 'MÁQUINAS ATIVAS', value: '07/09', trend: 'Auditado', icon: <Activity className="text-emerald-500" />, detail: 'Status Realtime' },
+          { label: 'MÁQUINAS ATIVAS', value: '07/09', trend: 'Auditado', icon: <Activity className="text-emerald-500" />, detail: 'Status em Tempo Real' },
           { label: 'PERDA MATERIAL', value: '1.2%', trend: '-0.8% ↓', icon: <TrendingDown className="text-amber-500" />, detail: 'Economia R$ 4.2k' },
           { label: 'RECEITA MENSAL', value: 'R$ 452k', trend: '+12.5% ↑', icon: <Zap className="text-purple-500" />, detail: 'Projeção Batida' },
         ].map((kpi, i) => (
@@ -127,9 +127,9 @@ export function Dashboard() {
       </div>
 
       {/* Main Charts */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        <Card className="lg:col-span-8 bg-[#111116] border-white/5 overflow-hidden">
-          <CardHeader className="flex flex-row items-center justify-between border-b border-white/5 bg-white/[0.01]">
+      <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
+        <Card className="xl:col-span-8 bg-[#111116] border-white/5 overflow-hidden">
+          <CardHeader className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/5 bg-white/[0.01]">
             <div>
               <CardTitle className="text-sm font-black text-white uppercase tracking-widest italic">Performance Industrial</CardTitle>
               <CardDescription className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mt-1">Acompanhamento diário (Seg - Sáb)</CardDescription>
@@ -137,15 +137,15 @@ export function Dashboard() {
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-1.5 pt-1">
                 <div className="w-1.5 h-1.5 rounded-full bg-blue-600 shadow-[0_0_8px_rgba(37,99,235,0.5)]" />
-                <span className="text-[10px] uppercase font-bold text-zinc-500 tracking-widest font-mono">Produção Real</span>
+                <span className="text-[10px] uppercase font-bold text-zinc-500 tracking-widest font-mono text-[9px] sm:text-[10px]">Produção Real</span>
               </div>
               <div className="flex items-center gap-1.5 pt-1">
                 <div className="w-1.5 h-1.5 rounded-full bg-zinc-800" />
-                <span className="text-[10px] uppercase font-bold text-zinc-500 tracking-widest font-mono">Meta</span>
+                <span className="text-[10px] uppercase font-bold text-zinc-500 tracking-widest font-mono text-[9px] sm:text-[10px]">Meta</span>
               </div>
             </div>
           </CardHeader>
-          <CardContent className="h-[340px] w-full pt-8 pl-0">
+          <CardContent className="h-[280px] md:h-[340px] w-full pt-8 pl-0">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={dataPerformance}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#ffffff05" vertical={false} />
@@ -178,12 +178,12 @@ export function Dashboard() {
           </CardContent>
         </Card>
 
-        <div className="lg:col-span-4 space-y-6">
+        <div className="xl:col-span-4 space-y-6">
           <Card className="bg-[#111116] border-white/5">
             <CardHeader className="border-b border-white/5 bg-white/[0.01]">
               <CardTitle className="text-sm font-black text-white uppercase tracking-widest italic">Mix de Produção</CardTitle>
             </CardHeader>
-            <CardContent className="h-[200px] flex items-center justify-center pt-4">
+            <CardContent className="h-[180px] md:h-[200px] flex items-center justify-center pt-4">
               <ResponsiveContainer width="100%" height="100%">
                 <RePieChart>
                   <Pie
@@ -236,25 +236,25 @@ export function Dashboard() {
       </div>
 
       {/* Production & Alerts */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 pb-12">
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 pb-12">
         <Card className="bg-[#111116] border-white/5 overflow-hidden">
           <CardHeader className="flex flex-row items-center justify-between border-b border-white/5 bg-white/[0.01]">
             <div>
-              <CardTitle className="text-sm font-black text-white uppercase tracking-widest italic">Monitoramento Realtime</CardTitle>
+              <CardTitle className="text-sm font-black text-white uppercase tracking-widest italic">Monitoramento em Tempo Real</CardTitle>
               <CardDescription className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mt-1">Status do Chão de Fábrica</CardDescription>
             </div>
             <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-rose-500/10 border border-rose-500/20">
                <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse shadow-[0_0_8px_rgba(244,63,94,0.5)]" />
-               <span className="text-[9px] font-black text-rose-500 uppercase tracking-widest">Live Engine</span>
+               <span className="text-[9px] font-black text-rose-500 uppercase tracking-widest">Motor ao Vivo</span>
             </div>
           </CardHeader>
           <CardContent className="p-0">
             <div className="divide-y divide-white/5">
               {[
                 { machine: 'Router CNC-01', status: 'Operando', operator: 'Marcos Silva', progress: 75, color: 'blue' },
-                { machine: 'Laser Fiber-03', status: 'Standby', operator: 'Ana Julia', progress: 0, color: 'zinc' },
-                { machine: 'UV Printer-02', status: 'Operando', operator: 'Roberto Dias', progress: 45, color: 'emerald' },
-                { machine: 'Thermo-Former', status: 'Setup', operator: 'Equipe Alpha', progress: 12, color: 'amber' },
+                { machine: 'Laser Fiber-03', status: 'Em Espera', operator: 'Ana Julia', progress: 0, color: 'zinc' },
+                { machine: 'Impressora UV-02', status: 'Operando', operator: 'Roberto Dias', progress: 45, color: 'emerald' },
+                { machine: 'Termoformadora', status: 'Configuração', operator: 'Equipe Alpha', progress: 12, color: 'amber' },
               ].map((item, i) => (
                 <div key={i} className="p-5 hover:bg-white/[0.02] transition-all flex items-center justify-between gap-6 group">
                   <div className="flex items-center gap-5 flex-1">
@@ -293,7 +293,7 @@ export function Dashboard() {
           </CardContent>
           <div className="p-4 bg-white/[0.01] border-t border-white/5 flex justify-center">
             <Button variant="ghost" className="text-[10px] text-zinc-500 hover:text-white uppercase tracking-[0.2em] font-black h-8">
-              Full Factory Overview <ArrowUpRight size={14} className="ml-2" />
+              Visão Geral da Fábrica <ArrowUpRight size={14} className="ml-2" />
             </Button>
           </div>
         </Card>

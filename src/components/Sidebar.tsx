@@ -8,12 +8,20 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { ChevronRight, Search, Star, Clock, X, Workflow } from 'lucide-react';
+import { ChevronRight, Search, Star, Clock, X, Workflow, Menu } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 
-export function Sidebar({ onChangeView }: { onChangeView?: (viewId: string) => void }) {
+export function Sidebar({ 
+  onChangeView, 
+  isMobileOpen, 
+  onCloseMobile 
+}: { 
+  onChangeView?: (viewId: string) => void;
+  isMobileOpen?: boolean;
+  onCloseMobile?: () => void;
+}) {
   const [activeModule, setActiveModule] = useState<ModuleSection | null>(null);
   const [activeSubmenu, setActiveSubmenu] = useState<MenuItem | null>(null);
   const sidebarRef = useRef<HTMLDivElement>(null);
@@ -24,6 +32,10 @@ export function Sidebar({ onChangeView }: { onChangeView?: (viewId: string) => v
       if (sidebarRef.current && !sidebarRef.current.contains(event.target as Node)) {
         setActiveModule(null);
         setActiveSubmenu(null);
+        if (isMobileOpen && onCloseMobile) {
+          // If clicking outside the bar specifically
+          // This logic might need to be careful with mobile overlay
+        }
       }
     };
 
@@ -68,9 +80,27 @@ export function Sidebar({ onChangeView }: { onChangeView?: (viewId: string) => v
   };
 
   return (
-    <div ref={sidebarRef} className="flex h-screen fixed left-0 top-0 z-50 select-none">
-      {/* LEVEL 1: Main Icons Bar */}
-      <div className="w-16 bg-[#020202] border-r border-white/5 flex flex-col items-center py-6 gap-6 shadow-2xl relative z-30">
+    <>
+      {/* Mobile Backdrop */}
+      <AnimatePresence>
+        {isMobileOpen && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={onCloseMobile}
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 md:hidden pointer-events-auto"
+          />
+        )}
+      </AnimatePresence>
+
+      <div ref={sidebarRef} className={cn(
+        "flex h-screen fixed left-0 top-0 z-50 select-none transition-all duration-500",
+        isMobileOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0",
+        "pointer-events-none md:pointer-events-auto"
+      )}>
+        {/* LEVEL 1: Main Icons Bar */}
+        <div className="w-16 bg-[#020202] border-r border-white/5 flex flex-col items-center py-6 gap-6 shadow-2xl relative z-30 pointer-events-auto">
         <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center mb-4 cursor-pointer hover:scale-105 transition-all shadow-[0_0_15px_rgba(37,99,235,0.2)]" onClick={() => onChangeView?.('dashboard')}>
           <span className="text-white font-black text-xl italic tracking-tighter">K</span>
         </div>
@@ -78,9 +108,9 @@ export function Sidebar({ onChangeView }: { onChangeView?: (viewId: string) => v
         <TooltipProvider delay={0}>
           <div className="flex flex-col gap-4 flex-1">
             {NAVIGATION_STRUCTURE.map((module) => (
-              <Tooltip key={module.id}>
-                <TooltipTrigger asChild>
-                  <button
+              <div key={module.id}>
+                <Tooltip>
+                  <TooltipTrigger
                     onClick={() => handleModuleClick(module)}
                     className={cn(
                       "w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300 relative group",
@@ -96,12 +126,12 @@ export function Sidebar({ onChangeView }: { onChangeView?: (viewId: string) => v
                         className="absolute -right-[1px] w-1 h-6 bg-blue-500 rounded-l-full shadow-[0_0_8px_rgba(59,130,246,0.5)]"
                       />
                     )}
-                  </button>
-                </TooltipTrigger>
-                <TooltipContent side="right" className="bg-black text-white border-zinc-800 ml-2">
-                  <p className="font-medium">{module.label}</p>
-                </TooltipContent>
-              </Tooltip>
+                  </TooltipTrigger>
+                  <TooltipContent side="right" className="bg-black text-white border-zinc-800 ml-2">
+                    <p className="font-medium">{module.label}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </div>
             ))}
           </div>
         </TooltipProvider>
@@ -131,7 +161,7 @@ export function Sidebar({ onChangeView }: { onChangeView?: (viewId: string) => v
             animate={{ x: 0 }}
             exit={{ x: -280 }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="w-[280px] bg-[#0d0d11] border-r border-white/5 shadow-2xl relative z-20 flex flex-col"
+            className="w-[280px] bg-[#0d0d11] border-r border-white/5 shadow-2xl relative z-20 flex flex-col pointer-events-auto"
           >
             <div className="p-6">
               <div className="flex items-center justify-between mb-2">
@@ -203,7 +233,7 @@ export function Sidebar({ onChangeView }: { onChangeView?: (viewId: string) => v
             animate={{ x: 0 }}
             exit={{ x: -280 }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="w-[280px] bg-[#141414] border-r border-white/5 shadow-2xl relative z-10 flex flex-col"
+            className="w-[280px] bg-[#141414] border-r border-white/5 shadow-2xl relative z-10 flex flex-col pointer-events-auto"
           >
             <div className="p-6 flex items-center justify-between border-b border-white/5 h-[100px]">
               <div>
@@ -237,6 +267,7 @@ export function Sidebar({ onChangeView }: { onChangeView?: (viewId: string) => v
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+      </div>
+    </>
   );
 }
