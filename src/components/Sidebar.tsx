@@ -96,11 +96,10 @@ export function Sidebar({
 
       <div ref={sidebarRef} className={cn(
         "flex h-screen fixed left-0 top-0 z-50 select-none transition-all duration-500",
-        isMobileOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0",
-        "pointer-events-none md:pointer-events-auto"
+        isMobileOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
       )}>
         {/* LEVEL 1: Main Icons Bar */}
-        <div className="w-16 bg-[#020202] border-r border-white/5 flex flex-col items-center py-6 gap-6 shadow-2xl relative z-30 pointer-events-auto">
+        <div className="w-16 bg-card border-r border-border flex flex-col items-center py-6 gap-6 shadow-2xl relative z-30 pointer-events-auto">
         <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center mb-4 cursor-pointer hover:scale-105 transition-all shadow-[0_0_15px_rgba(37,99,235,0.2)]" onClick={() => onChangeView?.('dashboard')}>
           <span className="text-white font-black text-xl italic tracking-tighter">K</span>
         </div>
@@ -161,16 +160,16 @@ export function Sidebar({
             animate={{ x: 0 }}
             exit={{ x: -280 }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="w-[280px] bg-[#0d0d11] border-r border-white/5 shadow-2xl relative z-20 flex flex-col pointer-events-auto"
+            className="w-[280px] bg-card border-r border-border shadow-2xl relative z-20 flex flex-col pointer-events-auto"
           >
             <div className="p-6">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-[10px] font-bold tracking-[0.2em] text-zinc-500">{activeModule.label}</span>
-                <button onClick={() => setActiveModule(null)} className="text-zinc-500 hover:text-white transition-colors">
+                <span className="text-[10px] font-bold tracking-[0.2em] text-muted-foreground">{activeModule.label}</span>
+                <button onClick={() => setActiveModule(null)} className="text-muted-foreground hover:text-foreground transition-colors">
                   <X size={14} />
                 </button>
               </div>
-              <h2 className="text-xl font-medium text-white mb-1">{activeModule.description}</h2>
+              <h2 className="text-xl font-medium text-foreground mb-1">{activeModule.description}</h2>
             </div>
             
             <ScrollArea className="flex-1 px-3">
@@ -233,12 +232,12 @@ export function Sidebar({
             animate={{ x: 0 }}
             exit={{ x: -280 }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="w-[280px] bg-[#141414] border-r border-white/5 shadow-2xl relative z-10 flex flex-col pointer-events-auto"
+            className="w-[280px] bg-popover border-r border-border shadow-2xl relative z-10 flex flex-col pointer-events-auto"
           >
             <div className="p-6 flex items-center justify-between border-b border-white/5 h-[100px]">
               <div>
-                <span className="text-xs font-bold tracking-widest text-zinc-500">{activeSubmenu.label}</span>
-                <h3 className="text-sm font-medium text-white opacity-60">Submódulos</h3>
+                <span className="text-xs font-bold tracking-widest text-muted-foreground">{activeSubmenu.label}</span>
+                <h3 className="text-sm font-medium text-foreground opacity-60">Submódulos</h3>
               </div>
             </div>
 

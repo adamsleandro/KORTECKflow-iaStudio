@@ -12,11 +12,16 @@ import { Commercial } from '@/src/components/Commercial';
 import { Stock } from '@/src/components/Stock';
 import { HR } from '@/src/components/HR';
 import { Designer } from '@/src/components/Designer';
+import { Projects } from '@/src/components/Projects';
 import { EducaCV } from '@/src/components/EducaCV';
+import { Clients } from '@/src/components/Clients';
+import { CRMFollow } from '@/src/components/CRMFollow';
 import { Admin } from '@/src/components/Admin';
 import { UsersManagement } from '@/src/components/Users';
 import { Permissions } from '@/src/components/Permissions';
 import { LevelsManagement } from '@/src/components/Levels';
+import { ThemeSettings } from '@/src/components/ThemeSettings';
+import { GlobalSettings } from '@/src/components/GlobalSettings';
 import { TooltipProvider } from '@/components/ui/tooltip';
 
 export default function App() {
@@ -40,6 +45,16 @@ export default function App() {
       case 'comercial':
       case 'op-ped':
         return <Commercial />;
+      case 'op-proj':
+        return <Projects />;
+      case 'cli-list':
+      case 'cli-seg':
+      case 'cli-rfm':
+      case 'cli-camp':
+      case 'clientes':
+        return <Clients initialTab={currentView} />;
+      case 'crm-follow':
+        return <CRMFollow />;
       case 'sup-mp':
       case 'suprimentos':
       case 'scraps':
@@ -67,6 +82,10 @@ export default function App() {
       case 'niveis':
       case 'hierarchy':
         return <LevelsManagement />;
+      case 'sys-theme':
+        return <ThemeSettings />;
+      case 'sys-cfg-glob':
+        return <GlobalSettings />;
       default:
         return (
           <div className="flex items-center justify-center h-screen text-zinc-500 animate-in fade-in duration-500">
@@ -90,9 +109,9 @@ export default function App() {
 
   return (
     <TooltipProvider>
-      <div className="min-h-screen bg-[#050505] text-zinc-200 font-sans selection:bg-white/10 selection:text-white overflow-x-hidden">
+      <div className="min-h-screen bg-background text-foreground font-sans selection:bg-primary/10 selection:text-white overflow-x-hidden">
         {/* Mobile Header */}
-        <header className="md:hidden sticky top-0 z-40 w-full h-16 bg-[#050505]/80 backdrop-blur-md border-b border-white/5 flex items-center justify-between px-6">
+        <header className="md:hidden sticky top-0 z-40 w-full h-16 bg-background/80 backdrop-blur-md border-b border-border flex items-center justify-between px-6">
            <div className="flex items-center gap-3" onClick={() => {
              setCurrentView('dashboard');
              setIsMobileMenuOpen(false);

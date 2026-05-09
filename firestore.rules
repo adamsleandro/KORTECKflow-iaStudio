@@ -1,0 +1,142 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // -------------------------------------------------------------------------
+    // 1. GLOBALS & HELPERS
+    // -------------------------------------------------------------------------
+    
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isEmailVerified() {
+      return isSignedIn() && request.auth.token.email_verified == true;
+    }
+
+    function isAdmin() {
+      // For this system, we'll check against a collection 'admins'
+      return isSignedIn() && exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    // -------------------------------------------------------------------------
+    // 2. ENTITY VALIDATORS
+    // -------------------------------------------------------------------------
+
+    function isValidUser(data) {
+      return data.keys().hasAll(['id', 'name', 'email', 'role']) &&
+             data.id is string && data.id.size() <= 128 &&
+             data.name is string && data.name.size() <= 100 &&
+             data.email is string && data.email.size() <= 100 &&
+             data.role in ['Super Admin', 'Admin', 'Vendedor', 'Designer', 'Produção', 'Financeiro'];
+    }
+
+    function isValidClient(data) {
+      return data.keys().hasAll(['id', 'name', 'cnpj']) &&
+             data.id is string && data.id.size() <= 128 &&
+             data.name is string && data.name.size() <= 200 &&
+             data.cnpj is string && data.cnpj.size() <= 18;
+    }
+
+    function isValidLead(data) {
+      return data.keys().hasAll(['id', 'client', 'status']) &&
+             data.id is string && data.id.size() <= 128 &&
+             data.client is string && data.client.size() <= 200 &&
+             data.status is string && data.status.size() <= 50 &&
+             (!('value' in data) || data.value is number) &&
+             (!('salesperson' in data) || (data.salesperson is string && data.salesperson.size() <= 100)) &&
+             (!('temperature' in data) || data.temperature in ['Quente', 'Morno', 'Frio']) &&
+             (!('objections' in data) || (data.objections is list && data.objections.size() <= 20)) &&
+             (!('registrationInfo' in data) || (data.registrationInfo is string && data.registrationInfo.size() <= 2000)) &&
+             (!('briefing' in data) || (data.briefing is string && data.briefing.size() <= 5000)) &&
+             (!('folderLink' in data) || (data.folderLink is string && data.folderLink.size() <= 500)) &&
+             (!('supportDesigner' in data) || (data.supportDesigner is string && data.supportDesigner.size() <= 100)) &&
+             (!('nextAction' in data) || (data.nextAction is string && data.nextAction.size() <= 500)) &&
+             (!('observations' in data) || (data.observations is string && data.observations.size() <= 2000)) &&
+             (!('salesScript' in data) || (data.salesScript is string && data.salesScript.size() <= 10000));
+    }
+
+    function isValidProject(data) {
+      return data.keys().hasAll(['id', 'title', 'client', 'status']) &&
+             data.id is string && data.id.size() <= 128 &&
+             data.title is string && data.title.size() <= 200 &&
+             data.client is string && data.client.size() <= 200 &&
+             data.status is string && data.status.size() <= 50;
+    }
+
+    function isValidStockItem(data) {
+      return data.keys().hasAll(['id', 'name', 'current']) &&
+             data.id is string && data.id.size() <= 128 &&
+             data.name is string && data.name.size() <= 200 &&
+             data.current is number;
+    }
+
+    // -------------------------------------------------------------------------
+    // 3. COLLECTION MATCH BLOCKS
+    // -------------------------------------------------------------------------
+
+    match /users/{userId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && isValidUser(incoming()) && userId == incoming().id;
+      allow update: if isSignedIn() && isValidUser(incoming()) && (
+        isAdmin() || (userId == request.auth.uid && incoming().diff(existing()).affectedKeys().hasOnly(['name', 'avatar']))
+      );
+    }
+
+    match /clients/{clientId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && isValidClient(incoming()) && isValidId(clientId);
+      allow update: if isSignedIn() && isValidClient(incoming()) && (
+        isAdmin() || incoming().diff(existing()).affectedKeys().hasOnly(['status', 'rfm', 'score', 'lastPurchase'])
+      );
+    }
+
+    match /leads/{leadId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && isValidLead(incoming()) && isValidId(leadId);
+      allow update: if isSignedIn() && isValidLead(incoming()) && (
+        isAdmin() || 
+        incoming().diff(existing()).affectedKeys().hasOnly([
+          'status', 'value', 'temperature', 'objections', 'aiAnalysis', 
+          'salesScript', 'registrationInfo', 'briefing', 'folderLink', 
+          'supportDesigner', 'nextAction', 'observations', 'updatedAt'
+        ])
+      );
+    }
+
+    match /projects/{projectId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && isValidProject(incoming()) && isValidId(projectId);
+      allow update: if isSignedIn() && isValidProject(incoming()) && (
+        isAdmin() || incoming().diff(existing()).affectedKeys().hasOnly(['status', 'progress', 'lastUpdate'])
+      );
+    }
+
+    match /inventory/{itemId} {
+      allow read: if isSignedIn();
+      allow create: if isAdmin() && isValidStockItem(incoming()) && isValidId(itemId);
+      allow update: if isSignedIn() && isValidStockItem(incoming()) && (
+        isAdmin() || incoming().diff(existing()).affectedKeys().hasOnly(['current'])
+      );
+    }
+
+    match /admins/{adminId} {
+      allow read: if isSignedIn();
+    }
+  }
+}

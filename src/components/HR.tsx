@@ -390,9 +390,7 @@ export function HR() {
         <TabsList className="bg-transparent lg:bg-[#0c0c10] border-0 lg:border border-white/5 p-1 flex justify-start overflow-x-auto h-auto lg:h-14 scrollbar-hide flex-nowrap w-full whitespace-nowrap lg:whitespace-normal">
            {[
              { id: 'dashboard', label: 'DASHBOARD', icon: <BarChart3 size={14} /> },
-             { id: 'colaboradores', label: 'WORKFORCE (GRID)', icon: <LayoutGrid size={14} /> },
-             { id: 'workforce-list', label: 'WORKFORCE (LISTA)', icon: <List size={14} /> },
-             { id: 'workforce-matrix', label: 'MATRIZ TÉCNICA', icon: <Target size={14} /> },
+             { id: 'colaboradores', label: 'WORKFORCE', icon: <Users size={14} /> },
              { id: 'performance', label: 'PRODUTIVIDADE', icon: <Timer size={14} /> },
              { id: 'skills', label: 'GLOBAL SKILLS', icon: <Target size={14} /> },
              { id: 'compliance', label: 'COMPLIANCE', icon: <Shield size={14} /> },
@@ -450,8 +448,8 @@ export function HR() {
                          <div className="flex items-center gap-2"><div className="w-1.5 h-1.5 rounded-full bg-emerald-500" /><span className="text-[9px] font-black text-zinc-400 uppercase">Eficiência</span></div>
                       </div>
                    </CardHeader>
-                   <CardContent className="p-8 h-[400px]">
-                      <ResponsiveContainer width="100%" height="100%">
+                   <CardContent className="p-8 h-[400px] overflow-hidden relative min-h-[400px]">
+                      <ResponsiveContainer width="99%" height="99%">
                          <AreaChart data={PRODUCTIVITY_DATA}>
                             <defs>
                                <linearGradient id="chartBlue" x1="0" y1="0" x2="0" y2="1">
@@ -553,7 +551,35 @@ export function HR() {
 
         {/* 2. WORKFORCE TAB */}
         <TabsContent value="colaboradores" className="space-y-8 mt-0 outline-none">
-           {selectedColab ? (
+           <Tabs defaultValue="grid" className="space-y-8">
+              {!selectedColab && (
+                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-[#0c0c10] border border-white/5 p-2 rounded-2xl">
+                    <TabsList className="bg-white/5 border-white/5 p-1">
+                       <TabsTrigger value="grid" className="text-[10px] font-black uppercase px-6 h-10 data-[state=active]:bg-white/10 data-[state=active]:text-white">
+                          <LayoutGrid size={14} className="mr-2" /> Grid
+                       </TabsTrigger>
+                       <TabsTrigger value="list" className="text-[10px] font-black uppercase px-6 h-10 data-[state=active]:bg-white/10 data-[state=active]:text-white">
+                          <List size={14} className="mr-2" /> Lista
+                       </TabsTrigger>
+                       <TabsTrigger value="matrix" className="text-[10px] font-black uppercase px-6 h-10 data-[state=active]:bg-white/10 data-[state=active]:text-white">
+                          <Target size={14} className="mr-2" /> Matriz Técnica
+                       </TabsTrigger>
+                    </TabsList>
+                    
+                    <div className="flex items-center gap-3 px-2">
+                       <div className="relative">
+                          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-600" size={14} />
+                          <Input className="bg-black/40 border-white/10 pl-9 h-10 w-64 text-[10px] text-white uppercase font-bold tracking-widest" placeholder="Filtrar talentos..." />
+                       </div>
+                       <Button variant="outline" className="h-10 px-4 border-white/10 text-white text-[9px] font-black uppercase">
+                          <Filter size={14} className="mr-2" /> Avançado
+                       </Button>
+                    </div>
+                 </div>
+              )}
+
+              <TabsContent value="grid" className="mt-0 outline-none">
+                 {selectedColab ? (
              <motion.div 
                initial={{ opacity: 0, x: 20 }}
                animate={{ opacity: 1, x: 0 }}
@@ -851,160 +877,164 @@ export function HR() {
                            </Card>
                          ))}
                       </div>
+                   </div>
                 </div>
-             </div>
-           )}
-        </TabsContent>
+              )}
+           </TabsContent>
 
-         <TabsContent value="workforce-list" className="space-y-8 mt-0 outline-none">
-            <Card className="bg-[#0c0c10] border-white/5 overflow-hidden">
-               <Table>
-                  <TableHeader className="bg-white/[0.01]">
-                     <TableRow className="border-white/5 hover:bg-transparent tracking-widest uppercase text-[9px]">
-                        <TableHead className="px-6">Nome</TableHead>
-                        <TableHead>Cargo</TableHead>
-                        <TableHead>Setor</TableHead>
-                        <TableHead>Admissão</TableHead>
-                        <TableHead>Compliance</TableHead>
-                        <TableHead className="text-right px-6">Ações</TableHead>
-                     </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                     {COLLABORATORS.map((c) => (
-                       <TableRow 
-                         key={c.id} 
-                         onClick={() => setSelectedColabId(c.id)}
-                         className="border-white/5 hover:bg-white/[0.01] cursor-pointer group"
-                        >
-                          <TableCell className="px-6 py-4">
-                             <div className="flex items-center gap-3">
-                                <Avatar className="w-8 h-8 border border-white/10">
-                                   <AvatarImage src={`https://i.pravatar.cc/100?u=${c.avatar}`} />
-                                   <AvatarFallback className="text-[10px] font-black italic">{c.name.charAt(0)}</AvatarFallback>
-                                </Avatar>
-                                <span className="text-[11px] font-black text-white italic uppercase tracking-tight">{c.name}</span>
-                             </div>
-                          </TableCell>
-                          <TableCell className="text-[10px] font-bold text-zinc-500 uppercase">{c.role}</TableCell>
-                          <TableCell className="text-[10px] font-bold text-zinc-500 uppercase">{c.dept}</TableCell>
-                          <TableCell className="text-[10px] font-mono text-zinc-500">{c.admission}</TableCell>
-                          <TableCell>
-                             <div className="flex gap-2">
-                                <div className={cn("w-1.5 h-1.5 rounded-full", c.nrs.nr35 === 'success' ? 'bg-emerald-500' : 'bg-rose-500 animate-pulse')} />
-                                <div className={cn("w-1.5 h-1.5 rounded-full", c.nrs.aso === 'success' ? 'bg-emerald-500' : 'bg-amber-500')} />
-                             </div>
-                          </TableCell>
-                          <TableCell className="text-right px-6">
-                             <Button size="icon" variant="ghost" className="h-8 w-8 text-zinc-600 hover:text-white">
-                                <MoreVertical size={14} />
-                             </Button>
-                          </TableCell>
+           <TabsContent value="list" className="mt-0 outline-none">
+              <Card className="bg-[#0c0c10] border-white/5 overflow-hidden">
+                 <Table>
+                    <TableHeader className="bg-white/[0.01]">
+                       <TableRow className="border-white/5 hover:bg-transparent tracking-widest uppercase text-[9px]">
+                          <TableHead className="px-6">Nome</TableHead>
+                          <TableHead>Cargo</TableHead>
+                          <TableHead>Setor</TableHead>
+                          <TableHead>Admissão</TableHead>
+                          <TableHead>Compliance</TableHead>
+                          <TableHead className="text-right px-6">Ações</TableHead>
                        </TableRow>
-                     ))}
-                  </TableBody>
-               </Table>
-            </Card>
-         </TabsContent>
+                    </TableHeader>
+                    <TableBody>
+                       {COLLABORATORS.map((c) => (
+                         <TableRow 
+                           key={c.id} 
+                           onClick={() => setSelectedColabId(c.id)}
+                           className="border-white/5 hover:bg-white/[0.01] cursor-pointer group"
+                          >
+                            <TableCell className="px-6 py-4">
+                               <div className="flex items-center gap-3">
+                                  <Avatar className="w-8 h-8 border border-white/10">
+                                     <AvatarImage src={`https://i.pravatar.cc/100?u=${c.avatar}`} />
+                                     <AvatarFallback className="text-[10px] font-black italic">{c.name.charAt(0)}</AvatarFallback>
+                                  </Avatar>
+                                  <span className="text-[11px] font-black text-white italic uppercase tracking-tight">{c.name}</span>
+                               </div>
+                            </TableCell>
+                            <TableCell className="text-[10px] font-bold text-zinc-500 uppercase">{c.role}</TableCell>
+                            <TableCell className="text-[10px] font-bold text-zinc-500 uppercase">{c.dept}</TableCell>
+                            <TableCell className="text-[10px] font-mono text-zinc-500">{c.admission}</TableCell>
+                            <TableCell>
+                               <div className="flex gap-2">
+                                  <div className={cn("w-1.5 h-1.5 rounded-full", c.nrs.nr35 === 'success' ? 'bg-emerald-500' : 'bg-rose-500 animate-pulse')} />
+                                  <div className={cn("w-1.5 h-1.5 rounded-full", c.nrs.aso === 'success' ? 'bg-emerald-500' : 'bg-amber-500')} />
+                               </div>
+                            </TableCell>
+                            <TableCell className="text-right px-6">
+                               <Button size="icon" variant="ghost" className="h-8 w-8 text-zinc-600 hover:text-white">
+                                  <MoreVertical size={14} />
+                               </Button>
+                            </TableCell>
+                         </TableRow>
+                       ))}
+                    </TableBody>
+                 </Table>
+              </Card>
+           </TabsContent>
 
-         <TabsContent value="workforce-matrix" className="space-y-8 mt-0 outline-none">
-            <div className="space-y-6">
-               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <Card className="bg-[#0c0c10] border-white/5 p-4 border-l-4 border-l-rose-500">
-                     <div className="flex items-center gap-3 mb-2">
-                        <Flame size={16} className="text-rose-500" />
-                        <h4 className="text-[10px] font-black text-white uppercase italic tracking-widest">Gargalos Técnicos</h4>
-                     </div>
-                     <div className="space-y-2">
-                        {SKILLS_LIST.map(skill => {
-                           const highProficiency = COLLABORATORS.filter(c => (c.skillMatrix as any)[skill] >= 3).length;
-                           if (highProficiency <= 1) {
-                              return (
-                                 <div key={skill} className="flex justify-between items-center bg-white/[0.02] p-2 rounded border border-white/5">
-                                    <span className="text-[9px] font-bold text-zinc-400 uppercase">{skill}</span>
-                                    <Badge className="bg-rose-500/10 text-rose-500 text-[8px] border-0 h-4 uppercase">Risco Crítico</Badge>
-                                 </div>
-                              );
-                           }
-                           return null;
-                        })}
-                     </div>
-                  </Card>
+           <TabsContent value="matrix" className="mt-0 outline-none">
+              <div className="space-y-6">
+                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <Card className="bg-[#0c0c10] border-white/5 p-4 border-l-4 border-l-rose-500">
+                       <div className="flex items-center gap-3 mb-2">
+                          <Flame size={16} className="text-rose-500" />
+                          <h4 className="text-[10px] font-black text-white uppercase italic tracking-widest">Gargalos Técnicos</h4>
+                       </div>
+                       <div className="space-y-2">
+                          {SKILLS_LIST.map(skill => {
+                             const highProficiency = COLLABORATORS.filter(c => (c.skillMatrix as any)[skill] >= 3).length;
+                             if (highProficiency <= 1) {
+                                return (
+                                   <div key={skill} className="flex justify-between items-center bg-white/[0.02] p-2 rounded border border-white/5">
+                                      <span className="text-[9px] font-bold text-zinc-400 uppercase">{skill}</span>
+                                      <Badge className="bg-rose-500/10 text-rose-500 text-[8px] border-0 h-4 uppercase">Risco Crítico</Badge>
+                                   </div>
+                                );
+                             }
+                             return null;
+                          })}
+                       </div>
+                    </Card>
 
-                  <Card className="bg-[#0c0c10] border-white/5 p-4 border-l-4 border-l-amber-500">
-                     <div className="flex items-center gap-3 mb-2">
-                        <Shield size={16} className="text-amber-500" />
-                        <h4 className="text-[10px] font-black text-white uppercase italic tracking-widest">Dependências Operacionais</h4>
-                     </div>
-                     <div className="space-y-2">
-                        {SKILLS_LIST.map(skill => {
-                           const specialists = COLLABORATORS.filter(c => (c.skillMatrix as any)[skill] === 4);
-                           if (specialists.length === 1) {
-                              return (
-                                 <div key={skill} className="flex justify-between items-center bg-white/[0.02] p-2 rounded border border-white/5">
-                                    <span className="text-[9px] font-bold text-zinc-400 uppercase">{skill}</span>
-                                    <span className="text-[8px] font-black text-amber-500 uppercase">{specialists[0].name} (Único Esp.)</span>
-                                 </div>
-                              );
-                           }
-                           return null;
-                        })}
-                     </div>
-                  </Card>
-               </div>
+                    <Card className="bg-[#0c0c10] border-white/5 p-4 border-l-4 border-l-amber-500">
+                       <div className="flex items-center gap-3 mb-2">
+                          <Shield size={16} className="text-amber-500" />
+                          <h4 className="text-[10px] font-black text-white uppercase italic tracking-widest">Dependências Operacionais</h4>
+                       </div>
+                       <div className="space-y-2">
+                          {SKILLS_LIST.map(skill => {
+                             const specialists = COLLABORATORS.filter(c => (c.skillMatrix as any)[skill] === 4);
+                             if (specialists.length === 1) {
+                                return (
+                                   <div key={skill} className="flex justify-between items-center bg-white/[0.02] p-2 rounded border border-white/5">
+                                      <span className="text-[9px] font-bold text-zinc-400 uppercase">{skill}</span>
+                                      <span className="text-[8px] font-black text-amber-500 uppercase">{specialists[0].name} (Único Esp.)</span>
+                                   </div>
+                                );
+                             }
+                             return null;
+                          })}
+                       </div>
+                    </Card>
+                 </div>
 
-               <Card className="bg-[#0c0c10] border-white/5 overflow-x-auto">
-                  <Table className="min-w-[800px]">
-                     <TableHeader className="bg-white/[0.01]">
-                        <TableRow className="border-white/5 hover:bg-transparent">
-                           <TableHead className="px-6 text-[9px] font-black text-zinc-500 uppercase sticky left-0 bg-[#0c0c10] z-20">Colaborador</TableHead>
-                           {SKILLS_LIST.map(skill => (
-                              <TableHead key={skill} className="text-center text-[9px] font-black text-zinc-500 uppercase px-4">{skill}</TableHead>
-                           ))}
-                        </TableRow>
-                     </TableHeader>
-                     <TableBody>
-                        {COLLABORATORS.map((c) => (
-                           <TableRow key={c.id} className="border-white/5 hover:bg-white/[0.01] group">
-                              <TableCell className="px-6 py-4 sticky left-0 bg-[#0c0c10] z-10 border-r border-white/5 group-hover:bg-zinc-900/50">
-                                 <div className="flex items-center gap-3">
-                                    <Avatar className="w-8 h-8 border border-white/10 shrink-0">
-                                       <AvatarImage src={`https://i.pravatar.cc/100?u=${c.avatar}`} />
-                                       <AvatarFallback className="text-[10px] font-black italic">{c.name.charAt(0)}</AvatarFallback>
-                                    </Avatar>
-                                    <div className="flex flex-col">
-                                       <span className="text-[11px] font-black text-white italic uppercase tracking-tight">{c.name}</span>
-                                       <span className="text-[8px] font-bold text-zinc-600 uppercase tracking-tighter leading-none">{c.role}</span>
-                                    </div>
-                                 </div>
-                              </TableCell>
-                              {SKILLS_LIST.map(skill => {
-                                 const level = (c.skillMatrix as any)[skill] as keyof typeof PROFICIENCY_LEVELS;
-                                 const prof = PROFICIENCY_LEVELS[level];
-                                 return (
-                                    <TableCell key={skill} className="text-center p-2">
-                                       <div className={cn(
-                                          "mx-auto w-24 py-1.5 rounded text-[8px] font-black uppercase tracking-widest border transition-all hover:scale-105",
-                                          prof.color
-                                       )}>
-                                          {prof.label}
-                                       </div>
-                                    </TableCell>
-                                 );
-                              })}
-                           </TableRow>
-                        ))}
-                     </TableBody>
-                  </Table>
-               </Card>
+                 <Card className="bg-[#0c0c10] border-white/5 overflow-x-auto">
+                    <Table className="min-w-[800px]">
+                       <TableHeader className="bg-white/[0.01]">
+                          <TableRow className="border-white/5 hover:bg-transparent">
+                             <TableHead className="px-6 text-[9px] font-black text-zinc-500 uppercase sticky left-0 bg-[#0c0c10] z-20">Colaborador</TableHead>
+                             {SKILLS_LIST.map(skill => (
+                                <TableHead key={skill} className="text-center text-[9px] font-black text-zinc-500 uppercase px-4">{skill}</TableHead>
+                             ))}
+                          </TableRow>
+                       </TableHeader>
+                       <TableBody>
+                          {COLLABORATORS.map((c) => (
+                             <TableRow key={c.id} className="border-white/5 hover:bg-white/[0.01] group">
+                                <TableCell className="px-6 py-4 sticky left-0 bg-[#0c0c10] z-10 border-r border-white/5 group-hover:bg-zinc-900/50">
+                                   <div className="flex items-center gap-3">
+                                      <Avatar className="w-8 h-8 border border-white/10 shrink-0">
+                                         <AvatarImage src={`https://i.pravatar.cc/100?u=${c.avatar}`} />
+                                         <AvatarFallback className="text-[10px] font-black italic">{c.name.charAt(0)}</AvatarFallback>
+                                      </Avatar>
+                                      <div className="flex flex-col">
+                                         <span className="text-[11px] font-black text-white italic uppercase tracking-tight">{c.name}</span>
+                                         <span className="text-[8px] font-bold text-zinc-600 uppercase tracking-tighter leading-none">{c.role}</span>
+                                      </div>
+                                   </div>
+                                </TableCell>
+                                {SKILLS_LIST.map(skill => {
+                                   const level = (c.skillMatrix as any)[skill] as keyof typeof PROFICIENCY_LEVELS;
+                                   const prof = PROFICIENCY_LEVELS[level];
+                                   return (
+                                      <TableCell key={skill} className="text-center p-2">
+                                         <div className={cn(
+                                            "mx-auto w-24 py-1.5 rounded text-[8px] font-black uppercase tracking-widest border transition-all hover:scale-105",
+                                            prof.color
+                                         )}>
+                                            {prof.label}
+                                         </div>
+                                      </TableCell>
+                                   );
+                                })}
+                             </TableRow>
+                          ))}
+                       </TableBody>
+                    </Table>
+                 </Card>
 
-               <div className="flex items-center gap-4 p-4 rounded-xl bg-blue-600/5 border border-blue-500/20">
-                  <Info size={16} className="text-blue-500 shrink-0" />
-                  <p className="text-[10px] font-bold text-zinc-400 leading-relaxed uppercase">
-                     A <span className="text-white italic">Matriz de Habilidades Técnicas</span> é atualizada via <span className="text-blue-400">Mesh-IA</span> baseada em apontamentos operacionais, tempos de execução e qualidade de entrega.
-                  </p>
-               </div>
-            </div>
-         </TabsContent>
+                 <div className="flex items-center gap-4 p-4 rounded-xl bg-blue-600/5 border border-blue-500/20">
+                    <Info size={16} className="text-blue-500 shrink-0" />
+                    <p className="text-[10px] font-bold text-zinc-400 leading-relaxed uppercase">
+                       A <span className="text-white italic">Matriz de Habilidades Técnicas</span> é atualizada via <span className="text-blue-400">Mesh-IA</span> baseada em apontamentos operacionais, tempos de execução e qualidade de entrega.
+                    </p>
+                 </div>
+              </div>
+           </TabsContent>
+        </Tabs>
+      </TabsContent>
+
+
 
         {/* 3. PERFORMANCE TAB */}
         <TabsContent value="performance" className="space-y-8 mt-0 outline-none">
@@ -1390,9 +1420,9 @@ export function HR() {
                     <CardHeader className="pb-2">
                        <CardTitle className="text-[10px] font-black text-white uppercase italic tracking-widest">Capacidade por Cluster</CardTitle>
                     </CardHeader>
-                    <CardContent className="h-40 p-0">
-                       <ResponsiveContainer width="100%" height="100%">
-                          <PieChart>
+                     <CardContent className="h-40 p-0 overflow-hidden relative min-h-[160px]">
+                        <ResponsiveContainer width="99%" height="99%">
+                           <PieChart>
                              <Pie data={[{v: 45}, {v: 25}, {v: 30}]} innerRadius={35} outerRadius={50} paddingAngle={2} dataKey="v">
                                 <Cell fill="#3b82f6" /><Cell fill="#10b981" /><Cell fill="#f59e0b" />
                              </Pie>
@@ -1408,14 +1438,7 @@ export function HR() {
                     <div className="absolute top-6 left-6 z-20 flex gap-2">
                        <Button variant="outline" size="sm" className="bg-black/40 border-white/10 text-[8px] font-black uppercase h-8 px-4 backdrop-blur-md">Mesh View</Button>
                     </div>
-                    <div className="p-12 flex flex-col items-center justify-center">
-                       {/* RECOVERED */}
-                       <p className="text-white">Organograma Reativado</p>
-                    </div>
-                 </Card>
-              </div>
-           </div>
-        </TabsContent>
+                    <div className="flex-1 flex flex-col items-center justify-center relative overflow-auto p-12 custom-scrollbar">
                        <div className="flex flex-col items-center gap-20 relative z-10">
                           {/* ROOT node */}
                           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
@@ -1435,14 +1458,28 @@ export function HR() {
                       { label: 'Diretoria Design', user: 'Ana Beatriz', color: 'purple' },
                     ].map((node, i) => (
                       <div key={i} className="flex flex-col items-center gap-10">
-                         <div className={cn(
+                        <div className={cn(
                            "w-36 p-4 bg-white/[0.02] border rounded-2xl text-center transition-all hover:scale-105",
-                           `border-${node.color}-500/40 hover:border-${node.color}-500 shadow-[0_0_20px_rgba(0,0,0,0.5)]`
-                         )}>
-                            <p className={cn("text-[8px] font-black uppercase tracking-widest italic mb-1", `text-${node.color}-500`)}>{node.label}</p>
-                            <p className="text-xs font-black text-white uppercase italic tracking-tight">{node.user}</p>
-                         </div>
-                         <div className={cn("h-16 w-0.5", `bg-gradient-to-b from-${node.color}-500/40 to-white/5`)} />
+                           node.color === "blue" ? "border-blue-500 shadow-xl shadow-blue-500/10" :
+                           node.color === "amber" ? "border-amber-500 shadow-xl shadow-amber-500/10" :
+                           "border-purple-500 shadow-xl shadow-purple-500/10"
+                        )}>
+                           <p className={cn(
+                              "text-[8px] font-black uppercase tracking-widest italic mb-1",
+                              node.color === "blue" ? "text-blue-500" :
+                              node.color === "amber" ? "text-amber-500" :
+                              "text-purple-500"
+                           )}>
+                              {node.label}
+                           </p>
+                           <p className="text-xs font-black text-white uppercase italic tracking-tight">{node.user}</p>
+                        </div>
+                        <div className={cn(
+                           "h-16 w-0.5",
+                           node.color === "blue" ? "bg-gradient-to-b from-blue-500/40 to-white/5" :
+                           node.color === "amber" ? "bg-gradient-to-b from-amber-500/40 to-white/5" :
+                           "bg-gradient-to-b from-purple-500/40 to-white/5"
+                        )} />
                          
                          {/* Staff Level */}
                          <div className="flex gap-4">
@@ -1452,22 +1489,25 @@ export function HR() {
                          </div>
                       </div>
                     ))}
-                 </div>
-              </div>
+                        </div>
+                     </div>
+                  </div>
 
-              <div className="absolute bottom-8 left-8 right-8 flex items-center justify-between">
-                 <div className="p-4 bg-white/[0.02] border border-white/5 rounded-xl flex items-center gap-4">
-                    <Info size={16} className="text-blue-500" />
-                    <p className="text-[9px] font-black text-zinc-500 uppercase tracking-widest">Arraste para navegar na visão tridimensional (Mesh-View)</p>
-                 </div>
-                 <div className="flex gap-2">
-                    <Button variant="outline" size="sm" className="bg-white/5 border-white/10 text-[9px] font-black uppercase h-8 px-4">Exportar PDF</Button>
-                    <Button variant="outline" size="sm" className="bg-white/5 border-white/10 text-[9px] font-black uppercase h-8 px-4">Visualizar por Setor</Button>
-                 </div>
-              </div>
-           </Card>
-        </TabsContent>
-      </Tabs>
+                  <div className="absolute bottom-8 left-8 right-8 flex items-center justify-between">
+                     <div className="p-4 bg-white/[0.02] border border-white/5 rounded-xl flex items-center gap-4">
+                        <Info size={16} className="text-blue-500" />
+                        <p className="text-[9px] font-black text-zinc-500 uppercase tracking-widest">Arraste para navegar na visão tridimensional (Mesh-View)</p>
+                     </div>
+                     <div className="flex gap-2">
+                        <Button variant="outline" size="sm" className="bg-white/5 border-white/10 text-[9px] font-black uppercase h-8 px-4">Exportar PDF</Button>
+                        <Button variant="outline" size="sm" className="bg-white/5 border-white/10 text-[9px] font-black uppercase h-8 px-4">Visualizar por Setor</Button>
+                     </div>
+                  </div>
+               </Card>
+            </div>
+         </div>
+      </TabsContent>
+   </Tabs>
 
       {/* Global Status Footer */}
       <div className="flex flex-col md:flex-row items-center justify-between pt-8 border-t border-white/5 gap-4">

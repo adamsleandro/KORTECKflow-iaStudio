@@ -145,8 +145,8 @@ export function Dashboard() {
               </div>
             </div>
           </CardHeader>
-          <CardContent className="h-[280px] md:h-[340px] w-full pt-8 pl-0">
-            <ResponsiveContainer width="100%" height="100%">
+          <CardContent className="h-[280px] md:h-[340px] w-full pt-8 pl-0 overflow-hidden relative min-h-[280px] md:min-h-[340px]">
+            <ResponsiveContainer width="99%" height="99%">
               <BarChart data={dataPerformance}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#ffffff05" vertical={false} />
                 <XAxis 
@@ -183,8 +183,8 @@ export function Dashboard() {
             <CardHeader className="border-b border-white/5 bg-white/[0.01]">
               <CardTitle className="text-sm font-black text-white uppercase tracking-widest italic">Mix de Produção</CardTitle>
             </CardHeader>
-            <CardContent className="h-[180px] md:h-[200px] flex items-center justify-center pt-4">
-              <ResponsiveContainer width="100%" height="100%">
+            <CardContent className="h-[180px] md:h-[200px] flex items-center justify-center pt-4 overflow-hidden relative min-h-[180px] md:min-h-[200px]">
+              <ResponsiveContainer width="99%" height="99%">
                 <RePieChart>
                   <Pie
                     data={dataOSStatus}

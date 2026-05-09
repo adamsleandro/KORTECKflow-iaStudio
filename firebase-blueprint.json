@@ -1,0 +1,125 @@
+{
+  "entities": {
+    "User": {
+      "title": "System User",
+      "description": "Information about system users and their permissions",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "role": { "type": "string", "enum": ["Super Admin", "Admin", "Vendedor", "Designer", "Produção", "Financeiro"] },
+        "department": { "type": "string" },
+        "status": { "type": "string", "enum": ["Ativo", "Inativo"] },
+        "lastActive": { "type": "string", "format": "date-time" },
+        "avatar": { "type": "string" }
+      },
+      "required": ["id", "name", "email", "role"]
+    },
+    "Client": {
+      "title": "Client",
+      "description": "Company client profiles",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "cnpj": { "type": "string" },
+        "segment": { "type": "string" },
+        "status": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "phone": { "type": "string" },
+        "address": { "type": "string" },
+        "score": { "type": "number" },
+        "rfm": { "type": "string" },
+        "lastPurchase": { "type": "string", "format": "date" }
+      },
+      "required": ["id", "name", "cnpj"]
+    },
+    "Collaborator": {
+      "title": "Collaborator",
+      "description": "HR records for employees",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "role": { "type": "string" },
+        "dept": { "type": "string" },
+        "status": { "type": "string", "enum": ["Ativo", "Férias", "Afastado"] },
+        "type": { "type": "string", "enum": ["CLT", "PJ"] },
+        "email": { "type": "string" },
+        "phone": { "type": "string" },
+        "admission": { "type": "string", "format": "date" },
+        "salary": { "type": "number" },
+        "skillMatrix": { "type": "object" },
+        "nrs": { "type": "object" }
+      },
+      "required": ["id", "name", "role", "dept"]
+    },
+    "Lead": {
+      "title": "Lead",
+      "description": "CRM Lead management",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "client": { "type": "string" },
+        "value": { "type": "number" },
+        "salesperson": { "type": "string" },
+        "status": { "type": "string" },
+        "entryDate": { "type": "string", "format": "date" },
+        "temperature": { "type": "string", "enum": ["Quente", "Morno", "Frio"] },
+        "objections": { "type": "array", "items": { "type": "string" } },
+        "aiAnalysis": { "type": "string" },
+        "salesScript": { "type": "string" },
+        "briefing": { "type": "string" },
+        "folderLink": { "type": "string" },
+        "registrationInfo": { "type": "string" },
+        "supportDesigner": { "type": "string" },
+        "nextAction": { "type": "string" },
+        "observations": { "type": "string" }
+      },
+      "required": ["id", "client", "status"]
+    },
+    "Project": {
+      "title": "Project",
+      "description": "Detailed project information and tracking",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "client": { "type": "string" },
+        "status": { "type": "string" },
+        "commercialResponsible": { "type": "string" },
+        "designerResponsible": { "type": "string" },
+        "deadline": { "type": "string", "format": "date" },
+        "value": { "type": "number" },
+        "progress": { "type": "number" },
+        "products": { "type": "array" }
+      },
+      "required": ["id", "title", "client", "status"]
+    },
+    "StockItem": {
+      "title": "Stock Item",
+      "description": "Raw material inventory",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "category": { "type": "string" },
+        "current": { "type": "number" },
+        "min": { "type": "number" },
+        "unit": { "type": "string" },
+        "cost": { "type": "number" },
+        "status": { "type": "string", "enum": ["ok", "low", "critical"] }
+      },
+      "required": ["id", "name", "current"]
+    }
+  },
+  "firestore": {
+    "users": { "schema": "User", "description": "System users collection" },
+    "clients": { "schema": "Client", "description": "Clients collection" },
+    "collaborators": { "schema": "Collaborator", "description": "HR collaborators collection" },
+    "leads": { "schema": "Lead", "description": "CRM leads collection" },
+    "projects": { "schema": "Project", "description": "Active projects collection" },
+    "inventory": { "schema": "StockItem", "description": "Material inventory collection" }
+  }
+}
