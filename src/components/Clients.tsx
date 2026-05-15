@@ -93,79 +93,55 @@ export function Clients({ initialTab = 'cli-list' }: { initialTab?: string }) {
   };
 
   return (
-    <div className="p-4 md:p-8 space-y-8 animate-in fade-in duration-700 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-900/10 via-background to-background min-h-screen">
-      
-      {/* Mini Report Topo */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 overflow-hidden">
-        <Card className="bg-[#0c0c10] border-white/5 relative overflow-hidden group">
-          <div className="absolute top-0 right-0 w-24 h-24 bg-blue-600/5 blur-3xl -mr-12 -mt-12 transition-all group-hover:bg-blue-600/10" />
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-[10px] font-black text-zinc-500 uppercase tracking-widest italic">Total de Clientes</span>
-              <Users size={16} className="text-blue-500" />
-            </div>
-            <div className="text-3xl font-black text-white italic tracking-tighter">1.248</div>
-            <div className="flex items-center gap-1 mt-2 text-[10px] text-emerald-500 font-bold">
-              <TrendingUp size={12} /> +12% este mês
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-[#0c0c10] border-white/5 relative overflow-hidden group">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-[10px] font-black text-zinc-500 uppercase tracking-widest italic">LTV Médio</span>
-              <BarChart3 size={16} className="text-blue-500" />
-            </div>
-            <div className="text-3xl font-black text-white italic tracking-tighter">R$ 18.5k</div>
-            <div className="flex items-center gap-1 mt-2 text-[10px] text-emerald-500 font-bold">
-              <TrendingUp size={12} /> +5.4% de engajamento
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-[#0c0c10] border-white/5 relative overflow-hidden group">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-[10px] font-black text-zinc-500 uppercase tracking-widest italic">Churn Rate</span>
-              <AlertCircle size={16} className="text-rose-500" />
-            </div>
-            <div className="text-3xl font-black text-white italic tracking-tighter">2.4%</div>
-            <div className="flex items-center gap-1 mt-2 text-[10px] text-rose-500 font-bold italic uppercase">
-              <ShieldCheck size={12} className="text-emerald-500" /> Nível Crítico Monitorado
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-blue-600 border-0 shadow-[0_0_50px_rgba(37,99,235,0.2)]">
-          <CardContent className="p-6 flex flex-col justify-center h-full">
-            <div className="text-[10px] font-black text-white/60 uppercase tracking-widest italic mb-1">IA Intelligence Update</div>
-            <div className="text-xs font-bold text-white leading-tight italic">"Sua base cresceu 4% mais rápido que a média do setor."</div>
-            <button className="flex items-center gap-2 text-[9px] font-black uppercase text-white mt-4 tracking-widest group">
-              Explorar Tendências <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform" />
-            </button>
-          </CardContent>
-        </Card>
-      </div>
-
-      <div className="flex items-center justify-between bg-[#0c0c10] border border-white/5 p-4 rounded-2xl">
-        <div className="flex items-center gap-6">
-          <h1 className="text-2xl font-black text-white italic uppercase tracking-tighter flex items-center gap-3">
-            <div className="w-1.5 h-8 bg-blue-600 rounded-full" />
-            GESTÃO DE CLIENTES <span className="text-blue-500">[{activeTab.toUpperCase()}]</span>
-          </h1>
-          <div className="hidden md:flex items-center gap-2 text-[10px] font-black text-zinc-500 uppercase tracking-widest border-l border-white/10 pl-6 h-8">
-             <Cpu size={14} className="text-blue-500" /> Core Engine v2.4.1
+    <div className="p-4 md:p-8 space-y-8 animate-in fade-in duration-750 max-w-[1700px] mx-auto pb-24">
+      {/* Mesh Clients Header */}
+      <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-8 border-b border-white/5 pb-8">
+        <div className="space-y-3">
+          <div className="flex items-center gap-3">
+             <div className="p-2.5 bg-blue-600/10 rounded-xl border border-blue-500/20">
+                <Users size={28} className="text-blue-500" />
+             </div>
+             <div className="flex flex-col">
+                <span className="text-[10px] font-black tracking-[0.5em] text-zinc-500 uppercase italic">OPERATIONAL ENGINE // CRM</span>
+                <h1 className="text-3xl md:text-5xl font-black text-white uppercase italic tracking-tighter leading-none">
+                  Gestão de <span className="text-blue-600">Clientes</span>
+                </h1>
+             </div>
           </div>
         </div>
-        <div className="flex gap-3">
-           <Button variant="outline" className="border-white/5 bg-white/5 text-[10px] font-black uppercase tracking-widest text-white h-10 hover:bg-white/10">
-              <Download size={14} className="mr-2" /> Exportar
+        <div className="flex flex-wrap items-center gap-3">
+           <Button variant="ghost" className="h-14 border-white/5 text-zinc-500 hover:text-white uppercase font-black text-[10px] tracking-widest px-8">
+              <Download size={18} className="mr-3" /> Export Dados
            </Button>
-           <Button className="bg-blue-600 text-white hover:bg-blue-700 text-[10px] font-black uppercase tracking-widest h-10 px-6">
-              <UserPlus size={14} className="mr-2" /> Novo Cliente
-           </Button>
+           <Button 
+            className="bg-blue-600 text-white hover:bg-blue-500 font-black h-14 px-10 text-[11px] uppercase tracking-widest shadow-2xl shadow-blue-600/20 transition-all border-0"
+          >
+            <Plus className="mr-3" size={18} /> Novo Contrato
+          </Button>
         </div>
+      </div>
+
+      {/* Stats Cluster */}
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+        {[
+          { label: 'Total de Clientes', val: '1.248', trend: '+12% este mês', icon: <Users className="text-blue-500" /> },
+          { label: 'LTV Médio', val: 'R$ 18.5k', trend: '+5.4% growth', icon: <TrendingUp className="text-blue-500" /> },
+          { label: 'Churn Rate', val: '2.4%', trend: 'Nível Estável', icon: <AlertCircle className="text-rose-500" /> },
+          { label: 'Market Share', val: '14.2%', trend: '+2.1% share', icon: <Building2 className="text-blue-500" /> },
+        ].map((stat, i) => (
+          <Card key={i} className="bg-[#0c0c10] border-white/5 p-8 relative overflow-hidden group hover:border-blue-600/20 transition-all">
+            <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity transform group-hover:scale-110">
+               {stat.icon}
+            </div>
+            <div className="relative z-10 space-y-4">
+               <h4 className="text-[10px] font-black text-zinc-600 uppercase tracking-widest italic">{stat.label}</h4>
+               <p className="text-4xl font-black text-white italic tracking-tighter uppercase">{stat.val}</p>
+               <div className="flex items-center gap-2 text-[10px] font-black text-emerald-500 uppercase tracking-widest italic">
+                  <Zap size={10} className="fill-emerald-500" /> {stat.trend}
+               </div>
+            </div>
+          </Card>
+        ))}
       </div>
 
       {/* Main Tabs */}

@@ -85,6 +85,8 @@ import {
 } from 'recharts';
 import { cn } from '@/lib/utils';
 
+import { BaseTable, Column } from './common/BaseTable';
+
 // --- MOCK DATA ---
 const PRODUCTIVITY_DATA = [
   { day: 'Seg', prod: 85, efficiency: 92, reworking: 2 },
@@ -94,6 +96,25 @@ const PRODUCTIVITY_DATA = [
   { day: 'Sex', prod: 95, efficiency: 98, reworking: 0 },
   { day: 'Sáb', prod: 60, efficiency: 70, reworking: 2 },
 ];
+
+interface Collaborator {
+  id: number;
+  name: string;
+  role: string;
+  dept: string;
+  status: string;
+  type: string;
+  score: number;
+  avatar: string;
+  email: string;
+  phone: string;
+  admission: string;
+  lastTraining: string;
+  salary: string;
+  tags: string[];
+  skillMatrix: Record<string, number>;
+  nrs: { nr35: string; nr10: string; aso: string };
+}
 
 const SKILL_MAP = [
   { group: 'Produção Industrial', items: [
@@ -256,19 +277,90 @@ const HISTORY_LOG = [
   { date: '02 Mai', type: 'AI', user: 'Sistema', desc: 'Alerta: Identificada queda de performance no setor de Impressão' },
 ];
 
-export function HR() {
-  const [activeTab, setActiveTab] = useState('dashboard');
+export function HR({ initialTab: propInitialTab }: { initialTab?: string }) {
+  const [activeTab, setActiveTab] = useState(() => {
+    if (propInitialTab === 'hr-cad' || propInitialTab === 'hr-colab') return 'colaboradores';
+    if (propInitialTab === 'hr-org') return 'dashboard'; // Or 'organograma' if implemented
+    return 'dashboard';
+  });
   const [selectedColabId, setSelectedColabId] = useState<number | null>(null);
   
   const SKILLS_LIST = ['Router CNC', 'Laser Fiber', 'Solda MIG/MAG', 'ACM/Dobra', 'SolidWorks', 'Elétrica'];
   
-  const PROFICIENCY_LEVELS = {
+const PROFICIENCY_LEVELS = {
     0: { label: '-', color: 'bg-zinc-900/50 text-zinc-700' },
     1: { label: 'Básico', color: 'bg-blue-500/10 text-blue-400 border-blue-500/20' },
     2: { label: 'Intermed.', color: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' },
     3: { label: 'Avançado', color: 'bg-amber-500/10 text-amber-400 border-amber-500/20' },
     4: { label: 'Especialista', color: 'bg-rose-500/10 text-rose-400 border-rose-500/20 shadow-[0_0_10px_rgba(244,63,94,0.1)]' }
   };
+
+  const COLAB_COLUMNS: Column<Collaborator>[] = [
+    {
+      header: 'Colaborador',
+      accessorKey: 'name',
+      sortable: true,
+      cell: (c) => (
+        <div className="flex items-center gap-3">
+          <Avatar className="w-9 h-9 border border-white/10">
+            <AvatarImage src={`https://i.pravatar.cc/100?u=${c.avatar}`} />
+            <AvatarFallback className="bg-zinc-900 text-zinc-500">{c.name.charAt(0)}</AvatarFallback>
+          </Avatar>
+          <div className="flex flex-col">
+            <span className="text-[11px] font-black text-white italic uppercase tracking-tight">{c.name}</span>
+            <span className="text-[9px] text-zinc-600 font-mono tracking-tighter">{c.email}</span>
+          </div>
+        </div>
+      )
+    },
+    {
+      header: 'Cargo / Setor',
+      accessorKey: 'role',
+      sortable: true,
+      cell: (c) => (
+        <div>
+          <p className="text-zinc-400 font-bold uppercase text-[10px]">{c.role}</p>
+          <p className="text-zinc-600 font-medium text-[9px] uppercase tracking-widest">{c.dept}</p>
+        </div>
+      )
+    },
+    {
+      header: 'Performance IA',
+      accessorKey: 'score',
+      sortable: true,
+      cell: (c) => (
+        <div className="flex flex-col gap-1.5 w-24">
+          <div className="flex justify-between items-center text-[8px] font-black uppercase text-zinc-600 italic">
+             <span>SCORE</span>
+             <span className="text-blue-500">{c.score}%</span>
+          </div>
+          <div className="h-1 bg-white/5 rounded-full overflow-hidden">
+             <div className="h-full bg-blue-600" style={{ width: `${c.score}%` }} />
+          </div>
+        </div>
+      )
+    },
+    {
+      header: 'Compliance NR',
+      accessorKey: 'nrs',
+      cell: (c) => (
+        <div className="flex gap-2">
+          <div className={cn("w-2 h-2 rounded-full", c.nrs.nr35 === 'success' ? 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]' : 'bg-rose-500 animate-pulse shadow-[0_0_8px_rgba(244,63,94,0.5)]')} />
+          <div className={cn("w-2 h-2 rounded-full", c.nrs.aso === 'success' ? 'bg-emerald-500' : 'bg-amber-500')} />
+          <div className={cn("w-2 h-2 rounded-full", c.nrs.nr10 === 'success' ? 'bg-emerald-500' : 'bg-zinc-800')} />
+        </div>
+      )
+    },
+    {
+      header: 'Contrato',
+      accessorKey: 'type',
+      cell: (c) => (
+        <Badge variant="outline" className="bg-white/5 border-0 text-zinc-500 text-[9px] font-black uppercase h-5">
+          {c.type}
+        </Badge>
+      )
+    }
+  ];
 
   const selectedColab = COLLABORATORS.find(c => c.id === selectedColabId);
 
@@ -883,53 +975,12 @@ export function HR() {
            </TabsContent>
 
            <TabsContent value="list" className="mt-0 outline-none">
-              <Card className="bg-[#0c0c10] border-white/5 overflow-hidden">
-                 <Table>
-                    <TableHeader className="bg-white/[0.01]">
-                       <TableRow className="border-white/5 hover:bg-transparent tracking-widest uppercase text-[9px]">
-                          <TableHead className="px-6">Nome</TableHead>
-                          <TableHead>Cargo</TableHead>
-                          <TableHead>Setor</TableHead>
-                          <TableHead>Admissão</TableHead>
-                          <TableHead>Compliance</TableHead>
-                          <TableHead className="text-right px-6">Ações</TableHead>
-                       </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                       {COLLABORATORS.map((c) => (
-                         <TableRow 
-                           key={c.id} 
-                           onClick={() => setSelectedColabId(c.id)}
-                           className="border-white/5 hover:bg-white/[0.01] cursor-pointer group"
-                          >
-                            <TableCell className="px-6 py-4">
-                               <div className="flex items-center gap-3">
-                                  <Avatar className="w-8 h-8 border border-white/10">
-                                     <AvatarImage src={`https://i.pravatar.cc/100?u=${c.avatar}`} />
-                                     <AvatarFallback className="text-[10px] font-black italic">{c.name.charAt(0)}</AvatarFallback>
-                                  </Avatar>
-                                  <span className="text-[11px] font-black text-white italic uppercase tracking-tight">{c.name}</span>
-                               </div>
-                            </TableCell>
-                            <TableCell className="text-[10px] font-bold text-zinc-500 uppercase">{c.role}</TableCell>
-                            <TableCell className="text-[10px] font-bold text-zinc-500 uppercase">{c.dept}</TableCell>
-                            <TableCell className="text-[10px] font-mono text-zinc-500">{c.admission}</TableCell>
-                            <TableCell>
-                               <div className="flex gap-2">
-                                  <div className={cn("w-1.5 h-1.5 rounded-full", c.nrs.nr35 === 'success' ? 'bg-emerald-500' : 'bg-rose-500 animate-pulse')} />
-                                  <div className={cn("w-1.5 h-1.5 rounded-full", c.nrs.aso === 'success' ? 'bg-emerald-500' : 'bg-amber-500')} />
-                               </div>
-                            </TableCell>
-                            <TableCell className="text-right px-6">
-                               <Button size="icon" variant="ghost" className="h-8 w-8 text-zinc-600 hover:text-white">
-                                  <MoreVertical size={14} />
-                               </Button>
-                            </TableCell>
-                         </TableRow>
-                       ))}
-                    </TableBody>
-                 </Table>
-              </Card>
+              <BaseTable 
+                data={COLLABORATORS}
+                columns={COLAB_COLUMNS}
+                searchPlaceholder="Pesquisar colaborador no motor KORTECK..."
+                onRowClick={(row) => setSelectedColabId(row.id)}
+              />
            </TabsContent>
 
            <TabsContent value="matrix" className="mt-0 outline-none">

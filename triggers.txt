@@ -1,0 +1,82 @@
+src/components/Users.tsx:  DropdownMenuTrigger 
+src/components/Clients.tsx:import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+src/components/Clients.tsx:          <TabsTrigger value="cli-list" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white text-[10px] font-black uppercase tracking-widest px-8 py-3 italic">
+src/components/Clients.tsx:          </TabsTrigger>
+src/components/Clients.tsx:          <TabsTrigger value="cli-seg" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white text-[10px] font-black uppercase tracking-widest px-8 py-3 italic">
+src/components/Clients.tsx:          </TabsTrigger>
+src/components/Clients.tsx:          <TabsTrigger value="cli-rfm" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white text-[10px] font-black uppercase tracking-widest px-8 py-3 italic">
+src/components/Clients.tsx:          </TabsTrigger>
+src/components/Clients.tsx:          <TabsTrigger value="cli-camp" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white text-[10px] font-black uppercase tracking-widest px-8 py-3 italic">
+src/components/Clients.tsx:          </TabsTrigger>
+src/components/Projects.tsx:import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+src/components/Projects.tsx:                    <TabsTrigger value="geral" className="text-[10px] font-black uppercase tracking-widest px-6 data-[state=active]:bg-white data-[state=active]:text-black">Geral</TabsTrigger>
+src/components/Projects.tsx:                    <TabsTrigger value="produtos" className="text-[10px] font-black uppercase tracking-widest px-6 data-[state=active]:bg-white data-[state=active]:text-black">Produtos ({project.products.length})</TabsTrigger>
+src/components/Projects.tsx:                    <TabsTrigger value="arquivos" className="text-[10px] font-black uppercase tracking-widest px-6 data-[state=active]:bg-white data-[state=active]:text-black">Arquivos</TabsTrigger>
+src/components/Projects.tsx:                    <TabsTrigger value="historico" className="text-[10px] font-black uppercase tracking-widest px-6 data-[state=active]:bg-white data-[state=active]:text-black">Histórico</TabsTrigger>
+src/components/Commercial.tsx:import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+src/components/Commercial.tsx:          <TabsTrigger value="pipeline" className="data-[state=active]:border-white border-b-2 border-transparent h-full rounded-none bg-transparent text-zinc-500 data-[state=active]:text-white font-bold text-[10px] tracking-widest transition-all whitespace-nowrap">PIPELINE</TabsTrigger>
+src/components/Commercial.tsx:          <TabsTrigger value="vendedores" className="data-[state=active]:border-white border-b-2 border-transparent h-full rounded-none bg-transparent text-zinc-500 data-[state=active]:text-white font-bold text-[10px] tracking-widest transition-all whitespace-nowrap">PERFORMANCE</TabsTrigger>
+src/components/Commercial.tsx:          <TabsTrigger value="clientes" className="data-[state=active]:border-white border-b-2 border-transparent h-full rounded-none bg-transparent text-zinc-500 data-[state=active]:text-white font-bold text-[10px] tracking-widest transition-all whitespace-nowrap">LISTA DE CLIENTES</TabsTrigger>
+src/components/CRMFollow.tsx:import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+src/components/CRMFollow.tsx:import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from '@/components/ui/dialog';
+src/components/CRMFollow.tsx:      <DialogTrigger
+src/components/CRMFollow.tsx:      </DialogTrigger>
+src/components/HR.tsx:import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+src/components/HR.tsx:import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+src/components/HR.tsx:import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogDescription } from '@/components/ui/dialog';
+src/components/HR.tsx:             <DialogTrigger className={cn(
+src/components/HR.tsx:             </DialogTrigger>
+src/components/HR.tsx:                      <TabsTrigger value="pessoal" className="flex-1 text-[9px] font-black uppercase tracking-widest">1. Dados Base</TabsTrigger>
+src/components/HR.tsx:                      <TabsTrigger value="cert" className="flex-1 text-[9px] font-black uppercase tracking-widest">2. Certificações</TabsTrigger>
+src/components/HR.tsx:                      <TabsTrigger value="epi" className="flex-1 text-[9px] font-black uppercase tracking-widest">3. Logística EPI</TabsTrigger>
+src/components/HR.tsx:                               <SelectTrigger className="bg-black border-white/5 text-xs">
+src/components/HR.tsx:                               </SelectTrigger>
+src/components/HR.tsx:             <TabsTrigger 
+src/components/HR.tsx:             </TabsTrigger>
+src/components/HR.tsx:                       <TabsTrigger value="grid" className="text-[10px] font-black uppercase px-6 h-10 data-[state=active]:bg-white/10 data-[state=active]:text-white">
+src/components/HR.tsx:                       </TabsTrigger>
+src/components/HR.tsx:                       <TabsTrigger value="list" className="text-[10px] font-black uppercase px-6 h-10 data-[state=active]:bg-white/10 data-[state=active]:text-white">
+src/components/HR.tsx:                       </TabsTrigger>
+src/components/HR.tsx:                       <TabsTrigger value="matrix" className="text-[10px] font-black uppercase px-6 h-10 data-[state=active]:bg-white/10 data-[state=active]:text-white">
+src/components/HR.tsx:                       </TabsTrigger>
+src/components/HR.tsx:                               <SelectTrigger className="bg-black border-white/5 h-10 text-[10px] uppercase font-bold">
+src/components/HR.tsx:                               </SelectTrigger>
+src/components/GlobalSettings.tsx:import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+src/components/GlobalSettings.tsx:import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+src/components/GlobalSettings.tsx:          <TabsTrigger value="company" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white text-[10px] font-black uppercase tracking-widest px-6 py-2.5 italic">
+src/components/GlobalSettings.tsx:          </TabsTrigger>
+src/components/GlobalSettings.tsx:          <TabsTrigger value="localization" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white text-[10px] font-black uppercase tracking-widest px-6 py-2.5 italic">
+src/components/GlobalSettings.tsx:          </TabsTrigger>
+src/components/GlobalSettings.tsx:          <TabsTrigger value="modules" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white text-[10px] font-black uppercase tracking-widest px-6 py-2.5 italic">
+src/components/GlobalSettings.tsx:          </TabsTrigger>
+src/components/GlobalSettings.tsx:          <TabsTrigger value="infrastructure" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white text-[10px] font-black uppercase tracking-widest px-6 py-2.5 italic">
+src/components/GlobalSettings.tsx:          </TabsTrigger>
+src/components/GlobalSettings.tsx:                        <SelectTrigger className="bg-[#050505] border-white/5 text-white text-xs font-bold h-10">
+src/components/GlobalSettings.tsx:                        </SelectTrigger>
+src/components/GlobalSettings.tsx:                        <SelectTrigger className="bg-[#050505] border-white/5 text-white text-xs font-bold h-10">
+src/components/GlobalSettings.tsx:                        </SelectTrigger>
+src/components/GlobalSettings.tsx:                        <SelectTrigger className="bg-[#050505] border-white/5 text-white text-xs font-bold h-10">
+src/components/GlobalSettings.tsx:                        </SelectTrigger>
+src/components/GlobalSettings.tsx:                        <SelectTrigger className="bg-[#050505] border-white/5 text-white text-xs font-bold h-10">
+src/components/GlobalSettings.tsx:                        </SelectTrigger>
+src/components/Sidebar.tsx:  TooltipTrigger,
+src/components/Sidebar.tsx:                  <TooltipTrigger
+src/components/Sidebar.tsx:                  </TooltipTrigger>
+src/components/Sidebar.tsx:              <TooltipTrigger className="w-10 h-10 rounded-xl flex items-center justify-center text-zinc-500 hover:text-white hover:bg-white/5 transition-all">
+src/components/Sidebar.tsx:              </TooltipTrigger>
+src/components/Sidebar.tsx:              <TooltipTrigger className="w-10 h-10 rounded-xl flex items-center justify-center text-zinc-500 hover:text-white hover:bg-white/5 transition-all">
+src/components/Sidebar.tsx:              </TooltipTrigger>
+src/components/Sidebar.tsx:              <TooltipTrigger className="w-10 h-10 rounded-xl flex items-center justify-center text-zinc-500 hover:text-white hover:bg-white/5 transition-all">
+src/components/Sidebar.tsx:              </TooltipTrigger>
+src/components/Permissions.tsx:import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+src/components/Stock.tsx:import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+src/components/Stock.tsx:          <TabsTrigger value="inventory" className="data-[state=active]:bg-white data-[state=active]:text-black text-zinc-400 text-xs font-bold px-8 h-8 tracking-widest uppercase">Matéria-Prima</TabsTrigger>
+src/components/Stock.tsx:          <TabsTrigger value="scraps" className="data-[state=active]:bg-white data-[state=active]:text-black text-zinc-400 text-xs font-bold px-8 h-8 tracking-widest uppercase items-center gap-2">
+src/components/Stock.tsx:          </TabsTrigger>
+src/components/Production.tsx:import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+src/components/Production.tsx:            <TabsTrigger value="chao" className="flex-1 data-[state=active]:bg-white data-[state=active]:text-black text-zinc-400 text-[10px] font-bold px-4 py-2 uppercase">CHÃO DE FÁBRICA</TabsTrigger>
+src/components/Production.tsx:            <TabsTrigger value="pcp" className="flex-1 data-[state=active]:bg-white data-[state=active]:text-black text-zinc-400 text-[10px] font-bold px-4 py-2 uppercase">PCP & ORDENS</TabsTrigger>
+src/components/Production.tsx:            <TabsTrigger value="maquinas" className="flex-1 data-[state=active]:bg-white data-[state=active]:text-black text-zinc-400 text-[10px] font-bold px-4 py-2 uppercase">MÁQUINAS</TabsTrigger>
+src/components/common/BaseTable.tsx:  DropdownMenuTrigger,
+src/components/common/BaseTable.tsx:                             <DropdownMenuTrigger className="w-8 h-8 rounded-lg flex items-center justify-center text-zinc-500 hover:text-white hover:bg-white/10 transition-all">
+src/components/common/BaseTable.tsx:                             </DropdownMenuTrigger>

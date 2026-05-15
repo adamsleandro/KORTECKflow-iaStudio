@@ -51,6 +51,8 @@ import { GoogleGenAI } from "@google/genai";
 import { format, differenceInDays } from 'date-fns';
 
 import { useStore } from '../lib/store';
+import { KanbanBoard } from './common/KanbanBoard';
+import { KanbanColumn, KanbanItem } from '@/src/types/common';
 
 // Types
 export type Temperature = 'Quente' | 'Morno' | 'Frio';
@@ -163,7 +165,7 @@ const SALESPERSON_PERFORMANCE = [
   { name: 'Marcos Oliveira', conversion: 45, avgTime: '6.1 dias', revenue: 'R$ 54k' },
 ];
 
-function LeadCard({ lead }: { lead: Lead }) {
+function LeadCard({ lead }: { lead: Lead, key?: string | number }) {
   const updateItem = useStore(state => state.updateItem);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [objections, setObjections] = useState<string[]>(lead.objections || []);
@@ -184,8 +186,11 @@ function LeadCard({ lead }: { lead: Lead }) {
       Contexto: ${lead.client}, Valor: R$ ${lead.value}.
       O tom deve ser profissional, empático e focado em valor. Responda em Português formatado com emojis.`;
       
-      const response = await ai.getGenerativeModel({ model: "gemini-1.5-flash" }).generateContent(prompt);
-      const text = response.response.text();
+      const response = await ai.models.generateContent({
+        model: "gemini-3-flash-preview",
+        contents: prompt
+      });
+      const text = response.text || '';
       setAiScript(text);
       await updateItem('leads', lead.id, { salesScript: text });
     } catch (error) {
@@ -228,12 +233,15 @@ function LeadCard({ lead }: { lead: Lead }) {
 
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-      <DialogTrigger asChild>
-        <motion.div
-          whileHover={{ y: -4, scale: 1.01 }}
-          className="bg-[#0c0c10] border border-white/5 rounded-2xl p-5 shadow-xl cursor-pointer group hover:border-white/20 transition-all relative overflow-hidden"
-        >
-          {/* Structural background patterns */}
+      <DialogTrigger
+        render={
+          <motion.div
+            whileHover={{ y: -4, scale: 1.01 }}
+            className="bg-[#0c0c10] border border-white/5 rounded-2xl p-5 shadow-xl cursor-pointer group hover:border-white/20 transition-all relative overflow-hidden"
+          />
+        }
+      >
+        {/* Structural background patterns */}
           <div className="absolute bottom-0 right-0 w-16 h-16 bg-white/[0.01] rounded-tl-3xl pointer-events-none" />
           
           {/* Progress bar at the top */}
@@ -300,18 +308,17 @@ function LeadCard({ lead }: { lead: Lead }) {
                 {daysInColumn} dias nesta fase
              </div>
              <div className="flex gap-1">
-                <button className="w-6 h-6 rounded-lg bg-white/5 flex items-center justify-center text-zinc-500 hover:text-white hover:bg-blue-600 transition-all">
+                <div className="w-6 h-6 rounded-lg bg-white/5 flex items-center justify-center text-zinc-500 hover:text-white hover:bg-blue-600 transition-all">
                    <Phone size={10} />
-                </button>
-                <button className="w-6 h-6 rounded-lg bg-white/5 flex items-center justify-center text-zinc-500 hover:text-white hover:bg-blue-600 transition-all">
+                </div>
+                <div className="w-6 h-6 rounded-lg bg-white/5 flex items-center justify-center text-zinc-500 hover:text-white hover:bg-blue-600 transition-all">
                    <MessageSquare size={10} />
-                </button>
-                <button className="w-6 h-6 rounded-lg bg-white/5 flex items-center justify-center text-zinc-500 hover:text-white hover:bg-blue-600 transition-all">
+                </div>
+                <div className="w-6 h-6 rounded-lg bg-white/5 flex items-center justify-center text-zinc-500 hover:text-white hover:bg-blue-600 transition-all">
                    <Zap size={10} />
-                </button>
+                </div>
              </div>
           </div>
-        </motion.div>
       </DialogTrigger>
 
       <DialogContent className="max-w-4xl bg-[#0c0c10] border-white/5 text-white max-h-[90vh] overflow-y-auto">
@@ -583,8 +590,11 @@ export function CRMFollow() {
     setIsAiLoading(true);
     try {
       const prompt = `Analise a performance de vendas da Korteck Comunicação Visual. Vendedores: ${JSON.stringify(SALESPERSON_PERFORMANCE)}. Leads Atuais: ${JSON.stringify(leads)}. Gere um sumário executivo curto de 3 frases com previsibilidade de fechamento e alertas de gargalo. Responda em Português com tom futurista e minimalista.`;
-      const response = await ai.getGenerativeModel({ model: "gemini-1.5-flash" }).generateContent(prompt);
-      setAiAnalysis(response.response.text());
+      const response = await ai.models.generateContent({
+        model: "gemini-3-flash-preview",
+        contents: prompt
+      });
+      setAiAnalysis(response.text || '');
     } catch (err) {
       setAiAnalysis('Falha na conexão com o Core Inteligente Korteck.');
     } finally {
@@ -709,36 +719,29 @@ export function CRMFollow() {
 
       {/* Main Content Area */}
       {activeView === 'board' ? (
-         <div className="flex gap-6 overflow-x-auto pb-8 snap-x">
-            {COLUMNS.map((col) => {
-               const colLeads = leads.filter(l => l.status === col.id);
-               return (
-                  <div key={col.id} className="min-w-[320px] max-w-[320px] flex-shrink-0 snap-center">
-                     <div className="flex items-center justify-between mb-4 px-2">
-                        <div className="flex items-center gap-3">
-                           <div className={cn("w-2 h-2 rounded-full shadow-[0_0_10px_rgba(255,255,255,0.2)]", col.color)} />
-                           <h3 className="text-xs font-black text-white uppercase italic tracking-[0.15em]">{col.title}</h3>
-                        </div>
-                        <Badge className="bg-white/5 text-zinc-500 border-0 text-[10px] font-black uppercase h-5">{colLeads.length}</Badge>
-                     </div>
-
-                     <div className="space-y-4">
-                        {colLeads.map((lead) => (
-                           <LeadCard key={lead.id} lead={lead} />
-                        ))}
-
-                        <button 
-                          onClick={handleAddLead}
-                          className="w-full py-4 border-2 border-dashed border-white/5 rounded-2xl flex flex-col items-center justify-center gap-2 hover:border-blue-600/30 transition-all group"
-                        >
-                           <Plus size={20} className="text-zinc-800 group-hover:text-blue-500 transition-colors" />
-                           <span className="text-[9px] font-black text-zinc-800 uppercase tracking-widest group-hover:text-zinc-500">Adicionar Lead</span>
-                        </button>
-                     </div>
-                  </div>
-               );
-            })}
-         </div>
+        <div className="h-[calc(100vh-400px)]">
+          <KanbanBoard 
+            columns={COLUMNS.map(c => ({ id: c.id, title: c.title, color: c.color.replace('bg-', 'text-') }))}
+            items={leads.map(lead => ({
+              id: lead.id,
+              title: lead.client,
+              subtitle: lead.salesperson,
+              status: lead.status,
+              value: `R$ ${lead.value.toLocaleString('pt-BR')}`,
+              date: lead.entryDate,
+              tags: lead.temperature === 'Quente' ? [{ label: 'QUENTE', color: 'bg-rose-500/20 text-rose-500' }] : [],
+              assignee: { name: lead.salesperson, avatar: `https://i.pravatar.cc/100?u=${lead.salesperson}` }
+            }))}
+            onItemMove={(itemId, newStatus) => {
+              useStore.getState().updateItem('leads', itemId, { status: newStatus });
+            }}
+            renderCard={(item) => {
+              const fullLead = leads.find(l => l.id === item.id);
+              if (!fullLead) return null;
+              return <LeadCard lead={fullLead} />;
+            }}
+          />
+        </div>
       ) : (
          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2 space-y-6">

@@ -99,55 +99,66 @@ export function Sidebar({
         isMobileOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
       )}>
         {/* LEVEL 1: Main Icons Bar */}
-        <div className="w-16 bg-card border-r border-border flex flex-col items-center py-6 gap-6 shadow-2xl relative z-30 pointer-events-auto">
-        <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center mb-4 cursor-pointer hover:scale-105 transition-all shadow-[0_0_15px_rgba(37,99,235,0.2)]" onClick={() => onChangeView?.('dashboard')}>
-          <span className="text-white font-black text-xl italic tracking-tighter">K</span>
+        <div className="w-18 bg-[#08080a] border-r border-white/5 flex flex-col items-center py-8 gap-8 shadow-[10px_0_40px_rgba(0,0,0,0.5)] relative z-30 pointer-events-auto">
+        <div className="group relative">
+           <div className="w-12 h-12 bg-blue-600 rounded-2xl flex items-center justify-center mb-6 cursor-pointer hover:rotate-90 transition-all duration-500 shadow-[0_0_25px_rgba(37,99,235,0.4)] relative z-10" onClick={() => onChangeView?.('dashboard')}>
+             <span className="text-white font-black text-2xl italic tracking-tighter">M</span>
+           </div>
+           <div className="absolute inset-0 bg-blue-600/20 blur-xl rounded-full scale-150 opacity-0 group-hover:opacity-100 transition-opacity" />
         </div>
 
         <TooltipProvider delay={0}>
-          <div className="flex flex-col gap-4 flex-1">
+          <div className="flex flex-col gap-6 flex-1">
             {NAVIGATION_STRUCTURE.map((module) => (
               <div key={module.id}>
                 <Tooltip>
                   <TooltipTrigger
                     onClick={() => handleModuleClick(module)}
                     className={cn(
-                      "w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300 relative group",
+                      "w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-300 relative group",
                       activeModule?.id === module.id 
-                        ? "bg-blue-600/10 text-blue-500 border border-blue-500/20 shadow-[0_0_15px_rgba(59,130,246,0.1)]" 
-                        : "text-zinc-500 hover:text-white hover:bg-white/5"
+                        ? "bg-blue-600 text-white shadow-[0_0_20px_rgba(59,130,246,0.3)]" 
+                        : "text-zinc-600 hover:text-white hover:bg-white/5"
                     )}
                   >
-                    {module.icon}
+                    {module.icon && React.cloneElement(module.icon as React.ReactElement, { size: 22 })}
                     {activeModule?.id === module.id && (
                       <motion.div 
                         layoutId="active-nav"
-                        className="absolute -right-[1px] w-1 h-6 bg-blue-500 rounded-l-full shadow-[0_0_8px_rgba(59,130,246,0.5)]"
+                        className="absolute -right-[1px] w-1.5 h-8 bg-blue-400 rounded-l-full shadow-[0_0_15px_rgba(59,130,246,0.8)]"
                       />
                     )}
+                    <div className="absolute left-full ml-4 px-3 py-1.5 bg-blue-600 text-white text-[10px] font-black uppercase tracking-widest rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none translate-x-2 group-hover:translate-x-0 transition-all z-[100] whitespace-nowrap shadow-2xl hidden md:block">
+                       {module.label}
+                    </div>
                   </TooltipTrigger>
-                  <TooltipContent side="right" className="bg-black text-white border-zinc-800 ml-2">
-                    <p className="font-medium">{module.label}</p>
-                  </TooltipContent>
                 </Tooltip>
               </div>
             ))}
           </div>
         </TooltipProvider>
 
-        <div className="flex flex-col gap-4">
-          <button className="w-10 h-10 rounded-xl flex items-center justify-center text-zinc-500 hover:text-white hover:bg-white/5 transition-all">
-            <Search size={20} />
-          </button>
-          <button className="w-10 h-10 rounded-xl flex items-center justify-center text-zinc-500 hover:text-white hover:bg-white/5 transition-all">
-            <Star size={20} />
-          </button>
-          <button className="w-10 h-10 rounded-xl flex items-center justify-center text-zinc-500 hover:text-white hover:bg-white/5 transition-all">
-            <Clock size={20} />
-          </button>
-          <Separator className="bg-white/10 w-8 mx-auto" />
-          <button className="w-10 h-10 rounded-full border border-white/10 overflow-hidden bg-zinc-800">
-            <img src="https://i.pravatar.cc/100?u=korteck" alt="User" referrerPolicy="no-referrer" />
+        <div className="flex flex-col gap-6 mt-auto items-center">
+          <TooltipProvider delay={0}>
+            <Tooltip>
+              <TooltipTrigger className="w-10 h-10 rounded-xl flex items-center justify-center text-zinc-700 hover:text-white hover:bg-white/5 transition-all">
+                <Search size={22} />
+              </TooltipTrigger>
+              <TooltipContent side="right" className="bg-black text-white border-zinc-800">Localizar OS, CRM ou Log</TooltipContent>
+            </Tooltip>
+
+            <Tooltip>
+              <TooltipTrigger className="w-10 h-10 rounded-xl flex items-center justify-center text-zinc-700 hover:text-white hover:bg-white/5 transition-all">
+                <Star size={22} className="text-amber-500/20 hover:text-amber-500 transition-colors" />
+              </TooltipTrigger>
+              <TooltipContent side="right" className="bg-black text-white border-zinc-800">Módulos Favoritos</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+
+          <Separator className="bg-white/5 w-8 mx-auto" />
+          <button className="w-12 h-12 rounded-2xl border-2 border-white/5 overflow-hidden bg-zinc-900 hover:scale-105 transition-all hover:border-blue-500/50 relative group">
+             <div className="absolute inset-0 bg-blue-600/10 group-hover:bg-transparent transition-colors" />
+            <img src="https://i.pravatar.cc/100?u=korteck" alt="User" referrerPolicy="no-referrer" className="w-full h-full object-cover" />
           </button>
         </div>
       </div>
@@ -156,67 +167,68 @@ export function Sidebar({
       <AnimatePresence>
         {activeModule && (
           <motion.div
-            initial={{ x: -280 }}
-            animate={{ x: 0 }}
-            exit={{ x: -280 }}
+            initial={{ x: -280, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: -280, opacity: 0 }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="w-[280px] bg-card border-r border-border shadow-2xl relative z-20 flex flex-col pointer-events-auto"
+            className="w-[320px] bg-[#0c0c10]/95 backdrop-blur-3xl border-r border-white/5 shadow-[20px_0_60px_rgba(0,0,0,0.6)] relative z-20 flex flex-col pointer-events-auto"
           >
-            <div className="p-6">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-[10px] font-bold tracking-[0.2em] text-muted-foreground">{activeModule.label}</span>
-                <button onClick={() => setActiveModule(null)} className="text-muted-foreground hover:text-foreground transition-colors">
+            <div className="p-10">
+              <div className="flex items-center justify-between mb-4">
+                <span className="text-[10px] font-black tracking-[0.5em] text-zinc-600 uppercase italic">SECTOR / {activeModule.id}</span>
+                <button onClick={() => setActiveModule(null)} className="text-zinc-600 hover:text-white transition-colors bg-white/5 p-2 rounded-xl">
                   <X size={14} />
                 </button>
               </div>
-              <h2 className="text-xl font-medium text-foreground mb-1">{activeModule.description}</h2>
+              <h2 className="text-3xl font-black text-white uppercase italic tracking-tighter leading-none mb-1">{activeModule.label}</h2>
+              <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">{activeModule.description}</p>
             </div>
             
-            <ScrollArea className="flex-1 px-3">
-              <div className="flex flex-col gap-1 pb-6">
+            <ScrollArea className="flex-1 px-4">
+              <div className="flex flex-col gap-2 pb-10">
                 {activeModule.submenus.map((item) => (
                   <button
                     key={item.id}
                     onClick={() => handleSubmenuClick(item)}
                     className={cn(
-                      "w-full flex items-center justify-between px-3 py-2.5 rounded-lg transition-all duration-200 group text-left",
+                      "w-full flex items-center justify-between px-6 py-4 rounded-2xl transition-all duration-300 group text-left border border-transparent",
                       activeSubmenu?.id === item.id 
-                        ? "bg-white/10 text-white" 
-                        : "text-zinc-400 hover:text-white hover:bg-white/5"
+                        ? "bg-blue-600/10 text-white border-blue-500/20 shadow-[inset_0_0_20px_rgba(59,130,246,0.05)]" 
+                        : "text-zinc-500 hover:text-white hover:bg-white/[0.03] hover:border-white/5"
                     )}
                   >
-                    <div className="flex items-center gap-3">
-                      <span className={cn(
-                        "transition-colors duration-200",
-                        activeSubmenu?.id === item.id ? "text-white" : "text-zinc-500 group-hover:text-white"
+                    <div className="flex items-center gap-4">
+                      <div className={cn(
+                        "w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300",
+                        activeSubmenu?.id === item.id ? "bg-blue-600 text-white shadow-lg" : "bg-white/5 group-hover:bg-white/10"
                       )}>
-                        {item.icon}
-                      </span>
-                      <span className="text-sm font-medium tracking-tight">{item.label}</span>
+                        {item.icon && React.cloneElement(item.icon as React.ReactElement, { size: 18 })}
+                      </div>
+                      <span className="text-xs font-black uppercase italic tracking-widest">{item.label}</span>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-3">
                       {item.badge && (
-                        <Badge variant="outline" className={cn(
-                          "px-1.5 py-0 text-[10px] h-4 bg-transparent border-white/10 text-zinc-400",
-                          item.statusColor && `border-0 text-white ${item.statusColor}`
+                        <Badge className={cn(
+                          "px-2 py-0.5 text-[9px] font-black uppercase h-5 bg-transparent border border-white/5 text-zinc-600",
+                          activeSubmenu?.id === item.id && "border-blue-500/30 text-blue-400"
                         )}>
                           {item.badge}
                         </Badge>
                       )}
-                      {item.children && <ChevronRight size={14} className={cn("transition-transform duration-200 opacity-40", activeSubmenu?.id === item.id && "rotate-90 opacity-100")} />}
+                      {item.children && <ChevronRight size={16} className={cn("transition-transform duration-300 opacity-20", activeSubmenu?.id === item.id && "rotate-90 opacity-100")} />}
                     </div>
                   </button>
                 ))}
               </div>
             </ScrollArea>
 
-            <div className="p-4 bg-[#141419]/50 border-t border-white/5">
-              <div className="flex items-center gap-2 text-zinc-500 text-[10px] font-black tracking-widest px-2 mb-2 uppercase">
-                <Workflow size={12} className="text-blue-500 animate-pulse" /> IA Intelligence
+            <div className="p-8 bg-black/50 border-t border-white/5">
+              <div className="flex items-center gap-3 text-blue-500 text-[10px] font-black tracking-[0.3em] px-2 mb-4 uppercase">
+                <Workflow size={16} className="animate-pulse" /> Intelligence Cloud
               </div>
-              <div className="bg-white/[0.02] border border-white/5 rounded-xl p-3">
-                <p className="text-[11px] text-zinc-500 leading-relaxed italic">
-                  "O setor de <span className="text-blue-400 font-bold">Corte CNC</span> está com capacidade ociosa. Recomendar antecipação da OS #4251."
+              <div className="bg-white/[0.02] border border-white/5 rounded-2xl p-5 shadow-inner">
+                <p className="text-[11px] text-zinc-500 leading-relaxed font-bold italic uppercase tracking-tighter">
+                  "O setor de <span className="text-blue-400">Corte CNC</span> apresenta ociosidade de 40%. Antecipar <span className="text-white">OS#4251</span> é recomendado."
                 </p>
               </div>
             </div>
@@ -228,21 +240,21 @@ export function Sidebar({
       <AnimatePresence>
         {activeSubmenu && activeSubmenu.children && (
           <motion.div
-            initial={{ x: -280 }}
-            animate={{ x: 0 }}
-            exit={{ x: -280 }}
+            initial={{ x: -280, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: -280, opacity: 0 }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="w-[280px] bg-popover border-r border-border shadow-2xl relative z-10 flex flex-col pointer-events-auto"
+            className="w-[300px] bg-[#0c0c10]/98 backdrop-blur-3xl border-r border-white/5 shadow-[30px_0_80px_rgba(0,0,0,0.7)] relative z-10 flex flex-col pointer-events-auto"
           >
-            <div className="p-6 flex items-center justify-between border-b border-white/5 h-[100px]">
+            <div className="p-10 flex items-center justify-between border-b border-white/5 h-[140px]">
               <div>
-                <span className="text-xs font-bold tracking-widest text-muted-foreground">{activeSubmenu.label}</span>
-                <h3 className="text-sm font-medium text-foreground opacity-60">Submódulos</h3>
+                <span className="text-[10px] font-black tracking-[0.5em] text-zinc-600 uppercase mb-2 block">{activeSubmenu.label}</span>
+                <h3 className="text-xl font-black text-white uppercase italic tracking-tighter">Sub-Categorias</h3>
               </div>
             </div>
 
-            <ScrollArea className="flex-1 p-3">
-              <div className="flex flex-col gap-1">
+            <ScrollArea className="flex-1 p-4">
+              <div className="flex flex-col gap-2 pb-10">
                 {activeSubmenu.children.map((child) => (
                   <button
                     key={child.id}
@@ -251,11 +263,11 @@ export function Sidebar({
                       setActiveModule(null);
                       setActiveSubmenu(null);
                     }}
-                    className="w-full flex items-center justify-between px-4 py-3 rounded-lg text-zinc-400 hover:text-white hover:bg-white/5 transition-all text-sm font-medium group"
+                    className="w-full flex items-center justify-between px-6 py-4 rounded-2xl text-zinc-500 hover:text-white hover:bg-white/[0.03] border border-transparent hover:border-white/5 transition-all text-[11px] font-black uppercase tracking-widest italic group"
                   >
                     {child.label}
                     {child.badge && (
-                      <Badge variant="outline" className="px-1.5 py-0 h-4 bg-white/10 border-0 text-white text-[10px]">
+                      <Badge className="px-2 py-0.5 h-4 bg-blue-600/10 border-0 text-blue-500 text-[8px] font-black uppercase italic">
                         {child.badge}
                       </Badge>
                     )}

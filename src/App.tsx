@@ -16,6 +16,7 @@ import { Projects } from '@/src/components/Projects';
 import { EducaCV } from '@/src/components/EducaCV';
 import { Clients } from '@/src/components/Clients';
 import { CRMFollow } from '@/src/components/CRMFollow';
+import { Financeiro } from '@/src/components/Financeiro';
 import { Admin } from '@/src/components/Admin';
 import { UsersManagement } from '@/src/components/Users';
 import { Permissions } from '@/src/components/Permissions';
@@ -23,10 +24,14 @@ import { LevelsManagement } from '@/src/components/Levels';
 import { ThemeSettings } from '@/src/components/ThemeSettings';
 import { GlobalSettings } from '@/src/components/GlobalSettings';
 import { TooltipProvider } from '@/components/ui/tooltip';
+import { GlobalAudit } from '@/src/components/common/GlobalAudit';
+import { useStore } from '@/src/lib/store';
 
 export default function App() {
   const [currentView, setCurrentView] = useState('dashboard');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isAuditOpen, setIsAuditOpen] = useState(false);
+  const auditLogs = useStore((state) => state.auditLogs);
 
   const renderView = () => {
     switch (currentView) {
@@ -37,32 +42,38 @@ export default function App() {
       case 'dash-est':
         return <Dashboard />;
       case 'prod-chao':
+      case 'prod-cnc':
+      case 'prod-imp':
+      case 'qual-exp':
+      case 'qual-retr':
       case 'pcp-main':
       case 'pcp-os':
       case 'producao':
-        return <Production />;
+        return <Production initialTab={currentView} />;
       case 'crm-pipe':
       case 'comercial':
-      case 'op-ped':
-        return <Commercial />;
-      case 'op-proj':
-        return <Projects />;
-      case 'cli-list':
-      case 'cli-seg':
-      case 'cli-rfm':
-      case 'cli-camp':
-      case 'clientes':
-        return <Clients initialTab={currentView} />;
       case 'crm-follow':
-        return <CRMFollow />;
+      case 'com-leads':
+      case 'op-vendas':
+      case 'op-ped':
+        return <Commercial initialTab={currentView} />;
       case 'sup-mp':
+      case 'sup-forn':
+      case 'sup-lista':
       case 'suprimentos':
       case 'scraps':
-        return <Stock />;
+        return <Stock initialTab={currentView} />;
+      case 'financeiro':
+      case 'fin-visao':
+      case 'fin-pagar':
+      case 'fin-receber':
+      case 'fin-fluxo':
+        return <Financeiro initialTab={currentView} />;
       case 'hr-cad':
       case 'hr-colab':
+      case 'hr-org':
       case 'hr':
-        return <HR />;
+        return <HR initialTab={currentView} />;
       case 'op-arte':
         return <Designer />;
       case 'edu-cursos':
@@ -79,6 +90,7 @@ export default function App() {
       case 'permissoes':
         return <Permissions />;
       case 'sys-levels':
+      case 'hr-cargos':
       case 'niveis':
       case 'hierarchy':
         return <LevelsManagement />;
@@ -154,6 +166,12 @@ export default function App() {
                 <div className="w-6 h-6 border-4 border-black rotate-45" />
              </button>
           </div>
+
+          <GlobalAudit 
+            logs={auditLogs} 
+            isOpen={isAuditOpen} 
+            onToggle={() => setIsAuditOpen(!isAuditOpen)} 
+          />
         </main>
       </div>
     </TooltipProvider>

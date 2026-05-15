@@ -12,6 +12,8 @@ import {
 } from 'firebase/firestore';
 import { db, OperationType, handleFirestoreError } from './firebase';
 
+import { AuditLog, AuditType } from '../components/common/GlobalAudit';
+
 interface SystemState {
   users: any[];
   clients: any[];
@@ -20,6 +22,7 @@ interface SystemState {
   inventory: any[];
   collaborators: any[];
   production_orders: any[];
+  auditLogs: AuditLog[];
   isLoading: boolean;
   error: string | null;
 
@@ -31,6 +34,9 @@ interface SystemState {
   updateItem: (collectionName: string, id: string, data: any) => Promise<void>;
   removeItem: (collectionName: string, id: string) => Promise<void>;
   
+  // Audit logs
+  addLog: (log: Omit<AuditLog, 'id' | 'timestamp'>) => void;
+
   // Seeding helper
   seedCollection: (collectionName: string, data: any[]) => Promise<void>;
 }
@@ -43,8 +49,20 @@ export const useStore = create<SystemState>((set, get) => ({
   inventory: [],
   collaborators: [],
   production_orders: [],
+  auditLogs: [],
   isLoading: false,
   error: null,
+
+  addLog: (logData) => {
+    const newLog: AuditLog = {
+      ...logData,
+      id: Math.random().toString(36).substring(7),
+      timestamp: new Date(),
+    };
+    set((state) => ({ 
+      auditLogs: [newLog, ...state.auditLogs].slice(0, 100) // Keep last 100
+    }));
+  },
 
   syncCollection: (collectionName) => {
     set({ isLoading: true });
@@ -65,8 +83,23 @@ export const useStore = create<SystemState>((set, get) => ({
     try {
       const docRef = doc(db, collectionName, id);
       await setDoc(docRef, { ...data, createdAt: Timestamp.now() });
+      get().addLog({
+        type: 'SYSTEM',
+        user: 'Adams Leandro', // System fallback or current user
+        action: `Adicionado item em ${collectionName}`,
+        module: collectionName.toUpperCase(),
+        severity: 'low'
+      });
     } catch (error) {
       handleFirestoreError(error, OperationType.CREATE, `${collectionName}/${id}`);
+      get().addLog({
+        type: 'ERROR',
+        user: 'Adams Leandro',
+        action: `Erro ao adicionar em ${collectionName}`,
+        module: collectionName.toUpperCase(),
+        severity: 'high',
+        detail: error instanceof Error ? error.message : 'Unknown error'
+      });
     }
   },
 
@@ -74,8 +107,22 @@ export const useStore = create<SystemState>((set, get) => ({
     try {
       const docRef = doc(db, collectionName, id);
       await updateDoc(docRef, { ...data, updatedAt: Timestamp.now() });
+      get().addLog({
+        type: 'SYSTEM',
+        user: 'Adams Leandro',
+        action: `Atualizado ID ${id} em ${collectionName}`,
+        module: collectionName.toUpperCase(),
+        severity: 'low'
+      });
     } catch (error) {
       handleFirestoreError(error, OperationType.UPDATE, `${collectionName}/${id}`);
+      get().addLog({
+        type: 'ERROR',
+        user: 'Adams Leandro',
+        action: `Erro ao atualizar ID ${id} em ${collectionName}`,
+        module: collectionName.toUpperCase(),
+        severity: 'high'
+      });
     }
   },
 

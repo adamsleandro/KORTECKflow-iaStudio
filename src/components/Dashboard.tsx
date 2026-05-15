@@ -1,12 +1,8 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import { 
-  BarChart, 
-  Bar, 
-  XAxis, 
-  YAxis, 
   CartesianGrid, 
-  Tooltip as ReTooltip, 
+  Tooltip as RechartsTooltip, 
   ResponsiveContainer,
   AreaChart,
   Area,
@@ -14,7 +10,11 @@ import {
   Line,
   Cell,
   PieChart as RePieChart,
-  Pie
+  Pie,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis
 } from 'recharts';
 import { 
   TrendingUp, 
@@ -24,14 +24,18 @@ import {
   ArrowUpRight, 
   ArrowDownRight, 
   MoreHorizontal,
-  Zap,
+  Target,
+  FileText,
   Clock,
   AlertCircle,
   Layout,
   Cpu,
   Activity,
   TrendingDown,
-  CheckCircle2
+  CheckCircle2,
+  PieChart,
+  AlertTriangle,
+  Zap
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -64,303 +68,255 @@ const dataOSStatus = [
   { name: 'Atrasado', value: 15, color: '#ef4444' },
 ];
 
+import { useStore } from '@/src/lib/store';
+import { format } from 'date-fns';
+
 export function Dashboard() {
+  const { auditLogs, leads, projects, inventory } = useStore();
+  
+  // Realtime KPI calculations
+  const totalLeads = leads.length || 154;
+  const activeProjects = projects.length || 42;
+  const lowStock = inventory.filter(i => i.status !== 'ok').length || 8;
+  const recentAlerts = auditLogs.filter(l => l.severity === 'high' || l.severity === 'critical').slice(0, 3);
+
   return (
-    <div className="p-4 md:p-8 space-y-6 md:space-y-8 animate-in fade-in slide-in-from-top-4 duration-700 max-w-[1600px] mx-auto">
-      {/* Header */}
-      <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-6">
-        <div>
-          <div className="flex items-center gap-2 text-[10px] font-black tracking-[0.3em] text-zinc-500 mb-2 uppercase">
-            <Layout size={14} /> CENTRAL DE INTELIGÊNCIA
+    <div className="p-4 md:p-8 space-y-8 animate-in fade-in duration-750 max-w-[1700px] mx-auto pb-24">
+      {/* Header Mesh Industrial */}
+      <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-8 border-b border-white/5 pb-8">
+        <div className="space-y-3">
+          <div className="flex items-center gap-3">
+             <div className="p-2.5 bg-blue-600/10 rounded-xl border border-blue-500/20">
+                <Cpu size={28} className="text-blue-500 animate-pulse" />
+             </div>
+             <div className="flex flex-col">
+                <span className="text-[10px] font-black tracking-[0.5em] text-zinc-500 uppercase">EXECUTIVE COMMAND CENTER // MESH-CORE</span>
+                <h1 className="text-3xl md:text-5xl font-black text-white uppercase italic tracking-tighter leading-none">
+                  Controle <span className="text-blue-600">de</span> Operações
+                </h1>
+             </div>
           </div>
-          <h1 className="text-3xl md:text-4xl font-black text-white uppercase italic tracking-tighter leading-none">Centro de Comando<span className="text-blue-600">.</span></h1>
         </div>
+        
         <div className="flex flex-wrap items-center gap-3">
-          <div className="hidden sm:flex -space-x-3 mr-4">
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="w-9 h-9 rounded-full border-4 border-[#050505] overflow-hidden bg-zinc-800 ring-1 ring-white/5 shadow-2xl">
-                <img src={`https://i.pravatar.cc/100?u=${i + 10}`} alt="User" referrerPolicy="no-referrer" />
+           <div className="hidden xl:flex items-center gap-10 px-10 border-r border-white/5 mr-3">
+              <div className="text-right">
+                 <p className="text-[9px] font-black text-zinc-600 uppercase tracking-widest mb-1">DATA DE HOJE</p>
+                 <p className="text-xl font-black text-white italic tracking-tighter">11 MAI 2026</p>
               </div>
-            ))}
-          </div>
-          <Button variant="outline" className="flex-1 sm:flex-none bg-white/5 border-white/10 hover:bg-white/10 hover:border-white/20 text-white font-bold h-10 md:h-11 px-4 md:px-6 text-[10px] uppercase tracking-widest transition-all">
-            Exportar Logs
-          </Button>
-          <Button className="flex-1 sm:flex-none bg-blue-600 text-white hover:bg-blue-500 font-bold h-10 md:h-11 px-6 md:px-8 text-[11px] uppercase tracking-[0.1em] shadow-[0_0_25px_rgba(37,99,235,0.25)] transition-all">
-            Nova OS
-          </Button>
+              <div className="text-right">
+                 <p className="text-[9px] font-black text-zinc-600 uppercase tracking-widest mb-1">STATUS DO SISTEMA</p>
+                 <div className="flex items-center gap-2 justify-end">
+                    <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)] animate-pulse" />
+                    <p className="text-xl font-black text-emerald-500 italic">NOMINAL</p>
+                 </div>
+              </div>
+           </div>
+           <Button className="bg-white text-black hover:bg-zinc-200 h-14 px-8 font-black uppercase text-[11px] tracking-widest shadow-xl transition-all">
+              Relatório Geral [B.I.]
+           </Button>
         </div>
       </div>
 
-      {/* KPI Section */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+      {/* Primary KPI Grid - Ultra High Contrast */}
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
         {[
-          { label: 'OEE GLOBAL', value: '84.2%', trend: '+2.4% ↑', icon: <Cpu className="text-blue-500" />, detail: 'Eficiência Sistêmica' },
-          { label: 'MÁQUINAS ATIVAS', value: '07/09', trend: 'Auditado', icon: <Activity className="text-emerald-500" />, detail: 'Status em Tempo Real' },
-          { label: 'PERDA MATERIAL', value: '1.2%', trend: '-0.8% ↓', icon: <TrendingDown className="text-amber-500" />, detail: 'Economia R$ 4.2k' },
-          { label: 'RECEITA MENSAL', value: 'R$ 452k', trend: '+12.5% ↑', icon: <Zap className="text-purple-500" />, detail: 'Projeção Batida' },
+          { label: 'EBITDA ESTIMADO', val: 'R$ 482k', icon: <TrendingUp />, color: 'emerald', detail: 'Margem: 28%' },
+          { label: 'OEE GLOBAL', val: '84.2%', icon: <Activity />, color: 'blue', detail: 'Meta: 85%' },
+          { label: 'FUNIL COMERCIAL', val: 'R$ 4.2M', icon: <Target />, color: 'indigo', detail: 'Ticket: 55k' },
+          { label: 'CUSTO RETRABALHO', val: '1.4%', icon: <AlertCircle />, color: 'rose', detail: 'Limite: 2.0%' },
         ].map((kpi, i) => (
-          <Card key={i} className="bg-[#111116] border-white/5 hover:border-white/10 transition-all group relative overflow-hidden">
-            <CardContent className="p-6">
-              <div className="flex items-start justify-between mb-2">
-                <span className="text-[10px] text-zinc-500 uppercase tracking-[0.2em] font-black">{kpi.label}</span>
-                <span className={cn(
-                  "text-[10px] font-black",
-                  kpi.trend.includes('↑') ? "text-emerald-500" : kpi.trend.includes('↓') ? "text-blue-500" : "text-zinc-500"
-                )}>{kpi.trend}</span>
-              </div>
-              <div className="flex items-end justify-between">
-                <h3 className="text-3xl font-light text-white tracking-tighter leading-none italic">{kpi.value}</h3>
-                <div className="w-10 h-10 rounded-xl bg-white/[0.02] border border-white/5 flex items-center justify-center text-zinc-400 group-hover:scale-110 group-hover:bg-white/[0.05] transition-all">
-                  {kpi.icon}
+          <Card key={i} className="bg-[#0c0c10] border-white/5 hover:border-white/10 transition-all group overflow-hidden">
+             <CardContent className="p-10 relative">
+                <div className={cn("absolute top-0 right-0 p-10 opacity-5 group-hover:opacity-10 transition-opacity", `text-${kpi.color}-500`)}>
+                   {React.cloneElement(kpi.icon as React.ReactElement, { size: 64 })}
                 </div>
-              </div>
-              <div className="mt-4 flex flex-col gap-1.5">
-                 <div className="w-full bg-white/5 h-1 rounded-full">
-                    <div className="bg-blue-600 h-full w-[80%] rounded-full shadow-[0_0_8px_rgba(37,99,235,0.5)]" />
-                 </div>
-                 <span className="text-[9px] font-bold text-zinc-600 uppercase tracking-widest">{kpi.detail}</span>
-              </div>
-            </CardContent>
+                <div className="space-y-4">
+                   <p className="text-[10px] font-black text-zinc-600 uppercase tracking-[0.3em]">{kpi.label}</p>
+                   <div className="flex items-end gap-3">
+                      <h3 className="text-5xl font-black text-white italic tracking-tighter leading-none">{kpi.val}</h3>
+                   </div>
+                   <div className="flex items-center gap-2 pt-4">
+                      <div className={cn("px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-widest", `bg-${kpi.color}-500/10 text-${kpi.color}-500`)}>
+                         {kpi.detail}
+                      </div>
+                   </div>
+                </div>
+             </CardContent>
           </Card>
         ))}
       </div>
 
-      {/* Main Charts */}
-      <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
-        <Card className="xl:col-span-8 bg-[#111116] border-white/5 overflow-hidden">
-          <CardHeader className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/5 bg-white/[0.01]">
-            <div>
-              <CardTitle className="text-sm font-black text-white uppercase tracking-widest italic">Performance Industrial</CardTitle>
-              <CardDescription className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mt-1">Acompanhamento diário (Seg - Sáb)</CardDescription>
-            </div>
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-1.5 pt-1">
-                <div className="w-1.5 h-1.5 rounded-full bg-blue-600 shadow-[0_0_8px_rgba(37,99,235,0.5)]" />
-                <span className="text-[10px] uppercase font-bold text-zinc-500 tracking-widest font-mono text-[9px] sm:text-[10px]">Produção Real</span>
-              </div>
-              <div className="flex items-center gap-1.5 pt-1">
-                <div className="w-1.5 h-1.5 rounded-full bg-zinc-800" />
-                <span className="text-[10px] uppercase font-bold text-zinc-500 tracking-widest font-mono text-[9px] sm:text-[10px]">Meta</span>
-              </div>
-            </div>
-          </CardHeader>
-          <CardContent className="h-[280px] md:h-[340px] w-full pt-8 pl-0 overflow-hidden relative min-h-[280px] md:min-h-[340px]">
-            <ResponsiveContainer width="99%" height="99%">
-              <BarChart data={dataPerformance}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#ffffff05" vertical={false} />
-                <XAxis 
-                  dataKey="name" 
-                  stroke="#3f3f46" 
-                  fontSize={10} 
-                  fontWeight="bold"
-                  tickLine={false} 
-                  axisLine={false} 
-                  tick={{ fill: '#71717a' }}
-                />
-                <YAxis 
-                  stroke="#3f3f46" 
-                  fontSize={10} 
-                  fontWeight="bold"
-                  tickLine={false} 
-                  axisLine={false}
-                  tick={{ fill: '#71717a' }}
-                  tickFormatter={(value) => `${value}`}
-                />
-                <ReTooltip 
-                  cursor={{ fill: 'rgba(255,255,255,0.02)' }}
-                  contentStyle={{ backgroundColor: '#0c0c0c', border: '1px solid #ffffff10', borderRadius: '12px', fontSize: '10px', textTransform: 'uppercase', fontWeight: 'bold' }}
-                />
-                <Bar dataKey="prod" fill="#2563eb" radius={[4, 4, 0, 0]} barSize={32} />
-                <Bar dataKey="meta" fill="#18181b" radius={[4, 4, 0, 0]} barSize={32} />
-              </BarChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
-
-        <div className="xl:col-span-4 space-y-6">
-          <Card className="bg-[#111116] border-white/5">
-            <CardHeader className="border-b border-white/5 bg-white/[0.01]">
-              <CardTitle className="text-sm font-black text-white uppercase tracking-widest italic">Mix de Produção</CardTitle>
-            </CardHeader>
-            <CardContent className="h-[180px] md:h-[200px] flex items-center justify-center pt-4 overflow-hidden relative min-h-[180px] md:min-h-[200px]">
-              <ResponsiveContainer width="99%" height="99%">
-                <RePieChart>
-                  <Pie
-                    data={dataOSStatus}
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={55}
-                    outerRadius={75}
-                    paddingAngle={8}
-                    dataKey="value"
-                  >
-                    {dataOSStatus.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} stroke="none" />
-                    ))}
-                  </Pie>
-                  <ReTooltip 
-                    contentStyle={{ backgroundColor: '#0c0c0c', border: '1px solid #ffffff10', borderRadius: '12px' }}
-                  />
-                </RePieChart>
-              </ResponsiveContainer>
-            </CardContent>
-            <div className="px-6 pb-6 space-y-3">
-              {dataOSStatus.map((status, i) => (
-                <div key={i} className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: status.color }} />
-                    <span className="text-[10px] font-black uppercase text-zinc-500 tracking-widest">{status.name}</span>
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+         {/* Main Chart Dashboard */}
+         <Card className="lg:col-span-8 bg-[#0c0c10] border-white/5 overflow-hidden">
+            <CardHeader className="bg-white/[0.01] border-b border-white/5 py-8 px-10">
+               <div className="flex justify-between items-center">
+                  <div>
+                     <CardTitle className="text-sm font-black text-white uppercase tracking-widest italic">Análise de Receita vs Produção</CardTitle>
+                     <p className="text-[10px] font-bold text-zinc-600 uppercase mt-1">Sincronismo entre faturamento e carga fabril</p>
                   </div>
-                  <span className="text-xs font-black text-white italic">{status.value}%</span>
-                </div>
-              ))}
-            </div>
-          </Card>
-
-          <Card className="bg-gradient-to-br from-blue-900/10 to-purple-900/10 border border-blue-500/20 relative overflow-hidden group">
-            <CardContent className="p-6">
-              <div className="flex items-center gap-2 mb-4">
-                 <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
-                 <span className="text-[10px] font-black text-blue-400 uppercase tracking-[0.2em]">Cortex AI Insight</span>
-              </div>
-              <p className="text-sm text-zinc-400 leading-relaxed font-medium">
-                Gargalo em <span className="text-white italic">Corte Laser</span> impedindo 14% da OS-4250. Recomendamos priorizar a manutenção preditiva do bico #04.
-              </p>
-              <Button className="w-full mt-6 bg-blue-600/10 border border-blue-500/20 text-blue-400 hover:bg-blue-600 hover:text-white transition-all text-[10px] font-black uppercase tracking-widest h-10">
-                 Agendar Manutenção
-              </Button>
+                  <div className="flex gap-4">
+                     <div className="flex items-center gap-2 text-[9px] font-black text-blue-500 uppercase italic">
+                        <div className="w-1.5 h-1.5 rounded-full bg-blue-500" /> FATURAMENTO
+                     </div>
+                     <div className="flex items-center gap-2 text-[9px] font-black text-zinc-700 uppercase italic">
+                        <div className="w-1.5 h-1.5 rounded-full bg-zinc-800" /> CARGA PCP
+                     </div>
+                  </div>
+               </div>
+            </CardHeader>
+            <CardContent className="h-[450px] p-10">
+               <ResponsiveContainer width="99%" height="99%">
+                  <AreaChart data={dataRevenue}>
+                     <defs>
+                        <linearGradient id="dashGrad" x1="0" y1="0" x2="0" y2="1">
+                           <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.2}/>
+                           <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
+                        </linearGradient>
+                     </defs>
+                     <CartesianGrid strokeDasharray="3 3" stroke="#ffffff03" vertical={false} />
+                     <XAxis dataKey="name" stroke="#333" fontSize={10} axisLine={false} tickLine={false} />
+                     <YAxis stroke="#333" fontSize={10} axisLine={false} tickLine={false} tickFormatter={(v) => `R$${v/1000}k`} />
+                     <RechartsTooltip 
+                        contentStyle={{ backgroundColor: '#09090b', border: '1px solid #ffffff10', borderRadius: '16px' }}
+                        itemStyle={{ fontSize: '12px', color: '#fff', fontWeight: '900' }}
+                     />
+                     <Area type="monotone" dataKey="value" stroke="#3b82f6" fillOpacity={1} fill="url(#dashGrad)" strokeWidth={4} />
+                  </AreaChart>
+               </ResponsiveContainer>
             </CardContent>
-          </Card>
-        </div>
+         </Card>
+
+         <div className="lg:col-span-4 space-y-8">
+            <Card className="bg-[#0c0c10] border-white/5 p-10 space-y-8">
+               <div className="flex items-center justify-between">
+                  <div>
+                     <h3 className="text-sm font-black text-white uppercase italic tracking-widest">Mix Operacional</h3>
+                     <p className="text-[10px] font-bold text-zinc-700 uppercase">Distribuição por setor</p>
+                  </div>
+                  <PieChart size={24} className="text-blue-500" />
+               </div>
+               
+               <div className="h-[200px] w-full">
+                  <ResponsiveContainer width="100%" height="100%">
+                     <RePieChart>
+                        <Pie
+                           data={dataOSStatus}
+                           cx="50%"
+                           cy="50%"
+                           innerRadius={60}
+                           outerRadius={80}
+                           paddingAngle={8}
+                           dataKey="value"
+                        >
+                           {dataOSStatus.map((entry, index) => (
+                             <Cell key={`cell-${index}`} fill={entry.color} stroke="none" />
+                           ))}
+                        </Pie>
+                     </RePieChart>
+                  </ResponsiveContainer>
+               </div>
+
+               <div className="space-y-4">
+                  {dataOSStatus.map((s, i) => (
+                    <div key={i} className="flex justify-between items-center border-b border-white/[0.03] pb-3 last:border-0">
+                       <div className="flex items-center gap-3">
+                          <div className="w-2 h-2 rounded-full" style={{ backgroundColor: s.color }} />
+                          <span className="text-[10px] font-black text-zinc-600 uppercase italic tracking-widest">{s.name}</span>
+                       </div>
+                       <span className="text-sm font-black text-white italic">{s.value}%</span>
+                    </div>
+                  ))}
+               </div>
+            </Card>
+
+            <Card className="bg-blue-600 border-0 p-10 relative overflow-hidden group cursor-pointer active:scale-95 transition-all">
+               <div className="absolute top-0 right-0 p-12 opacity-20"><Zap size={80} className="text-white" /></div>
+               <div className="relative z-10 space-y-4">
+                  <h4 className="text-lg font-black text-white uppercase italic tracking-tighter leading-tight">Sugestão KORTECK IA</h4>
+                  <p className="text-[11px] font-black text-blue-100 uppercase tracking-widest leading-loose">
+                     Otimize a escala do turno da noite para o setor CNC 01. Previsão de atraso na OS-4251 de 2.5 horas.
+                  </p>
+                  <Button className="w-full bg-black text-white hover:bg-zinc-900 border-0 text-[10px] font-black h-12 uppercase tracking-widest mt-4">Resolver Agora</Button>
+               </div>
+            </Card>
+         </div>
       </div>
 
-      {/* Production & Alerts */}
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 pb-12">
-        <Card className="bg-[#111116] border-white/5 overflow-hidden">
-          <CardHeader className="flex flex-row items-center justify-between border-b border-white/5 bg-white/[0.01]">
-            <div>
-              <CardTitle className="text-sm font-black text-white uppercase tracking-widest italic">Monitoramento em Tempo Real</CardTitle>
-              <CardDescription className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mt-1">Status do Chão de Fábrica</CardDescription>
-            </div>
-            <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-rose-500/10 border border-rose-500/20">
-               <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse shadow-[0_0_8px_rgba(244,63,94,0.5)]" />
-               <span className="text-[9px] font-black text-rose-500 uppercase tracking-widest">Motor ao Vivo</span>
-            </div>
-          </CardHeader>
-          <CardContent className="p-0">
-            <div className="divide-y divide-white/5">
-              {[
-                { machine: 'Router CNC-01', status: 'Operando', operator: 'Marcos Silva', progress: 75, color: 'blue' },
-                { machine: 'Laser Fiber-03', status: 'Em Espera', operator: 'Ana Julia', progress: 0, color: 'zinc' },
-                { machine: 'Impressora UV-02', status: 'Operando', operator: 'Roberto Dias', progress: 45, color: 'emerald' },
-                { machine: 'Termoformadora', status: 'Configuração', operator: 'Equipe Alpha', progress: 12, color: 'amber' },
-              ].map((item, i) => (
-                <div key={i} className="p-5 hover:bg-white/[0.02] transition-all flex items-center justify-between gap-6 group">
-                  <div className="flex items-center gap-5 flex-1">
-                    <div className="w-12 h-12 rounded-xl bg-black border border-white/5 flex items-center justify-center group-hover:border-blue-500/30 transition-all">
-                      <Zap size={20} className={cn(
-                        "transition-colors",
-                        item.status === 'Operando' ? "text-blue-500" : "text-zinc-600"
-                      )} />
-                    </div>
-                    <div className="space-y-2 flex-1">
-                      <div className="flex items-center justify-between">
-                        <h4 className="text-sm font-black text-white tracking-tight italic uppercase">{item.machine}</h4>
-                        <span className="text-[9px] tracking-[0.2em] text-zinc-500 uppercase font-black">{item.operator}</span>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <div className="flex-1 bg-white/5 h-1 rounded-full overflow-hidden">
-                          <motion.div 
-                            initial={{ width: 0 }}
-                            animate={{ width: `${item.progress}%` }}
-                            transition={{ duration: 1.5, ease: "circOut" }}
-                            className={cn(
-                              "h-full rounded-full",
-                              item.color === 'blue' ? "bg-blue-600 shadow-[0_0_8px_rgba(37,99,235,0.4)]" :
-                              item.color === 'emerald' ? "bg-emerald-600 shadow-[0_0_8px_rgba(16,185,129,0.4)]" :
-                              item.color === 'amber' ? "bg-amber-600 shadow-[0_0_8px_rgba(245,158,11,0.4)]" : "bg-zinc-800"
-                            )}
-                          />
+      {/* Critical Logs Section Dashboard */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+         <Card className="bg-[#0c0c10] border-white/5 overflow-hidden">
+            <CardHeader className="bg-white/[0.01] border-b border-white/5 py-8 px-10">
+               <div className="flex items-center gap-3">
+                  <Clock size={18} className="text-blue-500" />
+                  <CardTitle className="text-sm font-black text-white uppercase tracking-widest italic">Fila de Eventos Críticos</CardTitle>
+               </div>
+            </CardHeader>
+            <CardContent className="p-0">
+               <div className="divide-y divide-white/5">
+                  {recentAlerts.length > 0 ? recentAlerts.map((alert, i) => (
+                     <div key={i} className="p-8 hover:bg-white/[0.01] transition-all flex items-center justify-between group">
+                        <div className="flex items-center gap-6">
+                           <div className={cn(
+                             "w-12 h-12 rounded-2xl flex items-center justify-center border transition-all group-hover:scale-110",
+                             alert.severity === 'critical' ? "bg-rose-500/10 text-rose-500 border-rose-500/20 shadow-[0_0_20px_rgba(244,63,94,0.1)]" : "bg-amber-500/10 text-amber-500 border-amber-500/20"
+                           )}>
+                              <AlertTriangle size={24} />
+                           </div>
+                           <div className="space-y-1">
+                              <h4 className="text-sm font-black text-white uppercase italic tracking-tight">{alert.module}</h4>
+                              <p className="text-[11px] font-bold text-zinc-600 uppercase tracking-widest">{alert.action}</p>
+                           </div>
                         </div>
-                        <span className="text-[10px] font-mono font-bold text-zinc-500 w-8 text-right tracking-tighter">{item.progress}%</span>
-                      </div>
+                        <span className="text-[10px] font-black text-zinc-800 italic underline decoration-blue-500 underline-offset-4">{format(alert.timestamp, 'HH:mm:ss')}</span>
+                     </div>
+                  )) : (
+                    <div className="p-20 text-center opacity-20">
+                       <CheckCircle2 size={40} className="mx-auto mb-4 text-emerald-500" />
+                       <p className="text-[10px] font-black uppercase tracking-[0.3em]">Operação Estabilizada</p>
                     </div>
-                  </div>
-                </div>
-              ))}
+                  )}
+               </div>
+            </CardContent>
+         </Card>
+
+         <Card className="bg-[#0c0c10] border-white/5 p-10 flex flex-col justify-between">
+            <div className="space-y-8">
+               <div className="space-y-1">
+                  <h3 className="text-sm font-black text-white uppercase italic tracking-widest">Utilização de Recursos</h3>
+                  <p className="text-[10px] font-bold text-zinc-700 uppercase">Carga em tempo real vs Disponibilidade</p>
+               </div>
+               
+               <div className="space-y-10">
+                  {[
+                    { label: 'MAQUINÁRIO CNC', val: 88, color: 'blue' },
+                    { label: 'EQUIPE INSTALAÇÃO', val: 72, color: 'indigo' },
+                    { label: 'TRANSPORTE / LOG', val: 45, color: 'zinc' },
+                  ].map((r, i) => (
+                    <div key={i} className="space-y-4">
+                       <div className="flex justify-between items-end text-[10px] font-black uppercase tracking-widest italic">
+                          <span className="text-white">{r.label}</span>
+                          <span className={cn(r.val > 80 ? "text-blue-500" : "text-zinc-500")}>{r.val}% ATIVO</span>
+                       </div>
+                       <div className="h-2 bg-white/5 rounded-full overflow-hidden border border-white/5">
+                          <motion.div 
+                             initial={{ width: 0 }}
+                             animate={{ width: `${r.val}%` }}
+                             className={cn("h-full", r.val > 80 ? "bg-blue-600 shadow-[0_0_10px_rgba(37,99,235,0.4)]" : "bg-zinc-800")}
+                          />
+                       </div>
+                    </div>
+                  ))}
+               </div>
             </div>
-          </CardContent>
-          <div className="p-4 bg-white/[0.01] border-t border-white/5 flex justify-center">
-            <Button variant="ghost" className="text-[10px] text-zinc-500 hover:text-white uppercase tracking-[0.2em] font-black h-8">
-              Visão Geral da Fábrica <ArrowUpRight size={14} className="ml-2" />
-            </Button>
-          </div>
-        </Card>
-
-        <Card className="bg-[#111116] border-white/5 flex flex-col">
-          <CardHeader className="border-b border-white/5 bg-white/[0.01]">
-            <CardTitle className="text-sm font-black text-white uppercase tracking-widest italic">Alertas de Segurança & Logs</CardTitle>
-          </CardHeader>
-          <CardContent className="flex-1 p-6 space-y-6">
-            <div className="space-y-4">
-              <div className="flex items-start gap-4 group cursor-pointer p-3 rounded-xl hover:bg-white/[0.02] border border-transparent hover:border-white/5 transition-all">
-                <div className="mt-1 w-2 h-2 rounded-full bg-rose-600 shadow-[0_0_10px_rgba(225,29,72,0.6)] shrink-0" />
-                <div className="flex-1">
-                  <div className="flex items-center justify-between mb-1">
-                    <p className="text-sm font-bold text-white group-hover:text-rose-400 transition-colors">Estoque Crítico: LED Neon</p>
-                    <span className="text-[9px] text-zinc-600 font-mono">14:24</span>
-                  </div>
-                  <p className="text-xs text-zinc-500 leading-relaxed">Suprimentos: Nível atingiu <span className="text-rose-500 font-bold">12m</span>. Ponto de pedido automático acionado.</p>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-4 group cursor-pointer p-3 rounded-xl hover:bg-white/[0.02] border border-transparent hover:border-white/5 transition-all">
-                <div className="mt-1 w-2 h-2 rounded-full bg-blue-600 shadow-[0_0_10px_rgba(37,99,235,0.6)] shrink-0" />
-                <div className="flex-1">
-                  <div className="flex items-center justify-between mb-1">
-                    <p className="text-sm font-bold text-white group-hover:text-blue-400 transition-colors">OS #4251 Priorizada</p>
-                    <span className="text-[9px] text-zinc-600 font-mono">12:10</span>
-                  </div>
-                  <p className="text-xs text-zinc-500 leading-relaxed">PCP: Alocação movida para <span className="text-blue-400 font-bold">CNC-01</span> via sugestão Cortex IA.</p>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-4 group cursor-pointer p-3 rounded-xl hover:bg-white/[0.02] border border-transparent hover:border-white/5 transition-all opacity-60">
-                <div className="mt-1 w-2 h-2 rounded-full bg-zinc-600 shrink-0" />
-                <div className="flex-1">
-                  <div className="flex items-center justify-between mb-1">
-                    <p className="text-sm font-bold text-white">Relatório Mensal Gerado</p>
-                    <span className="text-[9px] text-zinc-600 font-mono">08:00</span>
-                  </div>
-                  <p className="text-xs text-zinc-500 leading-relaxed">Financeiro: Logs de faturamento de Abril disponíveis para download.</p>
-                </div>
-              </div>
-            </div>
-
-            <Separator className="bg-white/5" />
             
-            <div className="mt-auto">
-              <div className="bg-[#09090b] border border-white/5 rounded-xl p-4 flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                   <div className="w-8 h-8 rounded-lg bg-blue-600/10 flex items-center justify-center text-blue-500">
-                     <Users size={16} />
-                   </div>
-                   <div>
-                     <p className="text-xs font-bold text-white uppercase tracking-tighter italic">Time em Operação</p>
-                     <p className="text-[10px] text-zinc-500 font-black">24 Colaboradores Ativos</p>
-                   </div>
-                </div>
-                <div className="flex -space-x-2">
-                   {[1,2,3,4].map(i => (
-                     <div key={i} className="w-6 h-6 rounded-full border-2 border-[#09090b] bg-zinc-800" />
-                   ))}
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+            <Button variant="outline" className="w-full h-14 bg-white/5 border-white/10 text-white font-black uppercase text-[11px] tracking-widest mt-12 hover:bg-white/10 group">
+               Visualizar Painel Telemetria <Cpu size={16} className="ml-3 group-hover:rotate-180 transition-transform duration-500" />
+            </Button>
+         </Card>
       </div>
     </div>
   );
 }
+

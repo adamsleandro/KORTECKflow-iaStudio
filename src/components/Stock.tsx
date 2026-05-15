@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 import { 
   Package, 
   Database, 
@@ -18,7 +18,11 @@ import {
   TrendingDown,
   Sparkles,
   Layers,
-  ArrowRight
+  ArrowRight,
+  TrendingUp,
+  Scale,
+  ClipboardList,
+  ChevronRight
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -29,6 +33,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { cn } from '@/lib/utils';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { BaseTable, Column } from './common/BaseTable';
 
 interface StockItem {
   id: string;
@@ -64,223 +69,324 @@ const SCRAP_DATA: ScrapItem[] = [
   { id: 'RET-456', material: 'PVC Expandido', size: '800 x 1200 mm', color: 'Branco', thickness: '10mm', location: 'Rack C2', addedAt: '12 dias' },
 ];
 
-export function Stock() {
-  const [activeTab, setActiveTab] = useState('inventory');
+const SUPPLIERS_DATA = [
+  { id: 'F01', name: 'Alumínio & Cia', contact: 'Marcos Oliveira', phone: '(11) 4455-6677', category: 'Chapas', rating: 4.8 },
+  { id: 'F02', name: 'Acrílicos do Brasil', contact: 'Sueli Lima', phone: '(11) 3322-1100', category: 'Chapas', rating: 4.5 },
+  { id: 'F03', name: 'Leds Global', contact: 'Ricardo Stein', phone: '(11) 98877-6655', category: 'Elétrica', rating: 4.9 },
+  { id: 'F04', name: 'Tintas & Vinis Premium', contact: 'Ana Clara', phone: '(11) 2233-4455', category: 'Impressão', rating: 4.2 },
+];
+
+export function Stock({ initialTab: propInitialTab }: { initialTab?: string }) {
+  const [activeTab, setActiveTab] = React.useState(() => {
+    if (propInitialTab === 'sup-forn') return 'fornecedores';
+    if (propInitialTab === 'sup-lista') return 'lista';
+    if (propInitialTab === 'scraps') return 'scraps';
+    return 'inventory';
+  });
+
+  const STOCK_COLUMNS: Column<StockItem>[] = [
+    {
+      header: 'Identificação Material',
+      accessorKey: 'name',
+      sortable: true,
+      cell: (item) => (
+        <div className="flex flex-col">
+          <span className="text-[11px] font-black text-white uppercase italic tracking-tight">{item.name}</span>
+          <span className="text-[9px] font-bold text-zinc-600 font-mono tracking-widest">{item.id}</span>
+        </div>
+      )
+    },
+    {
+      header: 'Segmento',
+      accessorKey: 'category',
+      sortable: true,
+      cell: (item) => (
+        <Badge variant="outline" className="bg-white/5 border-0 text-[9px] font-black uppercase text-zinc-500 tracking-widest">
+           {item.category}
+        </Badge>
+      )
+    },
+    {
+      header: 'Disponibilidade Real',
+      accessorKey: 'current',
+      sortable: true,
+      cell: (item) => (
+        <div className="flex flex-col gap-2 w-48 font-mono">
+           <div className="flex justify-between items-center text-[9px] font-black italic uppercase">
+              <span className="text-white">{item.current} / {item.min * 2} {item.unit}</span>
+              <span className={cn(
+                 "ml-2 px-1.5 py-0.5 rounded-sm",
+                 item.status === 'ok' ? "bg-emerald-500/10 text-emerald-500" : 
+                 item.status === 'low' ? "bg-amber-500/10 text-amber-500" : "bg-rose-500/10 text-rose-500 animate-pulse"
+              )}>{item.status.toUpperCase()}</span>
+           </div>
+           <Progress value={(item.current / (item.min * 2)) * 100} className="h-1 bg-white/5" />
+        </div>
+      )
+    },
+    {
+      header: 'Markup Sugerido',
+      accessorKey: 'cost',
+      sortable: true,
+      cell: (item) => <span className="text-xs font-mono font-black text-emerald-500/80 italic">{item.cost}</span>
+    }
+  ];
 
   return (
-    <div className="p-8 space-y-8 animate-in fade-in slide-in-from-top-4 duration-700">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-2 text-[10px] font-bold tracking-[0.2em] text-zinc-500 mb-2 uppercase">
-            <Package size={14} /> SUPRIMENTOS & LOGÍSTICA
+    <div className="p-4 md:p-8 space-y-8 animate-in fade-in duration-750 max-w-[1700px] mx-auto pb-24">
+      {/* Industrial Stock Header */}
+      <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-8 border-b border-white/5 pb-8">
+        <div className="space-y-3">
+          <div className="flex items-center gap-3">
+             <div className="p-2.5 bg-emerald-600/10 rounded-xl border border-emerald-500/20">
+                <Package size={28} className="text-emerald-500" />
+             </div>
+             <div className="flex flex-col">
+                <span className="text-[10px] font-black tracking-[0.5em] text-zinc-500 uppercase">SUPPLY CHAIN // HUB-INDUSTRIAL</span>
+                <h1 className="text-3xl md:text-5xl font-black text-white uppercase italic tracking-tighter leading-none">
+                  Gestão de <span className="text-emerald-500">Insumos</span> <span className="text-zinc-700 italic">&</span> Materiais
+                </h1>
+             </div>
           </div>
-          <h1 className="text-3xl font-bold tracking-tight text-white uppercase tracking-tighter">Inventário Industrial</h1>
         </div>
-        <div className="flex items-center gap-3">
-          <div className="relative w-64">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-600" size={16} />
-            <Input className="pl-10 h-10 bg-white/5 border-white/10 text-white placeholder:text-zinc-600 focus-visible:ring-emerald-500 transition-all font-medium" placeholder="Buscar material..." />
-          </div>
-          <Button variant="outline" className="bg-white/5 border-white/10 hover:bg-white/10 text-white h-10">
-            <History size={16} className="mr-2" /> Movimentação
-          </Button>
-          <Button className="bg-emerald-600 text-white hover:bg-emerald-500 h-10 font-bold px-6 shadow-[0_0_20px_rgba(16,185,129,0.2)]">
-            <Plus size={16} className="mr-2" /> Entrada
-          </Button>
+
+        <div className="flex flex-wrap items-center gap-3">
+           <div className="hidden lg:flex items-center gap-8 px-8 border-r border-white/5 mr-3">
+              <div className="text-right">
+                 <p className="text-[9px] font-black text-zinc-600 uppercase tracking-widest mb-1">VALOR ATIVO</p>
+                 <p className="text-xl font-black text-white italic tracking-tighter">R$ 452.8k</p>
+              </div>
+              <div className="text-right">
+                 <p className="text-[9px] font-black text-zinc-600 uppercase tracking-widest mb-1">RUPTURA</p>
+                 <p className="text-xl font-black text-rose-500 italic tracking-tighter">08 ITEMS</p>
+              </div>
+           </div>
+           
+           <div className="flex items-center gap-2">
+              <Button variant="outline" className="h-14 px-6 bg-white/5 border-white/10 text-zinc-400 hover:text-white font-black uppercase text-[10px] tracking-widest gap-2">
+                 <History size={16} /> Movimentações
+              </Button>
+              <Button className="bg-emerald-600 text-white hover:bg-emerald-500 h-14 px-8 font-black uppercase text-[11px] tracking-widest shadow-2xl shadow-emerald-600/10 transition-all gap-2">
+                 <Plus size={18} /> Entrada de Nota
+              </Button>
+           </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {[
-          { label: 'Valor em Estoque', value: 'R$ 452.8k', trend: 'Auditado hoje', icon: <Database className="text-emerald-500" /> },
-          { label: 'Materiais Críticos', value: '08', trend: 'Reposição urgente', icon: <AlertTriangle className="text-rose-500" /> },
-          { label: 'Aproveitamento (Retalhos)', value: '18%', trend: '+4% este mês', icon: <Scissors className="text-amber-500" /> },
-          { label: 'Pedidos Compra', value: '12', trend: '4 em trânsito', icon: <Truck className="text-blue-500" /> },
+          { label: 'Valor em Estoque', value: 'R$ 452.8k', trend: 'Auditado hoje', icon: <Database className="text-emerald-500" />, color: 'emerald' },
+          { label: 'Materiais Críticos', value: '08 UM', trend: 'Reposição urgente', icon: <AlertTriangle className="text-rose-500" />, color: 'rose' },
+          { label: 'Aproveitamento (Retalhos)', value: '18%', trend: '+4% este mês', icon: <Scissors className="text-amber-500" />, color: 'amber' },
+          { label: 'Pedidos Compra', value: '12', trend: '4 em trânsito', icon: <Truck className="text-blue-500" />, color: 'blue' },
         ].map((kpi, i) => (
-          <Card key={i} className="bg-white/[0.02] border-white/5 group hover:border-white/10 transition-all">
-            <CardContent className="p-4 flex items-center justify-between">
-              <div>
-                <p className="text-[10px] font-bold text-zinc-600 uppercase tracking-widest mb-1">{kpi.label}</p>
-                <h3 className="text-xl font-bold text-white tracking-tight">{kpi.value}</h3>
-                <p className="text-[9px] text-zinc-500 font-medium mt-1 uppercase leading-none">{kpi.trend}</p>
+          <Card key={i} className="bg-[#0c0c10] border-white/5 group hover:border-white/10 transition-all relative overflow-hidden">
+            <div className={cn("absolute top-0 right-0 w-32 h-32 blur-[60px] opacity-10 -mr-16 -mt-16", `bg-${kpi.color}-500`)} />
+            <CardContent className="p-6 flex items-center justify-between">
+              <div className="space-y-1">
+                <p className="text-[10px] font-black text-zinc-600 uppercase tracking-widest">{kpi.label}</p>
+                <h3 className="text-2xl font-black text-white italic tracking-tighter">{kpi.value}</h3>
+                <p className="text-[9px] text-zinc-500 font-bold uppercase leading-none">{kpi.trend}</p>
               </div>
-              <div className="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center group-hover:scale-110 transition-transform">{kpi.icon}</div>
+              <div className="w-12 h-12 rounded-xl bg-white/[0.02] border border-white/5 flex items-center justify-center group-hover:scale-110 transition-transform">{kpi.icon}</div>
             </CardContent>
           </Card>
         ))}
       </div>
 
-      <Tabs defaultValue="inventory" onValueChange={setActiveTab} className="bg-transparent">
-        <TabsList className="bg-white/5 border border-white/10 p-1 mb-8">
-          <TabsTrigger value="inventory" className="data-[state=active]:bg-white data-[state=active]:text-black text-zinc-400 text-xs font-bold px-8 h-8 tracking-widest uppercase">Matéria-Prima</TabsTrigger>
-          <TabsTrigger value="scraps" className="data-[state=active]:bg-white data-[state=active]:text-black text-zinc-400 text-xs font-bold px-8 h-8 tracking-widest uppercase items-center gap-2">
-             Controle de Retalhos <Badge className="h-3.5 px-1 bg-amber-500 text-[8px] border-0 text-amber-950 font-black">PRO</Badge>
-          </TabsTrigger>
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8">
+        <TabsList className="bg-[#0c0c10] border border-white/5 p-1 h-14 flex w-full xl:w-auto overflow-x-auto scrollbar-hide">
+          {[
+            { id: 'inventory', label: 'ESTOQUE ATIVO', icon: <Box size={14} /> },
+            { id: 'fornecedores', label: 'FORNECEDORES', icon: <Truck size={14} /> },
+            { id: 'lista', label: 'CATÁLOGO GLOBAL', icon: <ClipboardList size={14} /> },
+            { id: 'scraps', label: 'GESTÃO DE RETALHOS', icon: <Scissors size={14} />, promo: true },
+          ].map(tab => (
+            <TabsTrigger 
+              key={tab.id}
+              value={tab.id}
+              className="flex-1 data-[state=active]:bg-white/10 data-[state=active]:text-white text-zinc-500 text-[10px] font-black px-8 h-full tracking-widest uppercase flex items-center justify-center gap-3 border-r border-white/5 last:border-0 rounded-none transition-all whitespace-nowrap"
+            >
+              {tab.icon} {tab.label}
+              {tab.promo && <Badge className="bg-amber-500 text-amber-950 border-0 text-[8px] font-black h-4 px-1">PRO</Badge>}
+            </TabsTrigger>
+          ))}
         </TabsList>
 
-        <TabsContent value="inventory" className="mt-0 space-y-6">
-          <Card className="bg-white/[0.02] border-white/5">
-             <Table>
-                <TableHeader className="bg-white/[0.01]">
-                   <TableRow className="border-white/5">
-                      <TableHead className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Material</TableHead>
-                      <TableHead className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest text-center">Categoria</TableHead>
-                      <TableHead className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest text-center">Atual</TableHead>
-                      <TableHead className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Estágio</TableHead>
-                      <TableHead className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest text-right">Custo Un.</TableHead>
-                      <TableHead className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest text-right">Ação</TableHead>
-                   </TableRow>
-                </TableHeader>
-                <TableBody>
-                   {STOCK_DATA.map(item => (
-                     <TableRow key={item.id} className="border-white/5 hover:bg-white/[0.02] group">
-                        <TableCell>
-                           <div className="flex flex-col">
-                              <span className="text-sm font-bold text-white uppercase tracking-tight">{item.name}</span>
-                              <span className="text-[10px] font-bold text-zinc-600">{item.id}</span>
-                           </div>
-                        </TableCell>
-                        <TableCell className="text-center">
-                           <Badge variant="outline" className="bg-white/5 border-0 text-[10px] font-medium text-zinc-400">{item.category}</Badge>
-                        </TableCell>
-                        <TableCell className="text-center">
-                           <div className="flex flex-col">
-                              <span className="text-sm font-black text-white">{item.current} {item.unit}</span>
-                              <span className="text-[10px] text-zinc-500 font-bold uppercase">Mín: {item.min}</span>
-                           </div>
-                        </TableCell>
-                        <TableCell className="w-[150px]">
-                            <div className="flex flex-col gap-1.5">
-                                <Progress value={(item.current/item.min) * 50} className={cn(
-                                   "h-1 bg-white/5",
-                                   (item.current < item.min) ? "bg-rose-500/20" : ""
-                                )} />
-                                <Badge className={cn(
-                                   "text-[8px] font-black w-fit border-0 px-1.5 h-3.5",
-                                   item.status === 'ok' ? "bg-emerald-500 text-emerald-950" :
-                                   item.status === 'low' ? "bg-amber-500 text-amber-950" : "bg-rose-500 text-white"
-                                )}>
-                                   {item.status.toUpperCase()}
-                                </Badge>
-                            </div>
-                        </TableCell>
-                        <TableCell className="text-right font-bold text-zinc-300 text-xs">{item.cost}</TableCell>
-                        <TableCell className="text-right">
-                           <Button variant="ghost" size="icon" className="h-8 w-8 text-zinc-600 hover:text-white"><Maximize2 size={14} /></Button>
-                        </TableCell>
-                     </TableRow>
-                   ))}
-                </TableBody>
-             </Table>
-          </Card>
+        <TabsContent value="inventory" className="mt-0 outline-none space-y-6">
+           <BaseTable 
+              data={STOCK_DATA}
+              columns={STOCK_COLUMNS}
+              className="bg-[#0c0c10] border border-white/5 rounded-2xl overflow-hidden"
+              searchPlaceholder="Localizar insumo no estoque industrial..."
+              onRowClick={(item) => console.log('Selected:', item.id)}
+           />
         </TabsContent>
 
-        <TabsContent value="scraps" className="mt-0 space-y-8">
-           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              <div className="lg:col-span-2 space-y-6">
-                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {SCRAP_DATA.map((scrap, i) => (
-                      <Card key={i} className="bg-zinc-950 border-white/5 group hover:border-amber-500/30 transition-all overflow-hidden cursor-pointer">
-                         <CardHeader className="p-4 flex flex-row items-start justify-between pb-2">
-                            <div>
-                               <Badge className="bg-amber-500 text-amber-950 border-0 text-[10px] font-black mb-2">{scrap.id}</Badge>
-                               <CardTitle className="text-sm font-bold text-white uppercase tracking-wider">{scrap.material}</CardTitle>
-                            </div>
-                            <div className="flex gap-1">
-                               <button className="p-1 text-zinc-700 hover:text-white"><Maximize2 size={12} /></button>
-                               <button className="p-1 text-rose-800 hover:text-rose-500"><Trash2 size={12} /></button>
-                            </div>
-                         </CardHeader>
-                         <CardContent className="p-4 pt-0">
-                            <div className="space-y-3">
-                               <div className="flex flex-col p-2 bg-white/[0.02] border border-white/5 rounded-md">
-                                  <span className="text-[9px] font-black text-zinc-600 uppercase tracking-widest mb-1">Dimensões Reais</span>
-                                  <span className="text-lg font-black text-white italic tracking-tighter">{scrap.size}</span>
-                               </div>
+        <TabsContent value="fornecedores" className="mt-0 outline-none space-y-6">
+           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {SUPPLIERS_DATA.map((forn) => (
+                <Card key={forn.id} className="bg-[#111116] border-white/5 hover:border-emerald-500/30 transition-all group relative overflow-hidden">
+                   <div className="absolute top-0 right-0 w-24 h-24 bg-emerald-500/5 blur-3xl opacity-0 group-hover:opacity-100 transition-opacity" />
+                   <CardHeader className="p-6 pb-2">
+                      <div className="flex justify-between items-start mb-4">
+                         <div className="w-12 h-12 rounded-xl bg-white/[0.02] border border-white/5 flex items-center justify-center text-zinc-500 group-hover:text-emerald-500 transition-colors">
+                            <Truck size={22} />
+                         </div>
+                         <Badge className="bg-emerald-600/10 text-emerald-500 border-0 text-[10px] font-black">{forn.rating} ★</Badge>
+                      </div>
+                      <CardTitle className="text-lg font-black text-white uppercase italic tracking-tighter">{forn.name}</CardTitle>
+                   </CardHeader>
+                   <CardContent className="p-6 pt-2 space-y-6">
+                      <div className="space-y-1">
+                         <p className="text-[9px] font-black text-zinc-700 uppercase tracking-widest">Gestor de Conta</p>
+                         <p className="text-sm font-bold text-zinc-400 uppercase italic tracking-tight">{forn.contact}</p>
+                      </div>
+                      <div className="flex items-center justify-between pt-4 border-t border-white/5">
+                         <div className="space-y-1">
+                            <p className="text-[9px] font-black text-zinc-700 uppercase tracking-widest">Especialidade</p>
+                            <p className="text-[11px] font-black text-emerald-500 uppercase italic">{forn.category}</p>
+                         </div>
+                         <Button size="icon" variant="ghost" className="h-10 w-10 text-zinc-600 hover:text-white hover:bg-white/5">
+                            <ArrowRight size={16} />
+                         </Button>
+                      </div>
+                   </CardContent>
+                </Card>
+              ))}
+           </div>
+        </TabsContent>
 
-                               <div className="grid grid-cols-2 gap-4">
-                                  <div className="space-y-1">
-                                     <span className="text-[9px] font-black text-zinc-600 uppercase tracking-widest leading-none">Espessura</span>
-                                     <p className="text-xs font-bold text-zinc-400">{scrap.thickness}</p>
-                                  </div>
-                                  <div className="space-y-1 text-right">
-                                     <span className="text-[9px] font-black text-zinc-600 uppercase tracking-widest leading-none">Localização</span>
-                                     <p className="text-xs font-bold text-emerald-400">{scrap.location}</p>
-                                  </div>
+        <TabsContent value="lista" className="mt-0 outline-none">
+           <Card className="bg-[#0c0c10] border-white/5 p-20 text-center flex flex-col items-center justify-center rounded-3xl border-dashed border-2">
+              <div className="w-20 h-20 rounded-full bg-white/5 flex items-center justify-center text-zinc-800 mb-8 border border-white/5 shadow-2xl">
+                 <Package size={40} />
+              </div>
+              <h3 className="text-3xl font-black text-white uppercase italic tracking-tighter mb-4">Master Index Industrial</h3>
+              <p className="text-sm text-zinc-500 max-w-lg mx-auto leading-relaxed font-medium">
+                Acesso centralizado a todo o portfólio de fornecedores e materiais pré-aprovados pela engenharia.
+                Sincronização forçada com banco de dados de markup v3.2.
+              </p>
+              <Button className="mt-10 bg-white text-black font-black uppercase text-[11px] tracking-widest h-14 px-12 transition-all hover:scale-105 active:scale-95">
+                 Explorar Catálogo Global
+              </Button>
+           </Card>
+        </TabsContent>
+
+        <TabsContent value="scraps" className="mt-0 outline-none space-y-8">
+           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+              <div className="lg:col-span-8 space-y-8">
+                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {SCRAP_DATA.map((scrap, i) => (
+                      <Card key={i} className="bg-[#111116] border-white/5 group hover:border-amber-500/20 transition-all overflow-hidden cursor-pointer relative">
+                         <div className="absolute top-0 right-0 px-4 py-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <div className="flex gap-2">
+                               <button className="p-1.5 bg-white/5 rounded-md text-zinc-400 hover:text-white"><Maximize2 size={14} /></button>
+                               <button className="p-1.5 bg-rose-500/10 rounded-md text-rose-500 hover:bg-rose-500 hover:text-white"><Trash2 size={14} /></button>
+                            </div>
+                         </div>
+                         <CardHeader className="p-6 pb-4">
+                            <Badge className="bg-amber-500 text-amber-950 border-0 text-[9px] font-black italic mb-3 w-fit tracking-widest">{scrap.id}</Badge>
+                            <CardTitle className="text-xl font-black text-white uppercase italic tracking-tighter">{scrap.material}</CardTitle>
+                         </CardHeader>
+                         <CardContent className="p-6 pt-0 space-y-6">
+                            <div className="p-5 bg-white/[0.02] border border-white/5 rounded-2xl">
+                               <span className="text-[10px] font-black text-zinc-700 uppercase tracking-widest mb-2 block italic">Área Remanescente</span>
+                               <span className="text-2xl font-black text-white italic tracking-tighter">{scrap.size}</span>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-6">
+                               <div className="space-y-1">
+                                  <span className="text-[9px] font-black text-zinc-700 uppercase tracking-widest">Espessura</span>
+                                  <p className="text-xs font-bold text-zinc-400 italic">{scrap.thickness}</p>
+                               </div>
+                               <div className="space-y-1 text-right">
+                                  <span className="text-[9px] font-black text-zinc-700 uppercase tracking-widest">Rack Destino</span>
+                                  <p className="text-xs font-black text-amber-500 italic uppercase">{scrap.location}</p>
                                </div>
                             </div>
-                            <div className="mt-4 pt-4 border-t border-white/5 flex items-center justify-between">
-                               <span className="text-[9px] font-bold text-zinc-500 uppercase tracking-widest">Adicionado há {scrap.addedAt}</span>
-                               <Button size="sm" className="h-7 bg-white text-black hover:bg-zinc-200 text-[10px] font-black uppercase tracking-widest">Usar Retalho</Button>
+
+                            <div className="pt-6 border-t border-white/5 flex items-center justify-between">
+                               <span className="text-[9px] font-black text-zinc-600 uppercase tracking-widest italic">{scrap.addedAt} em quarentena</span>
+                               <Button className="h-10 bg-white text-black hover:bg-zinc-200 text-[10px] font-black uppercase tracking-widest px-6 italic">Reservar</Button>
                             </div>
                          </CardContent>
                       </Card>
                     ))}
 
-                    <button className="group border-2 border-dashed border-white/5 rounded-xl p-6 flex flex-col items-center justify-center gap-3 hover:border-white/20 transition-all hover:bg-white/[0.02]">
-                       <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center text-zinc-600 group-hover:text-white transition-colors">
-                          <Plus size={24} />
+                    <button className="group border-2 border-dashed border-white/5 rounded-3xl p-10 flex flex-col items-center justify-center gap-6 hover:border-amber-500/20 transition-all hover:bg-amber-500/[0.02]">
+                       <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center text-zinc-700 group-hover:text-amber-500 group-hover:scale-110 transition-all duration-300">
+                          <Plus size={32} />
                        </div>
-                       <div className="text-center">
-                          <p className="text-xs font-black text-zinc-500 uppercase tracking-widest mb-1">Novo Retalho</p>
-                          <p className="text-[10px] text-zinc-700 italic">Cadastrar sobra de produção</p>
+                       <div className="text-center space-y-1">
+                          <p className="text-sm font-black text-zinc-500 uppercase tracking-widest group-hover:text-white transition-colors">Digitalizar Retalho</p>
+                          <p className="text-[10px] text-zinc-700 italic font-medium uppercase tracking-tight">Novas dimensões pós-corte CNC</p>
                        </div>
                     </button>
                  </div>
               </div>
 
-              {/* AI Scrap Recommender Side */}
-              <div className="space-y-6">
-                 <Card className="bg-zinc-950 border-white/5 overflow-hidden relative">
-                    <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/10 blur-[60px] -mr-16 -mt-16 rounded-full" />
-                    <CardHeader>
-                       <div className="flex items-center gap-2 text-amber-500/50 text-[10px] font-black tracking-[0.2em] mb-2">
-                          <Sparkles size={14} className="text-amber-500" /> MOTOR DE OTIMIZAÇÃO IA
+              <div className="lg:col-span-4 space-y-8">
+                 <Card className="bg-[#0c0c10] border-white/5 overflow-hidden relative p-10 space-y-8">
+                    <div className="absolute top-0 right-0 w-48 h-48 bg-amber-500/10 blur-[80px] -mr-24 -mt-24 rounded-full" />
+                    
+                    <div className="space-y-2 relative">
+                       <div className="flex items-center gap-2 text-amber-500 text-[10px] font-black tracking-[0.3em] uppercase">
+                          <Sparkles size={16} className="animate-pulse" /> IA Nesting Predictor
                        </div>
-                       <CardTitle className="text-xl text-white italic tracking-tighter">Sugestões de Aproveitamento</CardTitle>
-                       <CardDescription className="text-xs text-zinc-500">IA analisando fila de produção v1.2</CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-4 relative">
-                       <div className="p-4 bg-white/[0.03] border border-white/5 rounded-2xl space-y-3">
-                          <div className="flex items-center justify-between">
-                             <Badge className="bg-blue-500/20 text-blue-500 border-0 text-[10px] font-bold">OS-4256</Badge>
-                             <ArrowRight size={14} className="text-zinc-600" />
-                             <Badge className="bg-amber-500/20 text-amber-500 border-0 text-[10px] font-bold tracking-tight">RET-452</Badge>
-                          </div>
-                          <p className="text-xs font-bold text-zinc-400 leading-snug">
-                             O retalho <span className="text-white italic">ACM PRATA (3mm)</span> tem o tamanho exato para as 4 letras caixa do Banco Itaú.
-                          </p>
-                          <div className="flex items-center justify-between pt-2">
-                             <div className="flex items-center gap-1.5">
-                                <TrendingDown size={14} className="text-emerald-500" />
-                                <span className="text-[10px] font-black text-emerald-500 uppercase">Economia R$ 540,00</span>
-                             </div>
-                             <button className="text-[10px] font-black text-zinc-500 hover:text-white uppercase tracking-widest underline underline-offset-4 decoration-amber-500">Reservar</button>
-                          </div>
-                       </div>
+                       <CardTitle className="text-2xl text-white italic tracking-tighter uppercase font-black">Match de Sobras</CardTitle>
+                    </div>
 
-                       <div className="p-4 bg-white/[0.03] border border-white/5 rounded-2xl space-y-3">
-                          <div className="flex items-center justify-between">
-                             <Badge className="bg-blue-500/20 text-blue-500 border-0 text-[10px] font-bold">OS-4258</Badge>
-                             <ArrowRight size={14} className="text-zinc-600" />
-                             <Badge className="bg-amber-500/20 text-amber-500 border-0 text-[10px] font-bold tracking-tight">RET-456</Badge>
-                          </div>
-                          <p className="text-xs font-bold text-zinc-400 leading-snug">
-                             Use o retalho de <span className="text-white italic">PVC 10mm</span> para o suporte do Totem. Sobra zero desperdício.
-                          </p>
-                          <div className="flex items-center justify-between pt-2">
-                             <div className="flex items-center gap-1.5">
-                                <Layers size={14} className="text-emerald-500" />
-                                <span className="text-[10px] font-black text-emerald-500 uppercase">Impacto ESG: Alto</span>
-                             </div>
-                             <button className="text-[10px] font-black text-zinc-500 hover:text-white uppercase tracking-widest underline underline-offset-4 decoration-amber-500">Reservar</button>
-                          </div>
-                       </div>
+                    <div className="space-y-6 relative">
+                       {[
+                         { os: 'OS-4256', target: 'RET-452', material: 'ACM PRATA (3mm)', saving: 'R$ 540,20', desc: 'Sobra exata para 4 letras-caixa Banco Itaú.' },
+                         { os: 'OS-4258', target: 'RET-456', material: 'PVC W-FOAM (10mm)', saving: 'R$ 180,00', desc: 'Ideal para base de reforço totem interno.' },
+                       ].map((match, i) => (
+                         <div key={i} className="p-6 bg-white/[0.02] border border-white/10 rounded-2xl space-y-4 hover:border-amber-500/30 transition-colors group">
+                            <div className="flex items-center justify-between">
+                               <Badge className="bg-blue-600/20 text-blue-400 border-0 text-[9px] font-black italic tracking-widest">{match.os}</Badge>
+                               <ChevronRight size={14} className="text-zinc-700 group-hover:translate-x-1 transition-transform" />
+                               <Badge className="bg-amber-600/20 text-amber-400 border-0 text-[10px] font-black italic tracking-widest">{match.target}</Badge>
+                            </div>
+                            <p className="text-[11px] font-bold text-zinc-400 leading-relaxed uppercase tracking-tighter italic">
+                               {match.desc}
+                            </p>
+                            <div className="flex items-center justify-between pt-2 border-t border-white/5">
+                               <div className="flex items-center gap-2">
+                                  <TrendingDown size={14} className="text-emerald-500" />
+                                  <span className="text-[10px] font-black text-emerald-500 uppercase tracking-widest italic">{match.saving}</span>
+                               </div>
+                               <button className="text-[10px] font-black text-amber-500 hover:text-white uppercase tracking-widest underline underline-offset-4 decoration-amber-500/30">Vincular</button>
+                            </div>
+                         </div>
+                       ))}
 
-                       <Button className="w-full bg-amber-500 text-amber-950 hover:bg-amber-400 font-black text-xs tracking-widest h-12">
-                          GERAR RELATÓRIO DE SUSTENTABILIDADE
+                       <Button className="w-full bg-amber-500 text-amber-950 hover:bg-amber-400 font-black text-[11px] tracking-widest h-14 shadow-2xl shadow-amber-500/10">
+                          RELATÓRIO DE SUSTENTABILIDADE
                        </Button>
-                    </CardContent>
+                    </div>
+                 </Card>
+
+                 <Card className="bg-[#0c0c10] border-white/5 p-10 space-y-6">
+                    <div className="flex items-center gap-3">
+                       <div className="w-10 h-10 rounded-xl bg-white/[0.02] border border-white/5 flex items-center justify-center text-zinc-600">
+                          <Scale size={20} />
+                       </div>
+                       <div className="space-y-0.5">
+                          <h4 className="text-[10px] font-black text-white uppercase italic tracking-widest">Cubagem de Sucata</h4>
+                          <p className="text-[9px] font-bold text-zinc-600 uppercase tracking-[0.1em]">Resíduos acumulados / Junho</p>
+                       </div>
+                    </div>
+                    <div className="space-y-4">
+                       <div className="space-y-2">
+                          <div className="flex justify-between text-[9px] font-black text-zinc-500 uppercase italic">
+                             <span>Alumínio Reciclável</span>
+                             <span className="text-white">450kg</span>
+                          </div>
+                          <Progress value={65} className="h-1 bg-white/5" />
+                       </div>
+                       <Button variant="ghost" className="w-full text-[9px] font-black uppercase text-zinc-600 hover:text-white tracking-widest">Coleta Agendada para 12/06</Button>
+                    </div>
                  </Card>
               </div>
            </div>

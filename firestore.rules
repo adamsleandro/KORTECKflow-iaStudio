@@ -86,9 +86,60 @@ service cloud.firestore {
              data.current is number;
     }
 
+    function isValidCompany(data) {
+      return data.keys().hasAll(['id', 'name', 'cnpj']) &&
+             data.id is string && data.id.size() <= 128 &&
+             data.name is string && data.name.size() <= 200 &&
+             data.cnpj is string && data.cnpj.size() <= 18;
+    }
+
+    function isValidDepartment(data) {
+      return data.keys().hasAll(['id', 'companyId', 'name']) &&
+             data.id is string && data.id.size() <= 128 &&
+             data.companyId is string && data.companyId.size() <= 128 &&
+             data.name is string && data.name.size() <= 100;
+    }
+
+    function isValidTask(data) {
+      return data.keys().hasAll(['id', 'companyId', 'title', 'status']) &&
+             data.id is string && data.id.size() <= 128 &&
+             data.companyId is string && data.companyId.size() <= 128 &&
+             data.title is string && data.title.size() <= 200 &&
+             data.status is string && data.status.size() <= 50;
+    }
+
     // -------------------------------------------------------------------------
     // 3. COLLECTION MATCH BLOCKS
     // -------------------------------------------------------------------------
+
+    match /companies/{companyId} {
+      allow read: if isSignedIn();
+      allow create: if isAdmin();
+      allow update: if isAdmin() && isValidCompany(incoming());
+    }
+
+    match /departments/{deptId} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin() && isValidDepartment(incoming());
+    }
+
+    match /tasks/{taskId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && isValidTask(incoming());
+      allow update: if isSignedIn() && isValidTask(incoming()) && (
+        isAdmin() || incoming().diff(existing()).affectedKeys().hasOnly(['status', 'assignedTo', 'priority'])
+      );
+    }
+
+    match /audit_logs/{logId} {
+      allow read: if isAdmin();
+      allow create: if isSignedIn(); // System logs
+    }
+
+    match /notifications/{notifId} {
+      allow read: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow update: if isSignedIn() && resource.data.userId == request.auth.uid && incoming().diff(existing()).affectedKeys().hasOnly(['read']);
+    }
 
     match /users/{userId} {
       allow read: if isSignedIn();

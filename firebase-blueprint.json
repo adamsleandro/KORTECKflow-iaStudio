@@ -1,5 +1,43 @@
 {
   "entities": {
+    "Company": {
+      "title": "Company",
+      "description": "Multi-company SaaS isolation",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "cnpj": { "type": "string" },
+        "plan": { "type": "string", "enum": ["Basic", "Pro", "Enterprise"] },
+        "status": { "type": "string", "enum": ["Active", "Suspended"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "name", "cnpj"]
+    },
+    "Department": {
+      "title": "Department",
+      "description": "Organizational departments",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "companyId": { "type": "string" },
+        "name": { "type": "string" },
+        "managerId": { "type": "string" }
+      },
+      "required": ["id", "companyId", "name"]
+    },
+    "Role": {
+      "title": "System Role",
+      "description": "RBAC roles definitions",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "companyId": { "type": "string" },
+        "name": { "type": "string" },
+        "permissions": { "type": "array", "items": { "type": "string" } }
+      },
+      "required": ["id", "companyId", "name"]
+    },
     "User": {
       "title": "System User",
       "description": "Information about system users and their permissions",
@@ -112,10 +150,64 @@
         "status": { "type": "string", "enum": ["ok", "low", "critical"] }
       },
       "required": ["id", "name", "current"]
+    },
+    "Task": {
+      "title": "Task",
+      "description": "Universal task management",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "companyId": { "type": "string" },
+        "title": { "type": "string" },
+        "status": { "type": "string" },
+        "priority": { "type": "string" },
+        "assignedTo": { "type": "string" },
+        "dueDate": { "type": "string", "format": "date-time" },
+        "relatedTo": { "type": "string" },
+        "relatedId": { "type": "string" }
+      },
+      "required": ["id", "companyId", "title", "status"]
+    },
+    "AuditLog": {
+      "title": "Audit Log",
+      "description": "System activity tracking",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "companyId": { "type": "string" },
+        "userId": { "type": "string" },
+        "action": { "type": "string" },
+        "entity": { "type": "string" },
+        "entityId": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "companyId", "userId", "action"]
+    },
+    "Notification": {
+      "title": "Notification",
+      "description": "User system alerts",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "companyId": { "type": "string" },
+        "title": { "type": "string" },
+        "message": { "type": "string" },
+        "read": { "type": "boolean" },
+        "type": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "userId", "title"]
     }
   },
   "firestore": {
+    "companies": { "schema": "Company", "description": "Global companies isolation" },
+    "departments": { "schema": "Department", "description": "Org departments" },
+    "roles": { "schema": "Role", "description": "RBAC roles" },
     "users": { "schema": "User", "description": "System users collection" },
+    "tasks": { "schema": "Task", "description": "Global task management" },
+    "audit_logs": { "schema": "AuditLog", "description": "Security logs" },
+    "notifications": { "schema": "Notification", "description": "System notifications" },
     "clients": { "schema": "Client", "description": "Clients collection" },
     "collaborators": { "schema": "Collaborator", "description": "HR collaborators collection" },
     "leads": { "schema": "Lead", "description": "CRM leads collection" },
