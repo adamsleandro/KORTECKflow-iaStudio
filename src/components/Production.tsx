@@ -101,7 +101,7 @@ export function Production({ initialTab: propInitialTab }: { initialTab?: string
   });
 
   return (
-    <div className="p-4 md:p-8 space-y-8 animate-in fade-in duration-750 max-w-[1700px] mx-auto pb-48">
+    <div className="p-4 md:p-8 space-y-8 animate-in fade-in duration-750 max-w-[1700px] mx-auto pb-24">
       {/* Mesh Industrial Header */}
       <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-8 border-b border-white/5 pb-8">
         <div className="space-y-3">
@@ -141,6 +141,43 @@ export function Production({ initialTab: propInitialTab }: { initialTab?: string
               </Button>
            </div>
         </div>
+      </div>
+
+      {/* Station Operational Status Banner - Fully Integrated (Non-floating) */}
+      <div id="station-operational-status" className="bg-[#0c0c10] border border-white/5 rounded-3xl p-6 md:p-8 flex flex-col xl:flex-row items-center justify-between gap-8 shadow-2xl border-t-2 border-t-blue-500">
+         <div className="flex items-center gap-5 w-full xl:w-auto">
+            <div className="w-14 h-14 rounded-2xl bg-blue-600/15 border border-blue-500/30 flex items-center justify-center text-blue-500 shadow-lg shadow-blue-500/5 relative shrink-0">
+               <Workflow size={28} />
+               <div className="absolute -top-1 -right-1 w-4 h-4 bg-emerald-500 rounded-full border-4 border-zinc-950 italic text-[8px] font-black text-black flex items-center justify-center">!</div>
+            </div>
+            <div>
+               <p className="text-[10px] font-black text-zinc-500 uppercase tracking-widest mb-1">Status Operacional da Estação</p>
+               <div className="flex items-center gap-3">
+                  <div className="w-3.5 h-3.5 rounded-full bg-emerald-500 shadow-[0_0_12px_rgba(16,185,129,0.5)] animate-pulse" />
+                  <span className="text-lg font-black text-white uppercase italic tracking-tight">Normal / <span className="text-emerald-500">Fluxo de Produção Estável</span></span>
+               </div>
+            </div>
+         </div>
+         
+         <div className="grid grid-cols-3 gap-8 w-full xl:w-auto px-8 xl:border-x border-white/5 py-4 xl:py-0">
+            <div className="text-center xl:text-left min-w-[100px]">
+               <p className="text-[10px] font-black text-zinc-600 uppercase tracking-widest mb-1 italic">Jobs em Fila</p>
+               <p className="text-3xl font-black text-white italic tracking-tighter">154</p>
+            </div>
+            <div className="text-center xl:text-left min-w-[100px] border-x border-white/5 xl:border-x-0 xl:px-4">
+               <p className="text-[10px] font-black text-zinc-600 uppercase tracking-widest mb-1 italic">Setup Médio</p>
+               <p className="text-3xl font-black text-blue-500 italic tracking-tighter">12m</p>
+            </div>
+            <div className="text-center xl:text-left min-w-[100px]">
+               <p className="text-[10px] font-black text-zinc-600 uppercase tracking-widest mb-1 italic">Atrasos [OS]</p>
+               <p className="text-3xl font-black text-rose-500 italic tracking-tighter">02</p>
+            </div>
+         </div>
+
+         <div className="flex items-center gap-4 w-full xl:w-auto justify-end">
+            <Button variant="outline" className="flex-1 xl:flex-none h-14 px-8 border-white/10 text-[11px] hover:bg-white/5 uppercase tracking-widest font-black text-zinc-300">Relatórios BI</Button>
+            <Button className="flex-1 xl:flex-none h-14 bg-blue-600 hover:bg-blue-500 text-white font-black h-14 px-10 text-[11px] uppercase tracking-widest shadow-xl shadow-blue-600/20 transition-all border-0">Painel do Operador</Button>
+         </div>
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8">
@@ -556,42 +593,7 @@ export function Production({ initialTab: propInitialTab }: { initialTab?: string
         </TabsContent>
       </Tabs>
 
-      {/* Floating Global Operations Sidebar / Bar */}
-      <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 px-8 py-5 bg-zinc-950/80 backdrop-blur-2xl border border-white/10 rounded-3xl shadow-[0_25px_60px_rgba(0,0,0,0.8)] flex items-center gap-12 min-w-[350px] md:min-w-[800px] justify-between border-t-2 border-t-blue-500/20">
-         <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-2xl bg-blue-600 flex items-center justify-center text-white shadow-[0_0_30px_rgba(37,99,235,0.4)] relative">
-               <Workflow size={24} />
-               <div className="absolute -top-1 -right-1 w-4 h-4 bg-emerald-500 rounded-full border-4 border-zinc-950 italic text-[8px] font-black text-black flex items-center justify-center">!</div>
-            </div>
-            <div className="hidden sm:block">
-               <p className="text-[11px] font-black text-white uppercase italic tracking-tight mb-1">Status Operacional da Estação</p>
-               <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)] animate-pulse" />
-                  <span className="text-[12px] font-black text-zinc-600 uppercase tracking-[0.2em] italic">Normal / Fluxo de Produção Estável</span>
-               </div>
-            </div>
-         </div>
-         
-         <div className="flex items-center gap-10 px-10 border-x border-white/5">
-            <div className="text-center">
-               <p className="text-[10px] font-black text-zinc-700 uppercase tracking-widest mb-1 italic">Jobs em Fila</p>
-               <p className="text-xl font-black text-white italic tracking-tighter">154</p>
-            </div>
-            <div className="text-center">
-               <p className="text-[10px] font-black text-zinc-700 uppercase tracking-widest mb-1 italic">Setup Médio</p>
-               <p className="text-xl font-black text-blue-500 italic tracking-tighter">12m</p>
-            </div>
-            <div className="text-center">
-               <p className="text-[10px] font-black text-zinc-700 uppercase tracking-widest mb-1 italic">Atrasos [OS]</p>
-               <p className="text-xl font-black text-rose-500 italic tracking-tighter">02</p>
-            </div>
-         </div>
 
-         <div className="flex items-center gap-4">
-            <Button variant="ghost" className="h-12 px-6 text-[11px] font-black uppercase text-zinc-400 hover:text-white hover:bg-white/5 transition-all">Relatórios BI</Button>
-            <Button className="h-12 px-8 bg-blue-600 hover:bg-blue-500 text-white font-black uppercase text-[11px] tracking-widest shadow-xl shadow-blue-600/20 transition-all">Painel do Operador</Button>
-         </div>
-      </div>
     </div>
   );
 }

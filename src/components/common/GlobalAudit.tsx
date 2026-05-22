@@ -57,7 +57,7 @@ export function GlobalAudit({ logs, isOpen, onToggle }: GlobalAuditProps) {
 
   return (
     <div className={cn(
-      "fixed bottom-0 left-0 right-0 z-[60] transition-all duration-500 ease-in-out px-4 md:px-0 md:left-16",
+      "fixed bottom-0 left-0 right-0 z-[60] transition-all duration-500 ease-in-out px-4 md:px-0 md:left-[72px]",
       isOpen ? "h-[320px]" : "h-10"
     )}>
       {/* Backdrop for open state */}

@@ -94,6 +94,22 @@ export function Sidebar({
         )}
       </AnimatePresence>
 
+      {/* Mobile/Tablet Drawer Backdrop */}
+      <AnimatePresence>
+        {activeModule && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => {
+              setActiveModule(null);
+              setActiveSubmenu(null);
+            }}
+            className="fixed inset-0 bg-black/40 backdrop-blur-[1px] z-10 xl:hidden pointer-events-auto"
+          />
+        )}
+      </AnimatePresence>
+
       <div ref={sidebarRef} className={cn(
         "flex h-screen fixed left-0 top-0 z-50 select-none transition-all duration-500",
         isMobileOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
@@ -171,7 +187,7 @@ export function Sidebar({
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: -280, opacity: 0 }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="w-[320px] bg-[#0c0c10]/95 backdrop-blur-3xl border-r border-white/5 shadow-[20px_0_60px_rgba(0,0,0,0.6)] relative z-20 flex flex-col pointer-events-auto"
+            className="w-[280px] sm:w-[320px] max-w-[calc(100vw-4.5rem)] bg-[#0c0c10]/95 backdrop-blur-3xl border-r border-white/5 shadow-[20px_0_60px_rgba(0,0,0,0.6)] relative z-20 flex flex-col pointer-events-auto"
           >
             <div className="p-10">
               <div className="flex items-center justify-between mb-4">
@@ -244,7 +260,7 @@ export function Sidebar({
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: -280, opacity: 0 }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="w-[300px] bg-[#0c0c10]/98 backdrop-blur-3xl border-r border-white/5 shadow-[30px_0_80px_rgba(0,0,0,0.7)] relative z-10 flex flex-col pointer-events-auto"
+            className="w-[260px] sm:w-[300px] max-w-[calc(100vw-5rem)] bg-[#0c0c10]/98 backdrop-blur-3xl border-r border-white/5 shadow-[30px_0_80px_rgba(0,0,0,0.7)] relative z-10 flex flex-col pointer-events-auto"
           >
             <div className="p-10 flex items-center justify-between border-b border-white/5 h-[140px]">
               <div>

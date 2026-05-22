@@ -76,6 +76,8 @@ export default function App() {
         return <HR initialTab={currentView} />;
       case 'op-arte':
         return <Designer />;
+      case 'op-proj':
+        return <Projects />;
       case 'edu-cursos':
       case 'edu-trein':
       case 'educa':
@@ -152,7 +154,7 @@ export default function App() {
         />
         
         {/* Main Content Area */}
-        <main className="pl-0 md:pl-16 min-h-screen transition-all duration-500 ease-in-out relative flex flex-col">
+        <main className="pl-0 md:pl-[72px] min-h-screen transition-all duration-500 ease-in-out relative flex flex-col">
           <div className="mx-auto w-full max-w-[1700px] flex-1">
             {renderView()}
           </div>
