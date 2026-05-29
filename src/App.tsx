@@ -145,6 +145,7 @@ export default function App() {
         </header>
 
         <Sidebar 
+          currentView={currentView}
           onChangeView={(view) => {
             setCurrentView(view);
             setIsMobileMenuOpen(false);
@@ -154,7 +155,7 @@ export default function App() {
         />
         
         {/* Main Content Area */}
-        <main className="pl-0 md:pl-[72px] min-h-screen transition-all duration-500 ease-in-out relative flex flex-col">
+        <main className="pl-0 md:pl-24 min-h-screen transition-all duration-500 ease-in-out relative flex flex-col">
           <div className="mx-auto w-full max-w-[1700px] flex-1">
             {renderView()}
           </div>

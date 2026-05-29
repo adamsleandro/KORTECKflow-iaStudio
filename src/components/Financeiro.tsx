@@ -192,21 +192,21 @@ export function Financeiro({ initialTab: propInitialTab }: { initialTab?: string
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8">
-        <TabsList className="bg-transparent lg:bg-[#0c0c10] border-0 lg:border border-white/5 p-1 flex justify-start overflow-x-auto h-auto lg:h-14 scrollbar-hide flex-nowrap w-full whitespace-nowrap lg:whitespace-normal">
-           {[
-             { id: 'visao', label: 'VISÃO GERAL', icon: <BarChart3 size={14} /> },
-             { id: 'pagar', label: 'CONTAS A PAGAR', icon: <TrendingDown size={14} /> },
-             { id: 'receber', label: 'CONTAS A RECEBER', icon: <TrendingUp size={14} /> },
-             { id: 'fluxo', label: 'FLUXO DE CAIXA', icon: <Wallet size={14} /> },
-           ].map(tab => (
-             <TabsTrigger 
-               key={tab.id}
-               value={tab.id}
-               className="data-[state=active]:bg-white/10 data-[state=active]:text-white text-zinc-500 text-[10px] font-black px-6 h-12 lg:h-full tracking-widest uppercase flex items-center justify-center lg:justify-start gap-2 border-r border-white/5 last:border-0 rounded-none transition-all flex-none"
-             >
-               {tab.icon} {tab.label}
-             </TabsTrigger>
-           ))}
+        <TabsList className="bg-transparent border-0 p-0 flex flex-wrap gap-2 w-full xl:w-auto overflow-x-auto scrollbar-hide">
+          {[
+            { id: 'visao', label: 'Visão Geral', icon: <BarChart3 size={14} /> },
+            { id: 'pagar', label: 'Contas a Pagar', icon: <TrendingDown size={14} /> },
+            { id: 'receber', label: 'Contas a Receber', icon: <TrendingUp size={14} /> },
+            { id: 'fluxo', label: 'Fluxo de Caixa', icon: <Wallet size={14} /> },
+          ].map(tab => (
+            <TabsTrigger 
+              key={tab.id}
+              value={tab.id}
+              className="data-[state=active]:bg-blue-600 data-[state=active]:text-white text-zinc-400 bg-zinc-900/60 hover:bg-zinc-800/80 hover:text-zinc-200 border border-zinc-800/85 data-[state=active]:border-blue-500 text-xs font-semibold px-5 h-11 rounded-xl transition-all whitespace-nowrap flex items-center justify-center gap-2.5 cursor-pointer shadow-sm"
+            >
+              {tab.icon} {tab.label}
+            </TabsTrigger>
+          ))}
         </TabsList>
 
         <TabsContent value="visao" className="space-y-8 mt-0 outline-none">

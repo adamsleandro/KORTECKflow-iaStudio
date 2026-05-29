@@ -28,26 +28,26 @@
 
 @layer base {
   :root {
-    --background: 240 10% 2%; /* #050505 */
+    --background: 240 10% 4%; /* #09090b - Zinc 950 */
     --foreground: 0 0% 98%;
-    --card: 240 10% 4.5%;
+    --card: 240 10% 6%; /* #0f0f12 - Zinc 900 */
     --card-foreground: 0 0% 98%;
-    --popover: 240 10% 4.5%;
+    --popover: 240 10% 6%;
     --popover-foreground: 0 0% 98%;
-    --primary: 217.2 91.2% 59.8%; /* Blue 600 */
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 240 3.7% 15.9%;
+    --primary: 221.2 83.2% 53.3%; /* Blue 600 - Clean SaaS royal blue */
+    --primary-foreground: 210 40% 98%;
+    --secondary: 240 3.7% 12%;
     --secondary-foreground: 0 0% 98%;
-    --muted: 240 3.7% 15.9%;
+    --muted: 240 3.7% 12%;
     --muted-foreground: 240 5% 64.9%;
-    --accent: 240 3.7% 15.9%;
+    --accent: 240 3.7% 12%;
     --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 217.2 91.2% 59.8%;
-    --radius: 0.75rem;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 240 5.9% 15%; /* #24242b - Clean soft border */
+    --input: 240 5.9% 15%;
+    --ring: 221.2 83.2% 53.3%;
+    --radius: 0.85rem;
   }
 
   .ash-light {

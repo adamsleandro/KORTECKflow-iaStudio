@@ -68,17 +68,17 @@ export function EducaCV() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8">
-        <TabsList className="bg-[#0c0c10] border border-white/5 p-1 h-14 flex w-full xl:w-auto overflow-x-auto scrollbar-hide">
+        <TabsList className="bg-transparent border-0 p-0 flex flex-wrap gap-2 w-full xl:w-auto overflow-x-auto scrollbar-hide">
           {[
-            { id: 'cursos', label: 'MEUS CURSOS', icon: <BookOpen size={14} /> },
-            { id: 'certifica', label: 'CERTIFICAÇÕES', icon: <Award size={14} /> },
-            { id: 'badges', label: 'RANQUEAMENTO', icon: <Medal size={14} /> },
-            { id: 'obrigat', label: 'OBRIGATÓRIOS [NRs]', icon: <Lock size={14} /> },
+            { id: 'cursos', label: 'Meus Cursos', icon: <BookOpen size={14} /> },
+            { id: 'certifica', label: 'Certificações', icon: <Award size={14} /> },
+            { id: 'badges', label: 'Ranqueamento', icon: <Medal size={14} /> },
+            { id: 'obrigat', label: 'Obrigatórios (NRs)', icon: <Lock size={14} /> },
           ].map(tab => (
             <TabsTrigger 
               key={tab.id}
               value={tab.id}
-              className="flex-1 data-[state=active]:bg-white/10 data-[state=active]:text-white text-zinc-500 text-[10px] font-black px-8 h-full tracking-widest uppercase flex items-center justify-center gap-3 border-r border-white/5 last:border-0 rounded-none transition-all whitespace-nowrap"
+              className="data-[state=active]:bg-blue-600 data-[state=active]:text-white text-zinc-400 bg-zinc-900/60 hover:bg-zinc-800/80 hover:text-zinc-200 border border-zinc-800/85 data-[state=active]:border-blue-500 text-xs font-semibold px-5 h-11 rounded-xl transition-all whitespace-nowrap flex items-center justify-center gap-2.5 cursor-pointer shadow-sm relative"
             >
               {tab.icon} {tab.label}
             </TabsTrigger>

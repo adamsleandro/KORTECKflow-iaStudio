@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   Users, 
@@ -54,7 +54,9 @@ import {
   ArrowLeft,
   Download,
   FileText,
-  X
+  X,
+  Edit,
+  Trash2
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -277,13 +279,67 @@ const HISTORY_LOG = [
   { date: '02 Mai', type: 'AI', user: 'Sistema', desc: 'Alerta: Identificada queda de performance no setor de Impressão' },
 ];
 
+export interface OrgNode {
+  id: string;
+  name: string;
+  role: string;
+  dept: string;
+  level: 'Estratégico' | 'Tático' | 'Operacional';
+  parentId: string | null;
+}
+
+const INITIAL_ORG_NODES: OrgNode[] = [
+  { id: '1', name: 'Adams Leandro', role: 'Presidente & CEO', dept: 'Presidência', level: 'Estratégico', parentId: null },
+  
+  // Industrial Group
+  { id: '2', name: 'Eduardo Souza', role: 'Diretor Industrial', dept: 'Industrial', level: 'Estratégico', parentId: '1' },
+  { id: '3', name: 'Marcos Silva', role: 'Gerente Geral Industrial', dept: 'Industrial', level: 'Tático', parentId: '2' },
+  { id: '4', name: 'Bruno Alves', role: 'Operador Sênior CNC Router', dept: 'Industrial', level: 'Operacional', parentId: '3' },
+  { id: '5', name: 'Ricardo Melo', role: 'Instalador Especialista', dept: 'Industrial', level: 'Operacional', parentId: '3' },
+  
+  // Comercial Group
+  { id: '6', name: 'Ricardo Santos', role: 'Diretor Comercial', dept: 'Comercial', level: 'Estratégico', parentId: '1' },
+  { id: '7', name: 'Clara Mendes', role: 'Gerente Comercial', dept: 'Comercial', level: 'Tático', parentId: '6' },
+  { id: '8', name: 'Sofia Rezende', role: 'Consultora de Vendas AP', dept: 'Comercial', level: 'Operacional', parentId: '7' },
+  { id: '9', name: 'Leandro Cruz', role: 'Executivo de Contas', dept: 'Comercial', level: 'Operacional', parentId: '7' },
+
+  // Design & Engenharia Group
+  { id: '10', name: 'Ana Beatriz', role: 'Diretora de Design & CAD', dept: 'Design & Engenharia', level: 'Estratégico', parentId: '1' },
+  { id: '11', name: 'Lucas Rocha', role: 'Coordenador de Projetos', dept: 'Design & Engenharia', level: 'Tático', parentId: '10' },
+  { id: '12', name: 'Marcelo Lima', role: 'Cadista Designer Jr', dept: 'Design & Engenharia', level: 'Operacional', parentId: '11' },
+
+  // Financeiro & Admin Group
+  { id: '13', name: 'Julia Moreira', role: 'Diretora Financeira & CFO', dept: 'Financeiro', level: 'Estratégico', parentId: '1' },
+  { id: '14', name: 'Amanda Costa', role: 'Gerente de Contabilidade', dept: 'Financeiro', level: 'Tático', parentId: '13' },
+  { id: '15', name: 'Daniel Dias', role: 'Analista de Faturamento', dept: 'Financeiro', level: 'Operacional', parentId: '14' },
+
+  // Recursos Humanos Group
+  { id: '16', name: 'Patrícia Antunes', role: 'Gerente de DHO & RH', dept: 'Recursos Humanos', level: 'Tático', parentId: '1' },
+  { id: '17', name: 'Sueli Rocha', role: 'Analista de DP / Benefícios', dept: 'Recursos Humanos', level: 'Operacional', parentId: '16' },
+];
+
 export function HR({ initialTab: propInitialTab }: { initialTab?: string }) {
   const [activeTab, setActiveTab] = useState(() => {
     if (propInitialTab === 'hr-cad' || propInitialTab === 'hr-colab') return 'colaboradores';
-    if (propInitialTab === 'hr-org') return 'dashboard'; // Or 'organograma' if implemented
+    if (propInitialTab === 'hr-org') return 'org';
     return 'dashboard';
   });
+  const [orgNodes, setOrgNodes] = useState<OrgNode[]>(INITIAL_ORG_NODES);
   const [selectedColabId, setSelectedColabId] = useState<number | null>(null);
+
+  // States for interactive organograma
+  const [orgViewMode, setOrgViewMode] = useState<'flat' | 'mesh'>('flat');
+  const [isAddingNode, setIsAddingNode] = useState(false);
+  const [isEditingNode, setIsEditingNode] = useState(false);
+  const [editingNode, setEditingNode] = useState<OrgNode | null>(null);
+  const [orgSearchQuery, setOrgSearchQuery] = useState('');
+  const [orgNodeForm, setOrgNodeForm] = useState({
+    name: '',
+    role: '',
+    dept: 'Industrial',
+    level: 'Operacional' as 'Estratégico' | 'Tático' | 'Operacional',
+    parentId: ''
+  });
   
   const SKILLS_LIST = ['Router CNC', 'Laser Fiber', 'Solda MIG/MAG', 'ACM/Dobra', 'SolidWorks', 'Elétrica'];
   
@@ -361,6 +417,102 @@ const PROFICIENCY_LEVELS = {
       )
     }
   ];
+
+  // Organograma action helper functions
+  const getOrgDescendants = (nodeId: string, currentNodes: OrgNode[]): string[] => {
+    const list: string[] = [];
+    const recurse = (id: string) => {
+      const children = currentNodes.filter(n => n.parentId === id);
+      children.forEach(c => {
+        list.push(c.id);
+        recurse(c.id);
+      });
+    };
+    recurse(nodeId);
+    return list;
+  };
+
+  const handleAddNodeSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!orgNodeForm.name.trim() || !orgNodeForm.role.trim()) return;
+    
+    const newNodeId = Math.random().toString(36).substr(2, 9);
+    const newNode: OrgNode = {
+      id: newNodeId,
+      name: orgNodeForm.name.trim(),
+      role: orgNodeForm.role.trim(),
+      dept: orgNodeForm.dept,
+      level: orgNodeForm.level,
+      parentId: orgNodeForm.parentId || null
+    };
+
+    setOrgNodes(prev => [...prev, newNode]);
+    setIsAddingNode(false);
+    setOrgNodeForm({
+      name: '',
+      role: '',
+      dept: 'Industrial',
+      level: 'Operacional',
+      parentId: ''
+    });
+  };
+
+  const handleEditNodeSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingNode || !orgNodeForm.name.trim() || !orgNodeForm.role.trim()) return;
+
+    setOrgNodes(prev => prev.map(n => n.id === editingNode.id ? {
+      ...n,
+      name: orgNodeForm.name.trim(),
+      role: orgNodeForm.role.trim(),
+      dept: orgNodeForm.dept,
+      level: orgNodeForm.level,
+      parentId: orgNodeForm.parentId || null
+    } : n));
+
+    setIsEditingNode(false);
+    setEditingNode(null);
+  };
+
+  const handleDeleteNode = (nodeId: string) => {
+    if (nodeId === '1') {
+      alert("A raiz presidencial (Adams Leandro) não pode ser removida.");
+      return;
+    }
+    const nodeToDelete = orgNodes.find(n => n.id === nodeId);
+    if (!nodeToDelete) return;
+
+    if (confirm(`Tem certeza que deseja remover ${nodeToDelete.name} do organograma? Seus subordinados imediatos serão re-alocados para o nível superior.`)) {
+      setOrgNodes(prev => {
+        return prev
+          .filter(n => n.id !== nodeId)
+          .map(n => n.parentId === nodeId ? { ...n, parentId: nodeToDelete.parentId } : n);
+      });
+    }
+  };
+
+  const handleStartAddSubordinate = (parent: OrgNode) => {
+    setOrgNodeForm({
+      name: '',
+      role: '',
+      dept: parent.dept,
+      level: parent.level === 'Estratégico' ? 'Tático' : 'Operacional',
+      parentId: parent.id
+    });
+    setIsAddingNode(true);
+  };
+
+  const handleStartEditNode = (node: OrgNode) => {
+    setEditingNode(node);
+    setOrgNodeForm({
+      name: node.name,
+      role: node.role,
+      dept: node.dept,
+      level: node.level,
+      parentId: node.parentId || ''
+    });
+    setIsEditingNode(true);
+  };
 
   const selectedColab = COLLABORATORS.find(c => c.id === selectedColabId);
 
@@ -479,23 +631,23 @@ const PROFICIENCY_LEVELS = {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8">
-        <TabsList className="bg-transparent lg:bg-[#0c0c10] border-0 lg:border border-white/5 p-1 flex justify-start overflow-x-auto h-auto lg:h-14 scrollbar-hide flex-nowrap w-full whitespace-nowrap lg:whitespace-normal">
-           {[
-             { id: 'dashboard', label: 'DASHBOARD', icon: <BarChart3 size={14} /> },
-             { id: 'colaboradores', label: 'WORKFORCE', icon: <Users size={14} /> },
-             { id: 'performance', label: 'PRODUTIVIDADE', icon: <Timer size={14} /> },
-             { id: 'skills', label: 'GLOBAL SKILLS', icon: <Target size={14} /> },
-             { id: 'compliance', label: 'COMPLIANCE', icon: <Shield size={14} /> },
-             { id: 'org', label: 'ORGANOGRAMA', icon: <Network size={14} /> },
-           ].map(tab => (
-             <TabsTrigger 
-               key={tab.id}
-               value={tab.id}
-               className="data-[state=active]:bg-white/10 data-[state=active]:text-white text-zinc-500 text-[10px] font-black px-6 h-12 lg:h-full tracking-widest uppercase flex items-center justify-center lg:justify-start gap-2 border-r border-white/5 last:border-0 rounded-none transition-all flex-none"
-             >
-               {tab.icon} {tab.label}
-             </TabsTrigger>
-           ))}
+        <TabsList className="bg-transparent border-0 p-0 flex flex-wrap gap-2 w-full xl:w-auto overflow-x-auto scrollbar-hide">
+          {[
+            { id: 'dashboard', label: 'Dashboard', icon: <BarChart3 size={14} /> },
+            { id: 'colaboradores', label: 'Colaboradores', icon: <Users size={14} /> },
+            { id: 'performance', label: 'Produtividade', icon: <Timer size={14} /> },
+            { id: 'skills', label: 'Habilidades', icon: <Target size={14} /> },
+            { id: 'compliance', label: 'Compliance', icon: <Shield size={14} /> },
+            { id: 'org', label: 'Organograma', icon: <Network size={14} /> },
+          ].map(tab => (
+            <TabsTrigger 
+              key={tab.id}
+              value={tab.id}
+              className="data-[state=active]:bg-blue-600 data-[state=active]:text-white text-zinc-400 bg-zinc-900/60 hover:bg-zinc-800/80 hover:text-zinc-200 border border-zinc-800/85 data-[state=active]:border-blue-500 text-xs font-semibold px-5 h-11 rounded-xl transition-all whitespace-nowrap flex items-center justify-center gap-2.5 cursor-pointer shadow-sm flex-none"
+            >
+              {tab.icon} {tab.label}
+            </TabsTrigger>
+          ))}
         </TabsList>
 
         {/* 1. DASHBOARD INTEL */}
@@ -1436,128 +1588,471 @@ const PROFICIENCY_LEVELS = {
 
         {/* 6. ORGANOGRAMA TAB */}
         <TabsContent value="org" className="space-y-8 mt-0 outline-none">
-           {/* START REVAMP */}
            <div className="grid grid-cols-1 xl:grid-cols-4 gap-8">
-              {/* Sidebar AI Insights */}
+              {/* Sidebar: Analytics, Search, and Directory Operations */}
               <div className="xl:col-span-1 space-y-6">
+                 {/* Stats Card */}
                  <Card className="bg-[#0c0c10] border-white/5 overflow-hidden">
                     <CardHeader className="bg-gradient-to-r from-blue-600/20 to-transparent border-b border-white/5 py-4">
                        <div className="flex items-center gap-2 text-blue-400 text-[10px] font-black tracking-widest uppercase mb-1">
                           <BrainCircuit size={14} className="animate-pulse" /> Org Intelligence
                        </div>
-                       <CardTitle className="text-sm font-black text-white italic uppercase tracking-tighter">Mapeamento Genômico</CardTitle>
+                       <CardTitle className="text-sm font-black text-white italic uppercase tracking-tighter">Mapeamento Corporativo</CardTitle>
                     </CardHeader>
-                    <CardContent className="p-6 space-y-6">
-                       <div className="space-y-4">
-                          <div className="space-y-2">
-                             <div className="flex justify-between items-end text-zinc-500 text-[9px] font-black uppercase">
-                                <span>Eficiência de Gestão</span>
-                                <span className="text-blue-500">88%</span>
-                             </div>
-                             <Progress value={88} className="h-1 bg-white/5" />
+                    <CardContent className="p-6 space-y-5">
+                       <div className="space-y-3">
+                          <div className="flex justify-between items-center text-[10px] font-bold text-zinc-400">
+                             <span>TOTAL MEMBROS</span>
+                             <span className="text-white font-mono">{orgNodes.length}</span>
                           </div>
                           
-                          <div className="p-4 rounded-xl bg-blue-600/5 border border-blue-500/20 space-y-2">
-                             <p className="text-[10px] font-black text-blue-400 uppercase italic">IA Insight</p>
-                             <p className="text-[10px] text-zinc-400 leading-tight">
-                                <span className="text-white italic">Ana Beatriz</span> é o principal nó de conhecimento. Recomenda-se mentorar <span className="text-white">Bruno</span> para balanceamento.
-                             </p>
+                          <div className="space-y-1.5">
+                             <div className="flex justify-between items-end text-[9px] font-black uppercase text-zinc-500">
+                                <span>Estratégico</span>
+                                <span className="text-rose-400">{orgNodes.filter(n => n.level === 'Estratégico').length}</span>
+                             </div>
+                             <Progress value={(orgNodes.filter(n => n.level === 'Estratégico').length / orgNodes.length) * 100} className="h-1 bg-white/5 [&>div]:bg-rose-500" />
+                          </div>
+
+                          <div className="space-y-1.5">
+                             <div className="flex justify-between items-end text-[9px] font-black uppercase text-zinc-500">
+                                <span>Tático</span>
+                                <span className="text-amber-400">{orgNodes.filter(n => n.level === 'Tático').length}</span>
+                             </div>
+                             <Progress value={(orgNodes.filter(n => n.level === 'Tático').length / orgNodes.length) * 100} className="h-1 bg-white/5 [&>div]:bg-amber-500" />
+                          </div>
+
+                          <div className="space-y-1.5">
+                             <div className="flex justify-between items-end text-[9px] font-black uppercase text-zinc-500">
+                                <span>Operacional</span>
+                                <span className="text-emerald-400">{orgNodes.filter(n => n.level === 'Operacional').length}</span>
+                             </div>
+                             <Progress value={(orgNodes.filter(n => n.level === 'Operacional').length / orgNodes.length) * 100} className="h-1 bg-white/5 [&>div]:bg-emerald-500" />
                           </div>
                        </div>
+
+                       <div className="p-3.5 rounded-xl bg-blue-600/5 border border-blue-500/10 text-[10px] space-y-1">
+                          <p className="font-black text-blue-400 uppercase italic">Recomendação Mesh-IA</p>
+                          <p className="text-zinc-400 leading-tight">
+                             Níveis distribuídos de forma equilibrada. Prontos para expansão estratégica com foco operacional.
+                          </p>
+                       </div>
+
+                       <Button 
+                         onClick={() => {
+                           setOrgNodeForm({ name: '', role: '', dept: 'Industrial', level: 'Operacional', parentId: orgNodes[0]?.id || '' });
+                           setIsAddingNode(true);
+                         }}
+                         className="w-full bg-blue-600 hover:bg-blue-500/90 text-white font-black text-[10px] uppercase tracking-widest h-10 gap-2"
+                       >
+                          <Plus size={14} /> Novo Membro
+                       </Button>
                     </CardContent>
                  </Card>
 
-                 <Card className="bg-[#0c0c10] border-white/5">
-                    <CardHeader className="pb-2">
-                       <CardTitle className="text-[10px] font-black text-white uppercase italic tracking-widest">Capacidade por Cluster</CardTitle>
+                 {/* Custom search filter & direct list edit directory */}
+                 <Card className="bg-[#0c0c10] border-white/5 overflow-hidden">
+                    <CardHeader className="py-4 border-b border-white/5">
+                       <CardTitle className="text-[10px] font-black text-white uppercase italic tracking-widest">Diretório de Busca Fiel</CardTitle>
+                       <CardDescription className="text-[9px] text-zinc-500 uppercase">Busque e edite nós sem navegar no gráfico</CardDescription>
                     </CardHeader>
-                     <CardContent className="h-40 p-0 overflow-hidden relative min-h-[160px]">
-                        <ResponsiveContainer width="99%" height="99%">
-                           <PieChart>
-                             <Pie data={[{v: 45}, {v: 25}, {v: 30}]} innerRadius={35} outerRadius={50} paddingAngle={2} dataKey="v">
-                                <Cell fill="#3b82f6" /><Cell fill="#10b981" /><Cell fill="#f59e0b" />
-                             </Pie>
-                          </PieChart>
-                       </ResponsiveContainer>
+                    <CardContent className="p-4 space-y-4">
+                       <div className="relative">
+                          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-600 w-3.5 h-3.5" />
+                          <Input 
+                            value={orgSearchQuery}
+                            onChange={e => setOrgSearchQuery(e.target.value)}
+                            placeholder="Buscar nome, cargo ou setor..." 
+                            className="bg-black/50 border-white/5 text-[11px] h-9 pl-9 text-white placeholder-zinc-600 uppercase tracking-tighter"
+                          />
+                       </div>
+
+                       {/* List of personnel nodes */}
+                       <div className="space-y-2 max-h-[300px] overflow-y-auto scrollbar-thin scrollbar-thumb-zinc-800 pr-1">
+                          {orgNodes.filter(n => 
+                            n.name.toLowerCase().includes(orgSearchQuery.toLowerCase()) ||
+                            n.role.toLowerCase().includes(orgSearchQuery.toLowerCase()) ||
+                            n.dept.toLowerCase().includes(orgSearchQuery.toLowerCase())
+                          ).map(node => (
+                            <div key={node.id} className="p-2 bg-white/[0.01] border border-white/5 hover:border-white/10 rounded-lg flex items-center justify-between gap-2 group transition-all">
+                               <div className="min-w-0">
+                                  <p className="text-[10px] font-black text-white truncate leading-none uppercase">{node.name}</p>
+                                  <p className="text-[8px] text-zinc-500 font-bold truncate mt-0.5 leading-none uppercase">{node.role} • {node.dept}</p>
+                               </div>
+                               <div className="flex gap-1">
+                                  <Button 
+                                    variant="ghost" 
+                                    size="icon" 
+                                    className="h-6 w-6 text-zinc-500 hover:text-white hover:bg-white/5"
+                                    onClick={() => handleStartEditNode(node)}
+                                  >
+                                     <Edit size={10} />
+                                  </Button>
+                                  {node.parentId && (
+                                    <Button 
+                                      variant="ghost" 
+                                      size="icon" 
+                                      className="h-6 w-6 text-rose-500 hover:text-rose-400 hover:bg-rose-950/25"
+                                      onClick={() => handleDeleteNode(node.id)}
+                                    >
+                                       <Trash2 size={10} />
+                                    </Button>
+                                  )}
+                               </div>
+                            </div>
+                          ))}
+                          {orgNodes.filter(n => 
+                            n.name.toLowerCase().includes(orgSearchQuery.toLowerCase()) ||
+                            n.role.toLowerCase().includes(orgSearchQuery.toLowerCase()) ||
+                            n.dept.toLowerCase().includes(orgSearchQuery.toLowerCase())
+                          ).length === 0 && (
+                            <p className="text-[9px] text-zinc-600 italic text-center py-4">Nenhum membro encontrado.</p>
+                          )}
+                       </div>
                     </CardContent>
                  </Card>
               </div>
 
-              {/* Main Organogram Visualizer */}
+              {/* Main Panel: Interactive Tree layout vs rotating 3D Mesh layout */}
               <div className="xl:col-span-3">
                  <Card className="bg-[#0c0c10] border-white/5 overflow-hidden min-h-[700px] flex flex-col relative">
-                    <div className="absolute top-6 left-6 z-20 flex gap-2">
-                       <Button variant="outline" size="sm" className="bg-black/40 border-white/10 text-[8px] font-black uppercase h-8 px-4 backdrop-blur-md">Mesh View</Button>
+                    <div className="absolute top-6 right-6 z-20 flex gap-2">
+                       <Button 
+                         variant={orgViewMode === 'flat' ? 'secondary' : 'outline'}
+                         size="sm" 
+                         onClick={() => setOrgViewMode('flat')}
+                         className={cn(
+                           "text-[9px] font-black uppercase h-8 px-4",
+                           orgViewMode === 'flat' ? 'bg-blue-600 hover:bg-blue-500 text-white border-0' : 'bg-black/40 border-white/10 text-zinc-400 hover:text-white backdrop-blur-md'
+                         )}
+                       >
+                         Visão Tradicional
+                       </Button>
+                       <Button 
+                         variant={orgViewMode === 'mesh' ? 'secondary' : 'outline'}
+                         size="sm" 
+                         onClick={() => setOrgViewMode('mesh')}
+                         className={cn(
+                           "text-[9px] font-black uppercase h-8 px-4",
+                           orgViewMode === 'mesh' ? 'bg-blue-600 hover:bg-blue-500 text-white border-0 animate-pulse' : 'bg-black/40 border-white/10 text-zinc-400 hover:text-white backdrop-blur-md'
+                         )}
+                       >
+                         Visualizador 3D Mesh
+                       </Button>
                     </div>
-                    <div className="flex-1 flex flex-col items-center justify-center relative overflow-auto p-12 custom-scrollbar">
-                       <div className="flex flex-col items-center gap-20 relative z-10">
-                          {/* ROOT node */}
-                          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-                             <div className="w-56 p-6 bg-black border-2 border-blue-600 rounded-[2.5rem] text-center shadow-[0_0_50px_rgba(37,99,235,0.15)] group hover:scale-105 transition-all duration-500 cursor-pointer">
-                                <p className="text-[10px] font-black text-blue-500 uppercase tracking-[0.3em] italic mb-2">Presidente / CEO</p>
-                                <p className="text-xl font-black text-white uppercase italic tracking-tighter">Adams Leandro</p>
+
+                    <div className="absolute top-6 left-6 z-20">
+                       <h2 className="text-sm font-black text-white italic uppercase tracking-tighter leading-none">
+                          Diagramação Organizacional
+                       </h2>
+                       <p className="text-[9px] text-zinc-500 uppercase tracking-widest mt-1">
+                          Navegue, insira lideranças e alterne eixos de profundidade
+                       </p>
+                    </div>
+
+                    {/* Canvas/Tree render context */}
+                    <div className="flex-1 flex flex-col items-center justify-center relative overflow-auto p-12 pt-28 custom-scrollbar">
+                       {orgViewMode === 'mesh' ? (
+                          <div className="w-full h-[580px] flex flex-col relative">
+                             <OrgMesh3D 
+                               nodes={orgNodes}
+                               onSelectNode={(node) => handleStartEditNode(node)}
+                             />
+                             <div className="absolute bottom-4 left-4 right-4 pointer-events-none flex items-center justify-center">
+                                <div className="p-3 bg-black/80 border border-white/5 backdrop-blur-md rounded-xl flex items-center gap-3">
+                                   <Info size={14} className="text-blue-500 animate-bounce" />
+                                   <p className="text-[8.5px] font-black text-zinc-400 uppercase tracking-widest">
+                                      Arraste com o cursor para navegar na visão tridimensional. Clique em um nó para editá-lo.
+                                   </p>
+                                </div>
                              </div>
-                             <div className="h-16 w-0.5 mx-auto bg-gradient-to-b from-blue-600 to-white/5" />
-                          </motion.div>
-                          {/* NEW CONTENT START */}
+                          </div>
+                       ) : (
+                          <div className="flex flex-col items-center gap-12 relative z-10 w-full overflow-x-auto select-none py-10">
+                             {/* Root recursion start point */}
+                             {orgNodes.find(n => n.parentId === null) ? (
+                               <TreeNode 
+                                 node={orgNodes.find(n => n.parentId === null)!}
+                                 nodes={orgNodes}
+                                 onEdit={handleStartEditNode}
+                                 onDelete={handleDeleteNode}
+                                 onAddSub={handleStartAddSubordinate}
+                               />
+                             ) : (
+                               <div className="text-center">
+                                  <p className="text-[11px] text-zinc-500 italic">Estrutura sem nó raiz configurado.</p>
+                                  <Button 
+                                    className="mt-4 text-[10px] font-black uppercase"
+                                    onClick={() => setOrgNodes([{ id: '1', name: 'Adams Leandro', role: 'Presidente & CEO', dept: 'Presidência', level: 'Estratégico', parentId: null }])}
+                                  >
+                                     Resetar para Presidente Adams Leandro
+                                  </Button>
+                               </div>
+                             )}
+                          </div>
+                       )}
+                    </div>
 
-                 {/* C-Level */}
-                 <div className="flex gap-12 md:gap-32 w-full justify-center">
-                    {[
-                      { label: 'Diretoria Industrial', user: 'Eduardo Souza', color: 'blue' },
-                      { label: 'Diretoria Comercial', user: 'Ricardo Santos', color: 'amber' },
-                      { label: 'Diretoria Design', user: 'Ana Beatriz', color: 'purple' },
-                    ].map((node, i) => (
-                      <div key={i} className="flex flex-col items-center gap-10">
-                        <div className={cn(
-                           "w-36 p-4 bg-white/[0.02] border rounded-2xl text-center transition-all hover:scale-105",
-                           node.color === "blue" ? "border-blue-500 shadow-xl shadow-blue-500/10" :
-                           node.color === "amber" ? "border-amber-500 shadow-xl shadow-amber-500/10" :
-                           "border-purple-500 shadow-xl shadow-purple-500/10"
-                        )}>
-                           <p className={cn(
-                              "text-[8px] font-black uppercase tracking-widest italic mb-1",
-                              node.color === "blue" ? "text-blue-500" :
-                              node.color === "amber" ? "text-amber-500" :
-                              "text-purple-500"
-                           )}>
-                              {node.label}
-                           </p>
-                           <p className="text-xs font-black text-white uppercase italic tracking-tight">{node.user}</p>
-                        </div>
-                        <div className={cn(
-                           "h-16 w-0.5",
-                           node.color === "blue" ? "bg-gradient-to-b from-blue-500/40 to-white/5" :
-                           node.color === "amber" ? "bg-gradient-to-b from-amber-500/40 to-white/5" :
-                           "bg-gradient-to-b from-purple-500/40 to-white/5"
-                        )} />
-                         
-                         {/* Staff Level */}
-                         <div className="flex gap-4">
-                            {[1, 2].map(j => (
-                              <div key={j} className="w-8 h-8 rounded-full border border-white/10 bg-white/5" />
-                            ))}
-                         </div>
-                      </div>
-                    ))}
-                        </div>
-                     </div>
-                  </div>
+                    <div className="absolute bottom-8 left-8 right-8 flex items-center justify-between pointer-events-none xl:pointer-events-auto">
+                       <div className="p-3 bg-white/[0.01] border border-white/5 rounded-xl flex items-center gap-3">
+                          <div className="flex gap-2">
+                             <span className="flex items-center gap-1.5 text-[8.5px] font-black text-rose-400 uppercase">
+                                <span className="w-2 h-2 rounded-full bg-rose-500 shadow-[0_0_8px_rgba(244,63,94,0.5)]" /> ESTRATÉGICO
+                             </span>
+                             <span className="flex items-center gap-1.5 text-[8.5px] font-black text-amber-400 uppercase">
+                                <span className="w-2 h-2 rounded-full bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.5)]" /> TÁTICO
+                             </span>
+                             <span className="flex items-center gap-1.5 text-[8.5px] font-black text-emerald-400 uppercase">
+                                <span className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" /> OPERACIONAL
+                             </span>
+                          </div>
+                       </div>
+                       <div className="flex gap-2">
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            className="bg-white/5 border-white/10 text-[9px] font-black uppercase h-8 px-4"
+                            onClick={() => window.print()}
+                          >
+                             Exportar PDF
+                          </Button>
+                       </div>
+                    </div>
+                 </Card>
+              </div>
+           </div>
 
-                  <div className="absolute bottom-8 left-8 right-8 flex items-center justify-between">
-                     <div className="p-4 bg-white/[0.02] border border-white/5 rounded-xl flex items-center gap-4">
-                        <Info size={16} className="text-blue-500" />
-                        <p className="text-[9px] font-black text-zinc-500 uppercase tracking-widest">Arraste para navegar na visão tridimensional (Mesh-View)</p>
-                     </div>
-                     <div className="flex gap-2">
-                        <Button variant="outline" size="sm" className="bg-white/5 border-white/10 text-[9px] font-black uppercase h-8 px-4">Exportar PDF</Button>
-                        <Button variant="outline" size="sm" className="bg-white/5 border-white/10 text-[9px] font-black uppercase h-8 px-4">Visualizar por Setor</Button>
-                     </div>
-                  </div>
-               </Card>
-            </div>
-         </div>
-      </TabsContent>
+           {/* DIALOG FOR ADDING A NODE */}
+           <Dialog open={isAddingNode} onOpenChange={setIsAddingNode}>
+              <DialogContent className="bg-[#0c0c10] border-white/5 text-white max-w-md">
+                 <DialogHeader>
+                    <DialogTitle className="text-base font-black uppercase tracking-tight italic">
+                       Adicionar Membro ao Organograma
+                    </DialogTitle>
+                    <DialogDescription className="text-[10px] text-zinc-500 uppercase tracking-wider">
+                       Informe os detalhes do colaborador para acoplar hierarquia
+                    </DialogDescription>
+                 </DialogHeader>
+                 
+                 <form onSubmit={handleAddNodeSubmit} className="space-y-4">
+                    <div className="space-y-1.5">
+                       <Label className="text-[10px] font-bold text-zinc-400 uppercase">Nome Completo</Label>
+                       <Input 
+                         required
+                         value={orgNodeForm.name}
+                         onChange={e => setOrgNodeForm(prev => ({ ...prev, name: e.target.value }))}
+                         placeholder="Ex: Carlos Eduardo Medeiros"
+                         className="bg-black/50 border-white/5 text-xs text-white uppercase tracking-tighter"
+                       />
+                    </div>
+
+                    <div className="space-y-1.5">
+                       <Label className="text-[10px] font-bold text-zinc-400 uppercase">Cargo / Função</Label>
+                       <Input 
+                         required
+                         value={orgNodeForm.role}
+                         onChange={e => setOrgNodeForm(prev => ({ ...prev, role: e.target.value }))}
+                         placeholder="Ex: Engenheiro de Processos CNC"
+                         className="bg-black/50 border-white/5 text-xs text-white uppercase tracking-tighter"
+                       />
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                       <div className="space-y-1.5">
+                          <Label className="text-[10px] font-bold text-zinc-400 uppercase">Nível Hierárquico</Label>
+                          <Select 
+                            value={orgNodeForm.level}
+                            onValueChange={val => setOrgNodeForm(prev => ({ ...prev, level: val as any }))}
+                          >
+                             <SelectTrigger className="bg-black/50 border-white/5 text-xs uppercase">
+                                <SelectValue placeholder="Nível" />
+                             </SelectTrigger>
+                             <SelectContent className="bg-[#0c0c10] border-white/5 text-white uppercase text-xs">
+                                <SelectItem value="Estratégico">Estratégico</SelectItem>
+                                <SelectItem value="Tático">Tático</SelectItem>
+                                <SelectItem value="Operacional">Operacional</SelectItem>
+                             </SelectContent>
+                          </Select>
+                       </div>
+
+                       <div className="space-y-1.5">
+                          <Label className="text-[10px] font-bold text-zinc-400 uppercase">Área / Setor</Label>
+                          <Select 
+                            value={orgNodeForm.dept}
+                            onValueChange={val => setOrgNodeForm(prev => ({ ...prev, dept: val }))}
+                          >
+                             <SelectTrigger className="bg-black/50 border-white/5 text-xs uppercase">
+                                <SelectValue placeholder="Setor" />
+                             </SelectTrigger>
+                             <SelectContent className="bg-[#0c0c10] border-white/5 text-white uppercase text-xs">
+                                <SelectItem value="Presidência">Presidência</SelectItem>
+                                <SelectItem value="Industrial">Industrial (Produção)</SelectItem>
+                                <SelectItem value="Comercial">Comercial (Vendas)</SelectItem>
+                                <SelectItem value="Design & Engenharia">Design & Engenharia</SelectItem>
+                                <SelectItem value="Financeiro">Financeiro</SelectItem>
+                                <SelectItem value="Recursos Humanos">Recursos Humanos (RH)</SelectItem>
+                             </SelectContent>
+                          </Select>
+                       </div>
+                    </div>
+
+                    <div className="space-y-1.5">
+                       <Label className="text-[10px] font-bold text-zinc-400 uppercase">Supervisão Direta (Superior Hierárquico)</Label>
+                       <Select 
+                         value={orgNodeForm.parentId}
+                         onValueChange={val => setOrgNodeForm(prev => ({ ...prev, parentId: val }))}
+                       >
+                          <SelectTrigger className="bg-black/50 border-white/5 text-xs uppercase">
+                             <SelectValue placeholder="Selecione o Líder..." />
+                          </SelectTrigger>
+                          <SelectContent className="bg-[#0c0c10] border-white/5 text-white uppercase text-xs">
+                             {orgNodes.map(n => (
+                               <SelectItem key={n.id} value={n.id}>
+                                  {n.name} ({n.role} • {n.dept})
+                               </SelectItem>
+                             ))}
+                          </SelectContent>
+                       </Select>
+                    </div>
+
+                    <DialogFooter className="pt-4 border-t border-white/5 flex gap-2">
+                       <Button 
+                         type="button" 
+                         variant="ghost" 
+                         onClick={() => setIsAddingNode(false)}
+                         className="text-[10px] font-black uppercase text-zinc-500"
+                       >
+                          Cancelar
+                       </Button>
+                       <Button 
+                         type="submit" 
+                         className="bg-blue-600 hover:bg-blue-500 text-white text-[10px] font-black uppercase px-6"
+                       >
+                          Criar e Agrupar
+                       </Button>
+                    </DialogFooter>
+                 </form>
+              </DialogContent>
+           </Dialog>
+
+           {/* DIALOG FOR EDITING A NODE */}
+           <Dialog open={isEditingNode} onOpenChange={setIsEditingNode}>
+              <DialogContent className="bg-[#0c0c10] border-white/5 text-white max-w-md">
+                 <DialogHeader>
+                    <DialogTitle className="text-base font-black uppercase tracking-tight italic">
+                       Editar Membro: {editingNode?.name}
+                    </DialogTitle>
+                    <DialogDescription className="text-[10px] text-zinc-500 uppercase tracking-wider">
+                       Modifique permissões, cargos ou remodele a matriz relacional
+                    </DialogDescription>
+                 </DialogHeader>
+                 
+                 <form onSubmit={handleEditNodeSubmit} className="space-y-4">
+                    <div className="space-y-1.5">
+                       <Label className="text-[10px] font-bold text-zinc-400 uppercase">Nome Completo</Label>
+                       <Input 
+                         required
+                         value={orgNodeForm.name}
+                         onChange={e => setOrgNodeForm(prev => ({ ...prev, name: e.target.value }))}
+                         className="bg-black/50 border-white/5 text-xs text-white uppercase tracking-tighter"
+                       />
+                    </div>
+
+                    <div className="space-y-1.5">
+                       <Label className="text-[10px] font-bold text-zinc-400 uppercase">Cargo / Função</Label>
+                       <Input 
+                         required
+                         value={orgNodeForm.role}
+                         onChange={e => setOrgNodeForm(prev => ({ ...prev, role: e.target.value }))}
+                         className="bg-black/50 border-white/5 text-xs text-white uppercase tracking-tighter"
+                       />
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                       <div className="space-y-1.5">
+                          <Label className="text-[10px] font-bold text-zinc-400 uppercase">Nível Hierárquico</Label>
+                          <Select 
+                            value={orgNodeForm.level}
+                            onValueChange={val => setOrgNodeForm(prev => ({ ...prev, level: val as any }))}
+                          >
+                             <SelectTrigger className="bg-black/50 border-white/5 text-xs uppercase">
+                                <SelectValue placeholder="Nível" />
+                             </SelectTrigger>
+                             <SelectContent className="bg-[#0c0c10] border-white/5 text-white uppercase text-xs">
+                                <SelectItem value="Estratégico">Estratégico</SelectItem>
+                                <SelectItem value="Tático">Tático</SelectItem>
+                                <SelectItem value="Operacional">Operacional</SelectItem>
+                             </SelectContent>
+                          </Select>
+                       </div>
+
+                       <div className="space-y-1.5">
+                          <Label className="text-[10px] font-bold text-zinc-400 uppercase">Área / Setor</Label>
+                          <Select 
+                            value={orgNodeForm.dept}
+                            onValueChange={val => setOrgNodeForm(prev => ({ ...prev, dept: val }))}
+                          >
+                             <SelectTrigger className="bg-black/50 border-white/5 text-xs uppercase">
+                                <SelectValue placeholder="Setor" />
+                             </SelectTrigger>
+                             <SelectContent className="bg-[#0c0c10] border-white/5 text-white uppercase text-xs">
+                                <SelectItem value="Presidência">Presidência</SelectItem>
+                                <SelectItem value="Industrial">Industrial (Produção)</SelectItem>
+                                <SelectItem value="Comercial">Comercial (Vendas)</SelectItem>
+                                <SelectItem value="Design & Engenharia">Design & Engenharia</SelectItem>
+                                <SelectItem value="Financeiro">Financeiro</SelectItem>
+                                <SelectItem value="Recursos Humanos">Recursos Humanos (RH)</SelectItem>
+                             </SelectContent>
+                          </Select>
+                       </div>
+                    </div>
+
+                    {editingNode?.parentId && (
+                       <div className="space-y-1.5">
+                          <Label className="text-[10px] font-bold text-zinc-400 uppercase">Líder Imediato (No Loop de Segurança)</Label>
+                          <Select 
+                            value={orgNodeForm.parentId}
+                            onValueChange={val => setOrgNodeForm(prev => ({ ...prev, parentId: val }))}
+                          >
+                             <SelectTrigger className="bg-black/50 border-white/5 text-xs uppercase">
+                                <SelectValue placeholder="Líder" />
+                             </SelectTrigger>
+                             <SelectContent className="bg-[#0c0c10] border-white/5 text-white uppercase text-xs">
+                                {orgNodes
+                                  .filter(n => n.id !== editingNode?.id && !getOrgDescendants(editingNode?.id || '', orgNodes).includes(n.id))
+                                  .map(n => (
+                                    <SelectItem key={n.id} value={n.id}>
+                                       {n.name} ({n.role} • {n.dept})
+                                    </SelectItem>
+                                )) || <SelectItem value="">Sem Líder Compatível</SelectItem>}
+                             </SelectContent>
+                          </Select>
+                       </div>
+                    )}
+
+                    <DialogFooter className="pt-4 border-t border-white/5 flex gap-2">
+                       <Button 
+                         type="button" 
+                         variant="ghost" 
+                         onClick={() => {
+                           setIsEditingNode(false);
+                           setEditingNode(null);
+                         }}
+                         className="text-[10px] font-black uppercase text-zinc-500"
+                       >
+                          Cancelar
+                       </Button>
+                       <Button 
+                         type="submit" 
+                         className="bg-blue-600 hover:bg-blue-500 text-white text-[10px] font-black uppercase px-6"
+                       >
+                          Aplicar Alterações
+                       </Button>
+                    </DialogFooter>
+                 </form>
+              </DialogContent>
+           </Dialog>
+        </TabsContent>
    </Tabs>
 
       {/* Global Status Footer */}
@@ -1579,6 +2074,453 @@ const PROFICIENCY_LEVELS = {
             ))}
          </div>
       </div>
+    </div>
+  );
+}
+
+// Subcomponents for the organograma (TreeNode and OrgMesh3D)
+
+interface TreeNodeProps {
+  node: OrgNode;
+  nodes: OrgNode[];
+  onEdit: (node: OrgNode) => void;
+  onDelete: (id: string) => void;
+  onAddSub: (node: OrgNode) => void;
+}
+
+function TreeNode({ node, nodes, onEdit, onDelete, onAddSub }: TreeNodeProps) {
+  const children = nodes.filter(c => c.parentId === node.id);
+
+  const levelTag = {
+    'Estratégico': 'bg-rose-500/10 text-rose-400 border-rose-500/20',
+    'Tático': 'bg-amber-500/10 text-amber-400 border-amber-500/20',
+    'Operacional': 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
+  };
+
+  const levelBorder = {
+    'Estratégico': 'border-rose-500/30 hover:border-rose-500 shadow-[0_0_15px_rgba(244,63,94,0.02)]',
+    'Tático': 'border-amber-500/30 hover:border-amber-500 shadow-[0_0_15px_rgba(245,158,11,0.02)]',
+    'Operacional': 'border-emerald-500/30 hover:border-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.02)]',
+  };
+
+  return (
+    <div className="flex flex-col items-center">
+      {/* Node card and actions wrapper */}
+      <div className={cn(
+        "w-52 p-4 bg-[#0a0a0f] border rounded-2xl text-center group relative backdrop-blur-md transition-all duration-300 hover:scale-[1.03] hover:bg-black/60",
+        levelBorder[node.level]
+      )}>
+        <p className="text-[7.5px] font-black text-zinc-500 uppercase tracking-[0.2em]">{node.dept}</p>
+        <h4 className="text-[12px] font-black text-white uppercase italic tracking-tight truncate mt-1">{node.name}</h4>
+        <p className="text-[10px] text-zinc-400 font-bold truncate tracking-tight">{node.role}</p>
+        
+        <div className="mt-2.5 flex items-center justify-center gap-1">
+          <Badge variant="outline" className={cn("text-[7px] font-black px-1.5 h-4 uppercase tracking-widest", levelTag[node.level])}>
+            {node.level}
+          </Badge>
+        </div>
+
+        {/* Hover overlay menu with actions */}
+        <div className="absolute inset-0 bg-[#07070a]/95 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex flex-col justify-center items-center gap-1 px-3 z-30">
+          <p className="text-[8px] font-mono text-zinc-500 uppercase truncate max-w-full italic mb-0.5">{node.name}</p>
+          <div className="flex gap-1 w-full justify-center">
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="h-6 text-[8px] font-black uppercase text-blue-400 border-blue-500/20 hover:bg-blue-500/10 flex-1"
+              onClick={() => onAddSub(node)}
+            >
+              + Sub
+            </Button>
+            <Button 
+              variant="outline" 
+              size="icon" 
+              className="h-6 w-6 border-zinc-800 hover:border-zinc-700 text-zinc-400 hover:text-white"
+              onClick={() => onEdit(node)}
+            >
+              <Edit size={10} />
+            </Button>
+            {node.parentId && (
+              <Button 
+                variant="outline"
+                size="icon" 
+                className="h-6 w-6 border-rose-500/20 hover:border-rose-500 text-rose-500 hover:bg-rose-500/10"
+                onClick={() => onDelete(node.id)}
+              >
+                <Trash2 size={10} />
+              </Button>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {children.length > 0 && (
+        <div className="h-8 w-[1px] bg-white/10" />
+      )}
+
+      {children.length > 0 && (
+        <div className="flex gap-4 relative pt-4">
+          {children.length > 1 && (
+            <div className="absolute top-0 left-[104px] right-[104px] h-[1px] bg-white/10" />
+          )}
+
+          {children.map(child => (
+            <div key={child.id} className="relative flex flex-col items-center">
+              <div className="absolute -top-4 w-[1px] h-4 bg-white/10" />
+              <TreeNode 
+                node={child} 
+                nodes={nodes} 
+                onEdit={onEdit} 
+                onDelete={onDelete} 
+                onAddSub={onAddSub} 
+              />
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+interface OrgMesh3DProps {
+  nodes: OrgNode[];
+  onSelectNode: (node: OrgNode) => void;
+}
+
+function OrgMesh3D({ nodes, onSelectNode }: OrgMesh3DProps) {
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const rotationX = useRef<number>(0.3); // rotate down slightly
+  const rotationY = useRef<number>(0.5); // rotate right slightly
+  const isDragging = useRef<boolean>(false);
+  const previousMousePosition = useRef({ x: 0, y: 0 });
+  const animationFrameId = useRef<number | null>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    let width = canvas.clientWidth || 600;
+    let height = canvas.clientHeight || 500;
+    canvas.width = width;
+    canvas.height = height;
+
+    // Maintain dimensions via ResizeObserver
+    const resizeObserver = new ResizeObserver(() => {
+      if (canvas) {
+        width = canvas.clientWidth || 600;
+        height = canvas.clientHeight || 500;
+        canvas.width = width;
+        canvas.height = height;
+      }
+    });
+    resizeObserver.observe(canvas);
+
+    // Filter by levels to lay them out in 3D rings/planes
+    const stratNodes = nodes.filter(n => n.level === 'Estratégico');
+    const tactNodes = nodes.filter(n => n.level === 'Tático');
+    const operNodes = nodes.filter(n => n.level === 'Operacional');
+
+    // Setup coordinates in local space
+    const points3D = nodes.map(node => {
+      let x = 0;
+      let y = 0;
+      let z = 0;
+
+      if (node.level === 'Estratégico') {
+        const idx = stratNodes.indexOf(node);
+        const total = stratNodes.length;
+        const radius = 90;
+        const angle = total > 1 ? (idx / total) * Math.PI * 2 : 0;
+        x = Math.cos(angle) * radius;
+        y = -100;
+        z = Math.sin(angle) * radius;
+      } else if (node.level === 'Tático') {
+        const idx = tactNodes.indexOf(node);
+        const total = tactNodes.length;
+        const radius = 140;
+        const angle = total > 1 ? (idx / total) * Math.PI * 2 : 0;
+        x = Math.cos(angle) * radius;
+        y = 10;
+        z = Math.sin(angle) * radius;
+      } else {
+        const idx = operNodes.indexOf(node);
+        const total = operNodes.length;
+        const radius = 190;
+        const angle = total > 1 ? (idx / total) * Math.PI * 2 : 0;
+        x = Math.cos(angle) * radius;
+        y = 120;
+        z = Math.sin(angle) * radius;
+      }
+
+      return {
+        node,
+        x,
+        y,
+        z,
+        projected: { u: 0, v: 0, scale: 1, zDepth: 0 }
+      };
+    });
+
+    const draw = () => {
+      // Background gradient
+      ctx.fillStyle = '#050508';
+      ctx.fillRect(0, 0, width, height);
+
+      // Subtle network cyber mesh grid background
+      ctx.strokeStyle = 'rgba(59, 130, 246, 0.02)';
+      ctx.lineWidth = 1;
+      const step = 45;
+      for (let j = 0; j < width; j += step) {
+        ctx.beginPath();
+        ctx.moveTo(j, 0);
+        ctx.lineTo(j, height);
+        ctx.stroke();
+      }
+      for (let k = 0; k < height; k += step) {
+        ctx.beginPath();
+        ctx.moveTo(0, k);
+        ctx.lineTo(width, k);
+        ctx.stroke();
+      }
+
+      const rx = rotationX.current;
+      const ry = rotationY.current;
+      const centerX = width / 2;
+      const centerY = height / 2;
+      const cameraDistance = 450;
+
+      // Project each coordinate in 3D perspective
+      points3D.forEach(p => {
+        // Yaw (rotate Y)
+        const cosY = Math.cos(ry);
+        const sinY = Math.sin(ry);
+        const x1 = p.x * cosY - p.z * sinY;
+        const z1 = p.x * sinY + p.z * cosY;
+
+        // Pitch (rotate X)
+        const cosX = Math.cos(rx);
+        const sinX = Math.sin(rx);
+        const y2 = p.y * cosX - z1 * sinX;
+        const z2 = p.y * sinX + z1 * cosX;
+
+        // Apply scale based on depth distance
+        const scale = cameraDistance / (cameraDistance + z2);
+
+        p.projected.u = centerX + x1 * scale * 1.5;
+        p.projected.v = centerY + y2 * scale * 1.25;
+        p.projected.scale = scale;
+        p.projected.zDepth = z2;
+      });
+
+      // Draw Connection Links (sorted by depth for standard occlusion)
+      points3D.forEach(child => {
+        if (!child.node.parentId) return;
+        const parent = points3D.find(p => p.node.id === child.node.parentId);
+        if (!parent) return;
+
+        const avgDepth = (child.projected.zDepth + parent.projected.zDepth) / 2;
+        const depthOpacity = Math.max(0.04, Math.min(0.35, 1 - (avgDepth + 200) / 400));
+
+        // Draw connecting laser line
+        ctx.beginPath();
+        ctx.moveTo(parent.projected.u, parent.projected.v);
+        ctx.lineTo(child.projected.u, child.projected.v);
+
+        // Customize color by subordinate level
+        if (child.node.level === 'Estratégico') {
+          ctx.strokeStyle = `rgba(244, 63, 94, ${depthOpacity * 0.8})`;
+        } else if (child.node.level === 'Tático') {
+          ctx.strokeStyle = `rgba(245, 158, 11, ${depthOpacity * 0.8})`;
+        } else {
+          ctx.strokeStyle = `rgba(16, 185, 129, ${depthOpacity * 0.8})`;
+        }
+
+        ctx.lineWidth = Math.max(1, 1.8 * ((child.projected.scale + parent.projected.scale) / 2));
+        ctx.stroke();
+      });
+
+      // Sort points from back to front (Painter's algorithm)
+      const sortedPoints = [...points3D].sort((a, b) => b.projected.zDepth - a.projected.zDepth);
+
+      sortedPoints.forEach(p => {
+        const { u, v, scale, zDepth } = p.projected;
+        const size = Math.max(5, 13 * scale);
+
+        // Set palette colors as RGB values
+        let colorRGB = '59, 130, 246'; // blue default
+        if (p.node.level === 'Estratégico') colorRGB = '244, 63, 94'; // rose
+        else if (p.node.level === 'Tático') colorRGB = '245, 158, 11'; // amber
+        else if (p.node.level === 'Operacional') colorRGB = '16, 185, 129'; // emerald
+
+        // Adjust opacity factor by distance
+        const opacity = Math.max(0.2, Math.min(1, 1 - (zDepth / 250)));
+
+        // Glow ring blur shadow
+        ctx.shadowBlur = 15 * scale;
+        ctx.shadowColor = `rgba(${colorRGB}, ${0.5 * opacity})`;
+
+        // Glow circle outer bloom
+        ctx.beginPath();
+        const radGrad = ctx.createRadialGradient(u, v, size * 0.1, u, v, size);
+        radGrad.addColorStop(0, `rgba(${colorRGB}, ${1.0 * opacity})`);
+        radGrad.addColorStop(0.3, `rgba(${colorRGB}, ${0.5 * opacity})`);
+        radGrad.addColorStop(1, `rgba(${colorRGB}, 0)`);
+        ctx.fillStyle = radGrad;
+        ctx.arc(u, v, size, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Solid core
+        ctx.shadowBlur = 0; // turn off shadow for typography / border lines
+        ctx.beginPath();
+        ctx.fillStyle = '#06060c';
+        ctx.arc(u, v, size * 0.35, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.strokeStyle = `rgba(${colorRGB}, ${0.9 * opacity})`;
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+
+        // Write Name & Role directly on Canvas under node if depth is close enough
+        if (scale > 0.45) {
+          ctx.font = `bold ${Math.max(8, Math.round(9.5 * scale))}px "Inter", sans-serif`;
+          ctx.textAlign = 'center';
+          
+          // Draw dark backplate for legible contrast
+          const textName = p.node.name.toUpperCase();
+          const textRole = p.node.role.toUpperCase();
+          const textWidth = Math.max(ctx.measureText(textName).width, ctx.measureText(textRole).width) + 8;
+          ctx.fillStyle = `rgba(5, 5, 8, ${opacity * 0.85})`;
+          ctx.fillRect(u - textWidth / 2, v - size - 17, textWidth, 18);
+
+          // Render Text details
+          ctx.fillStyle = `rgba(255, 255, 255, ${opacity})`;
+          ctx.fillText(textName, u, v - size - 9);
+
+          ctx.fillStyle = `rgba(161, 161, 170, ${opacity * 0.7})`;
+          ctx.font = `${Math.max(7, Math.round(7.5 * scale))}px "JetBrains Mono", monospace`;
+          ctx.fillText(textRole, u, v - size - 2);
+        }
+      });
+
+      // Simple rotation drift if not user dragging
+      if (!isDragging.current) {
+        rotationY.current += 0.0015;
+      }
+
+      animationFrameId.current = requestAnimationFrame(draw);
+    };
+
+    draw();
+
+    return () => {
+      if (animationFrameId.current) {
+        cancelAnimationFrame(animationFrameId.current);
+      }
+      resizeObserver.disconnect();
+    };
+  }, [nodes]);
+
+  // Handle mesh node selections
+  const handleCanvasClick = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const rect = canvas.getBoundingClientRect();
+    const clickX = e.clientX - rect.left;
+    const clickY = e.clientY - rect.top;
+
+    const width = canvas.width;
+    const height = canvas.height;
+    const rx = rotationX.current;
+    const ry = rotationY.current;
+    const centerX = width / 2;
+    const centerY = height / 2;
+    const cameraDistance = 450;
+
+    const stratNodes = nodes.filter(n => n.level === 'Estratégico');
+    const tactNodes = nodes.filter(n => n.level === 'Tático');
+    const operNodes = nodes.filter(n => n.level === 'Operacional');
+
+    let closestNode: OrgNode | null = null;
+    let minDistance = 25; // click sensitivity in pixels
+
+    nodes.forEach(node => {
+      let x = 0; let y = 0; let z = 0;
+      if (node.level === 'Estratégico') {
+        const idx = stratNodes.indexOf(node); const total = stratNodes.length; const radius = 90;
+        const angle = total > 1 ? (idx / total) * Math.PI * 2 : 0;
+        x = Math.cos(angle) * radius; y = -100; z = Math.sin(angle) * radius;
+      } else if (node.level === 'Tático') {
+        const idx = tactNodes.indexOf(node); const total = tactNodes.length; const radius = 140;
+        const angle = total > 1 ? (idx / total) * Math.PI * 2 : 0;
+        x = Math.cos(angle) * radius; y = 10; z = Math.sin(angle) * radius;
+      } else {
+        const idx = operNodes.indexOf(node); const total = operNodes.length; const radius = 190;
+        const angle = total > 1 ? (idx / total) * Math.PI * 2 : 0;
+        x = Math.cos(angle) * radius; y = 120; z = Math.sin(angle) * radius;
+      }
+
+      const cosY = Math.cos(ry); const sinY = Math.sin(ry);
+      const x1 = x * cosY - z * sinY; const z1 = x * sinY + z * cosY;
+      const cosX = Math.cos(rx); const sinX = Math.sin(rx);
+      const y2 = y * cosX - z1 * sinX; const z2 = y * sinX + z1 * cosX;
+      const scale = cameraDistance / (cameraDistance + z2);
+
+      const u = centerX + x1 * scale * 1.5;
+      const v = centerY + y2 * scale * 1.25;
+
+      const dist = Math.hypot(clickX - u, clickY - v);
+      if (dist < minDistance) {
+        minDistance = dist;
+        closestNode = node;
+      }
+    });
+
+    if (closestNode) {
+      onSelectNode(closestNode);
+    }
+  };
+
+  const startDrag = (clientX: number, clientY: number) => {
+    isDragging.current = true;
+    previousMousePosition.current = { x: clientX, y: clientY };
+  };
+
+  const onDrag = (clientX: number, clientY: number) => {
+    if (!isDragging.current) return;
+    const deltaX = clientX - previousMousePosition.current.x;
+    const deltaY = clientY - previousMousePosition.current.y;
+
+    rotationY.current += deltaX * 0.0065;
+    // Keep pitch rotation in a safe range to not invert upside down
+    rotationX.current = Math.max(-1.1, Math.min(1.1, rotationX.current + deltaY * 0.0065));
+
+    previousMousePosition.current = { x: clientX, y: clientY };
+  };
+
+  const stopDrag = () => {
+    isDragging.current = false;
+  };
+
+  return (
+    <div className="w-full h-full min-h-[580px] flex-1 relative select-none overflow-hidden rounded-2xl">
+      <canvas
+        ref={canvasRef}
+        onClick={handleCanvasClick}
+        onMouseDown={e => startDrag(e.clientX, e.clientY)}
+        onMouseMove={e => onDrag(e.clientX, e.clientY)}
+        onMouseUp={stopDrag}
+        onMouseLeave={stopDrag}
+        onTouchStart={e => {
+          if (e.touches[0]) startDrag(e.touches[0].clientX, e.touches[0].clientY);
+        }}
+        onTouchMove={e => {
+          if (e.touches[0]) onDrag(e.touches[0].clientX, e.touches[0].clientY);
+        }}
+        onTouchEnd={stopDrag}
+        className="w-full h-full min-h-[580px] bg-[#050508] border border-blue-500/10 cursor-grab active:cursor-grabbing block"
+      />
     </div>
   );
 }

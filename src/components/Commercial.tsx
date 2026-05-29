@@ -182,17 +182,17 @@ export function Commercial({ initialTab: propInitialTab }: { initialTab?: string
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8">
-        <TabsList className="bg-[#0c0c10] border border-white/5 p-1 h-14 flex w-full xl:w-auto overflow-x-auto scrollbar-hide">
+        <TabsList className="bg-transparent border-0 p-0 flex flex-wrap gap-2 w-full xl:w-auto overflow-x-auto scrollbar-hide">
           {[
-            { id: 'pipeline', label: 'FUNIL DE VENDAS', icon: <Layers size={14} /> },
-            { id: 'vendedores', label: 'PERFORMANCE TEAM', icon: <Star size={14} /> },
-            { id: 'leads', label: 'BASE DE CLIENTES', icon: <Users size={14} /> },
-            { id: 'analytics', label: 'FORECAST BI', icon: <TrendingUp size={14} /> },
+            { id: 'pipeline', label: 'Funil de Vendas', icon: <Layers size={14} /> },
+            { id: 'vendedores', label: 'Equipe de Vendas', icon: <Star size={14} /> },
+            { id: 'leads', label: 'Base de Clientes', icon: <Users size={14} /> },
+            { id: 'analytics', label: 'Análises & Previsões', icon: <TrendingUp size={14} /> },
           ].map(tab => (
             <TabsTrigger 
               key={tab.id}
               value={tab.id}
-              className="flex-1 data-[state=active]:bg-white/10 data-[state=active]:text-white text-zinc-500 text-[10px] font-black px-8 h-full tracking-widest uppercase flex items-center justify-center gap-3 border-r border-white/5 last:border-0 rounded-none transition-all whitespace-nowrap"
+              className="data-[state=active]:bg-blue-600 data-[state=active]:text-white text-zinc-400 bg-zinc-900/60 hover:bg-zinc-800/80 hover:text-zinc-200 border border-zinc-800/85 data-[state=active]:border-blue-500 text-xs font-semibold px-5 h-11 rounded-xl transition-all whitespace-nowrap flex items-center justify-center gap-2.5 cursor-pointer shadow-sm"
             >
               {tab.icon} {tab.label}
             </TabsTrigger>
