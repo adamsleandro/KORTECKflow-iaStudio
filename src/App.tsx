@@ -5,7 +5,7 @@
 
 import React, { useState } from 'react';
 import { Sidebar } from '@/src/components/Sidebar';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, ChevronLeft, Search, Bell, LogOut, User } from 'lucide-react';
 import { Dashboard } from '@/src/components/Dashboard';
 import { Production } from '@/src/components/Production';
 import { Commercial } from '@/src/components/Commercial';
@@ -56,6 +56,13 @@ export default function App() {
       case 'com-leads':
       case 'op-vendas':
       case 'op-ped':
+      case 'clientes':
+      case 'com-atendimentos':
+      case 'com-projetos':
+      case 'com-orcamentos':
+      case 'com-servicos':
+      case 'com-campanhas':
+      case 'com-ftp':
         return <Commercial initialTab={currentView} />;
       case 'sup-mp':
       case 'sup-forn':
@@ -68,6 +75,13 @@ export default function App() {
       case 'fin-pagar':
       case 'fin-receber':
       case 'fin-fluxo':
+      case 'fin-colab':
+      case 'fin-fiscal':
+      case 'fin-sped':
+      case 'fin-notas':
+      case 'fin-os-restricao':
+      case 'fin-lancamentos-futuros':
+      case 'fin-faturamento':
         return <Financeiro initialTab={currentView} />;
       case 'hr-cad':
       case 'hr-colab':
@@ -155,7 +169,78 @@ export default function App() {
         />
         
         {/* Main Content Area */}
-        <main className="pl-0 md:pl-24 min-h-screen transition-all duration-500 ease-in-out relative flex flex-col">
+        <main className="pl-0 md:pl-[245px] min-h-screen transition-all duration-300 relative flex flex-col">
+          {/* Top Header - Mockup Standard Header */}
+          <header className="hidden md:flex sticky top-0 z-40 w-full h-16 bg-white dark:bg-[#0c0c10] border-b border-zinc-200 dark:border-zinc-800/85 items-center justify-between px-8 select-none shadow-[0_1px_5px_rgba(0,0,0,0.01)] shrink-0">
+             {/* Left Section of Header */}
+             <div className="flex items-center gap-6">
+                <button 
+                  onClick={() => setCurrentView('dashboard')}
+                  className="w-8 h-8 rounded-full border border-zinc-200 dark:border-zinc-800 flex items-center justify-center hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors cursor-pointer text-zinc-600 dark:text-zinc-400"
+                >
+                  <ChevronLeft size={16} />
+                </button>
+                
+                <span className="text-[13px] font-black tracking-tight text-purple-700 dark:text-purple-400 uppercase">
+                  Korteck{" "}<span className="text-zinc-300 dark:text-zinc-700">::</span>{" "}955716
+                </span>
+
+                {/* KPI / Priority Indicators */}
+                <div className="flex items-center gap-2 text-[11px] font-black">
+                   <div className="bg-[#12b347] text-white px-2.5 h-6 rounded-full flex items-center justify-center gap-1 shadow-[0_1px_4px_rgba(18,179,71,0.2)]">
+                      <span>173</span>
+                   </div>
+                   <div className="bg-[#ffcc00] text-zinc-950 px-2.5 h-6 rounded-full flex items-center justify-center gap-1 shadow-[0_1px_4px_rgba(255,204,0,0.2)]">
+                      <span>1</span>
+                   </div>
+                   <div className="bg-[#d92c2c] text-white px-2.5 h-6 rounded-full flex items-center justify-center gap-1 shadow-[0_1px_4px_rgba(217,44,44,0.2)]">
+                      <span>96</span>
+                   </div>
+                </div>
+             </div>
+
+             {/* Center Search Pill */}
+             <div className="flex-1 max-w-sm relative mx-8">
+                <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-400" size={15} />
+                <input 
+                  type="text" 
+                  placeholder="Buscar" 
+                  className="w-full h-9 bg-[#f4f5f7] dark:bg-zinc-900/60 text-zinc-700 dark:text-zinc-200 border-0 focus:ring-1 focus:ring-purple-500 rounded-full pl-9 pr-4 text-xs font-semibold placeholder-zinc-400"
+                />
+             </div>
+
+             {/* Right Section Tools */}
+             <div className="flex items-center gap-4">
+                {/* Custom purple helmet profile badge from mockup */}
+                <button 
+                  onClick={() => setCurrentView('sys-theme')}
+                  className="w-10 h-10 rounded-full bg-purple-100 dark:bg-purple-950/40 border-2 border-purple-500 flex items-center justify-center text-purple-600 dark:text-purple-400 hover:scale-[1.03] transition-all cursor-pointer shadow-[0_0_15px_rgba(124,58,237,0.15)] overflow-hidden"
+                >
+                   <User size={18} className="stroke-[2.5]" />
+                </button>
+
+                <div className="w-px h-6 bg-zinc-200 dark:bg-zinc-800" />
+
+                <button className="text-zinc-400 hover:text-purple-600 dark:hover:text-purple-400 relative p-1.5 transition-all">
+                  <Bell size={18} />
+                  <span className="absolute top-1 right-1 w-1.5 h-1.5 rounded-full bg-purple-600 animate-ping" />
+                </button>
+
+                <button 
+                  onClick={() => {
+                    const confirmLog = window.confirm("Deseja desconectar do sistema KORTECKflowERP?");
+                    if (confirmLog) {
+                      setCurrentView('dashboard');
+                    }
+                  }}
+                  className="text-zinc-400 hover:text-rose-500 p-1.5 transition-colors cursor-pointer"
+                  title="Fazer Logout"
+                >
+                  <LogOut size={18} />
+                </button>
+             </div>
+          </header>
+
           <div className="mx-auto w-full max-w-[1700px] flex-1">
             {renderView()}
           </div>

@@ -16,7 +16,7 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState<Theme>(() => {
     const saved = localStorage.getItem('korteck-theme');
-    return (saved as Theme) || 'korteck-dark';
+    return (saved as Theme) || 'ash-light';
   });
   
   const [glassEffect, setGlassEffect] = useState(() => {

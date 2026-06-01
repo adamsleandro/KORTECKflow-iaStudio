@@ -51,25 +51,25 @@
   }
 
   .ash-light {
-    --background: 240 5% 98%;
-    --foreground: 240 10% 3.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 240 10% 3.9%;
+    --background: 220 14% 96.5%; /* #f4f5f7 - Light gray SaaS backdrop */
+    --foreground: 220 25% 9%; /* Deep charcoal */
+    --card: 0 0% 100%; /* Pure White cards */
+    --card-foreground: 220 25% 9%;
     --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 3.9%;
-    --primary: 221.2 83.2% 53.3%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 240 4.8% 95.9%;
-    --secondary-foreground: 240 5.9% 10%;
-    --muted: 240 4.8% 95.9%;
-    --muted-foreground: 240 3.8% 46.1%;
-    --accent: 240 4.8% 95.9%;
-    --accent-foreground: 240 5.9% 10%;
+    --popover-foreground: 220 25% 9%;
+    --primary: 271 81% 56%; /* #7c3aed - Clean SaaS purple/indigo */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 220 12% 92%;
+    --secondary-foreground: 220 25% 9%;
+    --muted: 220 10% 94%;
+    --muted-foreground: 220 8% 46%;
+    --accent: 271 81% 95%;
+    --accent-foreground: 271 81% 56%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
-    --border: 240 5.9% 90%;
-    --input: 240 5.9% 90%;
-    --ring: 221.2 83.2% 53.3%;
+    --border: 220 13% 90%; /* Soft elegant gray border */
+    --input: 220 13% 90%;
+    --ring: 271 81% 56%;
   }
 
   .cyber-blue {
