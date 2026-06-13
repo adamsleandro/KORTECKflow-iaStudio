@@ -61,7 +61,7 @@ export function LevelsManagement() {
           </h1>
         </div>
         <div className="flex items-center gap-3">
-          <Button variant="outline" className="bg-white/5 border-white/10 hover:bg-white/10 text-white h-11 px-6 text-[10px] uppercase font-black tracking-widest">
+          <Button variant="outline" className="bg-white/5 border-transparent hover:bg-white/10 text-white h-11 px-6 text-[10px] uppercase font-black tracking-widest">
             Exportar Protocolos
           </Button>
           <Button className="bg-blue-600 text-white hover:bg-blue-500 font-bold h-11 px-8 text-[11px] uppercase tracking-[0.2em] shadow-[0_0_25px_rgba(37,99,235,0.25)] transition-all">
@@ -87,7 +87,7 @@ export function LevelsManagement() {
                     "w-full p-6 rounded-2xl border transition-all text-left group relative overflow-hidden",
                     selectedLevel === level.id 
                       ? "bg-blue-600/5 border-blue-500/30 shadow-[0_0_40px_rgba(37,99,235,0.05)]" 
-                      : "bg-[#111116] border-white/5 hover:border-white/10"
+                      : "bg-white dark:bg-zinc-900 border-transparent hover:border-transparent"
                   )}
                 >
                   {selectedLevel === level.id && (
@@ -98,7 +98,7 @@ export function LevelsManagement() {
                     <div className="flex items-center gap-6">
                       <div className={cn(
                         "w-14 h-14 rounded-2xl flex items-center justify-center font-black italic text-xl border",
-                        selectedLevel === level.id ? "bg-blue-600 border-blue-400 text-white" : "bg-zinc-900 border-white/5 text-zinc-500"
+                        selectedLevel === level.id ? "bg-blue-600 border-blue-400 text-white" : "bg-zinc-900 border-transparent text-zinc-500"
                       )}>
                         {level.id}
                       </div>
@@ -148,7 +148,7 @@ export function LevelsManagement() {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
-              <div className="p-4 rounded-xl bg-black/40 border border-white/5 space-y-3">
+              <div className="p-4 rounded-xl bg-black/40 border-none space-y-3">
                 <div className="flex items-start gap-3">
                   <AlertTriangle className="text-amber-500 mt-0.5 shrink-0" size={16} />
                   <p className="text-[11px] text-zinc-400 leading-relaxed font-medium">
@@ -172,8 +172,8 @@ export function LevelsManagement() {
           </Card>
 
           {/* Level Constraints */}
-          <Card className="bg-[#111116] border-white/5">
-            <CardHeader className="border-b border-white/5 bg-white/[0.01]">
+          <Card className="bg-white dark:bg-zinc-900 border-transparent">
+            <CardHeader className="border-b border-transparent bg-white/[0.01]">
               <CardTitle className="text-sm font-black text-white uppercase tracking-widest italic">Restrições de Protocolo</CardTitle>
             </CardHeader>
             <CardContent className="p-6 space-y-6">
@@ -196,7 +196,7 @@ export function LevelsManagement() {
                       { label: 'Gestão de Usuários', allowed: ['L0', 'L1', 'L2'].includes(selectedLevel!) },
                       { label: 'Visualização de Dashboards', allowed: true },
                     ].map((rule, i) => (
-                      <div key={i} className="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5">
+                      <div key={i} className="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border-none">
                         <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-tight">{rule.label}</span>
                         {rule.allowed ? (
                           <CheckCircle2 size={14} className="text-emerald-500" />
@@ -211,8 +211,8 @@ export function LevelsManagement() {
             </CardContent>
           </Card>
 
-          <Card className="bg-[#111116] border-white/5 overflow-hidden">
-             <CardHeader className="border-b border-white/5 bg-white/[0.01]">
+          <Card className="bg-white dark:bg-zinc-900 border-transparent overflow-hidden">
+             <CardHeader className="border-b border-transparent bg-white/[0.01]">
                 <CardTitle className="text-sm font-black text-white uppercase tracking-widest italic">Últimos Upgrades</CardTitle>
              </CardHeader>
              <CardContent className="p-0">
@@ -227,7 +227,7 @@ export function LevelsManagement() {
                            <p className="text-[9px] text-zinc-600 uppercase font-black tracking-widest">{up.date}</p>
                         </div>
                         <div className="flex items-center gap-2">
-                           <Badge variant="outline" className="text-[8px] bg-zinc-900 border-white/5 text-zinc-500 uppercase">{up.from}</Badge>
+                           <Badge variant="outline" className="text-[8px] bg-zinc-900 border-transparent text-zinc-500 uppercase">{up.from}</Badge>
                            <ChevronRight size={10} className="text-zinc-700" />
                            <Badge className="text-[8px] bg-blue-600 border-0 text-white uppercase">{up.to}</Badge>
                         </div>

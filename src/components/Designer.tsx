@@ -43,7 +43,7 @@ export function Designer({ initialTab: propInitialTab }: { initialTab?: string }
   return (
     <div className="p-4 md:p-8 space-y-8 animate-in fade-in duration-750 max-w-[1600px] mx-auto pb-24">
       {/* Engineering / Pre-Press Header */}
-      <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-8 border-b border-white/5 pb-8">
+      <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-8 border-b border-transparent pb-8">
         <div className="space-y-3">
           <div className="flex items-center gap-3">
              <div className="p-2.5 bg-indigo-600/10 rounded-xl border border-indigo-500/20">
@@ -59,7 +59,7 @@ export function Designer({ initialTab: propInitialTab }: { initialTab?: string }
         </div>
         
         <div className="flex items-center gap-3">
-           <Button variant="outline" className="h-12 px-6 bg-white/5 border-white/10 text-white font-black uppercase text-[10px] tracking-widest gap-2">
+           <Button variant="outline" className="h-12 px-6 bg-white/5 border-transparent text-white font-black uppercase text-[10px] tracking-widest gap-2">
               <Download size={16} /> Templates DXF
            </Button>
            <Button className="bg-white text-black hover:bg-zinc-200 h-12 px-8 font-black uppercase text-[11px] tracking-widest shadow-xl transition-all gap-2">
@@ -69,7 +69,7 @@ export function Designer({ initialTab: propInitialTab }: { initialTab?: string }
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8">
-        <TabsList className="bg-[#0c0c10] border border-white/5 p-1 h-14 flex w-full xl:w-auto overflow-x-auto scrollbar-hide">
+        <TabsList className="bg-white dark:bg-zinc-900 border-none p-1 h-14 flex w-full xl:w-auto overflow-x-auto scrollbar-hide">
           {[
             { id: 'eng-view', label: 'WORKFLOW TÉCNICO', icon: <Monitor size={14} /> },
             { id: 'pre-flight', label: 'PRE-FLIGHT / DXF', icon: <FileCode size={14} /> },
@@ -79,7 +79,7 @@ export function Designer({ initialTab: propInitialTab }: { initialTab?: string }
             <TabsTrigger 
               key={tab.id}
               value={tab.id} 
-              className="flex-1 data-[state=active]:bg-white/10 data-[state=active]:text-white text-zinc-500 text-[10px] font-black px-8 h-full tracking-widest uppercase flex items-center justify-center gap-3 border-r border-white/5 last:border-0 rounded-none transition-all whitespace-nowrap"
+              className="flex-1 data-[state=active]:bg-white/10 data-[state=active]:text-white text-zinc-500 text-[10px] font-black px-8 h-full tracking-widest uppercase flex items-center justify-center gap-3 border-r border-transparent last:border-0 rounded-none transition-all whitespace-nowrap"
             >
               {tab.icon} {tab.label}
             </TabsTrigger>
@@ -89,7 +89,7 @@ export function Designer({ initialTab: propInitialTab }: { initialTab?: string }
         <TabsContent value="eng-view" className="mt-0 outline-none space-y-8">
            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
               {ACTIVE_PROJECTS.map((prj, i) => (
-                <Card key={prj.id} className="bg-[#0c0c10] border-white/5 hover:border-indigo-500/30 transition-all overflow-hidden relative group">
+                <Card key={prj.id} className="bg-white dark:bg-zinc-900 border-transparent hover:border-indigo-500/30 transition-all overflow-hidden relative group">
                    <div className={cn(
                      "absolute top-0 left-0 w-full h-1",
                      prj.status === 'approved' ? "bg-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.5)]" : 
@@ -113,7 +113,7 @@ export function Designer({ initialTab: propInitialTab }: { initialTab?: string }
                    </CardHeader>
 
                    <CardContent className="px-8 pb-8 space-y-6">
-                      <div className="p-4 bg-black/40 rounded-2xl border border-white/5 space-y-4">
+                      <div className="p-4 bg-black/40 rounded-2xl border-none space-y-4">
                          <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest">
                             <div className="flex items-center gap-2 text-indigo-400">
                                <FileCode size={12} />
@@ -131,7 +131,7 @@ export function Designer({ initialTab: propInitialTab }: { initialTab?: string }
                          </div>
                       </div>
 
-                      <div className="flex items-center justify-between border-t border-white/5 pt-6">
+                      <div className="flex items-center justify-between border-t border-transparent pt-6">
                          <div className="flex flex-col">
                             <span className="text-[9px] font-black text-zinc-700 uppercase tracking-widest mb-1 italic">Engenheiro</span>
                             <div className="flex items-center gap-2">
@@ -139,7 +139,7 @@ export function Designer({ initialTab: propInitialTab }: { initialTab?: string }
                                <span className="text-[11px] font-black text-zinc-400 uppercase italic">{prj.designer}</span>
                             </div>
                          </div>
-                         <Button size="icon" variant="ghost" className="h-10 w-10 text-zinc-500 hover:text-white bg-white/5 border border-white/5">
+                         <Button size="icon" variant="ghost" className="h-10 w-10 text-zinc-500 hover:text-white bg-white/5 border-none">
                             <ChevronRight size={18} />
                          </Button>
                       </div>
@@ -149,14 +149,14 @@ export function Designer({ initialTab: propInitialTab }: { initialTab?: string }
            </div>
 
            {/* Pre-Flight Checklist Logic */}
-           <Card className="bg-[#0c0c10] border-white/5 overflow-hidden">
-              <CardHeader className="bg-white/[0.01] border-b border-white/5 py-8 px-10 flex flex-row items-center justify-between">
+           <Card className="bg-white dark:bg-zinc-900 border-transparent overflow-hidden">
+              <CardHeader className="bg-white/[0.01] border-b border-transparent py-8 px-10 flex flex-row items-center justify-between">
                  <div>
                     <CardTitle className="text-lg font-black text-white uppercase italic tracking-widest">Pre-Flight Automático [IA]</CardTitle>
                     <p className="text-[10px] font-bold text-zinc-500 uppercase mt-1">Detecção de erros comuns em arquivos vetoriais para CNC</p>
                  </div>
                  <div className="flex gap-2">
-                    <Button variant="outline" className="bg-white/5 border-white/10 text-white text-[10px] font-black uppercase h-10 px-6">Configurar Critérios</Button>
+                    <Button variant="outline" className="bg-white/5 border-transparent text-white text-[10px] font-black uppercase h-10 px-6">Configurar Critérios</Button>
                  </div>
               </CardHeader>
               <CardContent className="p-0">
@@ -166,7 +166,7 @@ export function Designer({ initialTab: propInitialTab }: { initialTab?: string }
                    { name: 'Raio de Fresagem < Tool', status: 'warning', count: 4, desc: 'Cantos internos menores que fresa de 4mm detectados' },
                    { name: 'Espaçamento para Nesting', status: 'ok', count: 0, desc: 'Margens de segurança de 10mm respeitadas' },
                  ].map((check, i) => (
-                   <div key={i} className="flex items-center gap-6 p-8 border-b border-white/5 last:border-0 hover:bg-white/[0.01] transition-colors group">
+                   <div key={i} className="flex items-center gap-6 p-8 border-b border-transparent last:border-0 hover:bg-white/[0.01] transition-colors group">
                       <div className={cn(
                         "w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg transition-transform group-hover:scale-110",
                         check.status === 'ok' ? "bg-emerald-500/10 text-emerald-500" : 
@@ -191,9 +191,9 @@ export function Designer({ initialTab: propInitialTab }: { initialTab?: string }
         <TabsContent value="nesting" className="mt-0 outline-none">
            {/* Visual simulation of nesting/optimization results */}
            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-              <Card className="lg:col-span-8 bg-[#0c0c10] border-white/5 p-10 min-h-[500px] flex flex-col items-center justify-center relative overflow-hidden">
+              <Card className="lg:col-span-8 zinc-900 border-transparent p-10 min-h-[500px] flex flex-col items-center justify-center relative overflow-hidden">
                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_#4f46e520_0%,_transparent_70%)] opacity-30" />
-                 <div className="w-full max-w-2xl bg-zinc-950 border border-white/10 aspect-[16/9] rounded-3xl relative p-1 pb-4 shadow-2xl">
+                 <div className="w-full max-w-2xl bg-zinc-950 border-none aspect-[16/9] rounded-3xl relative p-1 pb-4 shadow-sm">
                     <div className="absolute top-2 left-4 text-[8px] font-black text-zinc-700 tracking-widest">CHAPA-PADRÃO 3000x2000mm // ACRÍLICO 3MM</div>
                     {/* Mock canvas rendering of nested shapes */}
                     <div className="w-full h-full flex flex-wrap gap-1 p-2 items-start content-start opacity-40">
@@ -202,7 +202,7 @@ export function Designer({ initialTab: propInitialTab }: { initialTab?: string }
                        ))}
                     </div>
                     <div className="absolute inset-0 flex items-center justify-center">
-                       <div className="bg-black/90 backdrop-blur-xl border border-white/10 p-8 rounded-3xl text-center space-y-4 shadow-2xl">
+                       <div className="bg-black/90 backdrop-blur-xl border-none p-8 rounded-3xl text-center space-y-4 shadow-sm">
                           <Cpu size={32} className="text-indigo-500 mx-auto animate-pulse" />
                           <h4 className="text-lg font-black text-white italic tracking-tighter uppercase">Motor de Nesting Mesh Ativo</h4>
                           <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em]">Otimização de Retalho em Tempo Real</p>
@@ -222,7 +222,7 @@ export function Designer({ initialTab: propInitialTab }: { initialTab?: string }
                  </div>
               </Card>
 
-              <Card className="lg:col-span-4 bg-[#0c0c10] border-white/5 flex flex-col p-10 space-y-10">
+              <Card className="lg:col-span-4 zinc-900 border-transparent flex flex-col p-10 space-y-10">
                  <div className="space-y-1">
                     <h3 className="text-sm font-black text-white uppercase italic tracking-widest">Parâmetros de Corte</h3>
                     <p className="text-[9px] font-bold text-zinc-600 uppercase">Configuração automática via material</p>
@@ -245,9 +245,9 @@ export function Designer({ initialTab: propInitialTab }: { initialTab?: string }
                     ))}
                  </div>
 
-                 <div className="pt-10 border-t border-white/5 space-y-4 mt-auto">
+                 <div className="pt-10 border-t border-transparent space-y-4 mt-auto">
                     <Button className="w-full bg-indigo-600 hover:bg-indigo-500 text-white h-14 font-black uppercase text-[11px] tracking-widest shadow-xl shadow-indigo-600/20">Gerar G-CODE Final</Button>
-                    <Button variant="outline" className="w-full border-white/10 text-zinc-400 h-14 font-black uppercase text-[11px] tracking-widest">Enviar para Fila CNC</Button>
+                    <Button variant="outline" className="w-full border-transparent text-zinc-400 h-14 font-black uppercase text-[11px] tracking-widest">Enviar para Fila CNC</Button>
                  </div>
               </Card>
            </div>
@@ -261,8 +261,8 @@ export function Designer({ initialTab: propInitialTab }: { initialTab?: string }
                 { name: 'Aço Galvanizado 18', type: 'Metálico', id: 'MAT-MET-G18', stock: 'Ok', spec: 'Resistência Corrosão Média' },
                 { name: 'MDF 18mm Cru', type: 'Madeira Processada', id: 'MAT-MDF-18', stock: 'Crítico', spec: 'Densidade Média' },
               ].map((mat, i) => (
-                 <Card key={i} className="bg-[#0c0c10] border-white/5 p-8 flex items-center gap-8 hover:bg-white/[0.01] transition-all">
-                    <div className="w-20 h-20 rounded-2xl bg-zinc-900 border border-white/5 flex items-center justify-center text-zinc-700">
+                 <Card key={i} className="bg-white dark:bg-zinc-900 border-transparent p-8 flex items-center gap-8 hover:bg-white/[0.01] transition-all">
+                    <div className="w-20 h-20 rounded-2xl bg-zinc-900 border-none flex items-center justify-center text-zinc-700">
                        <Box size={32} />
                     </div>
                     <div className="flex-1 space-y-2">
@@ -283,7 +283,7 @@ export function Designer({ initialTab: propInitialTab }: { initialTab?: string }
       </Tabs>
 
       {/* Engineering Footer Bar */}
-      <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 px-8 py-5 bg-zinc-950/80 backdrop-blur-2xl border border-white/10 rounded-3xl shadow-2xl flex items-center gap-12 justify-between border-t-2 border-t-indigo-500/20 min-w-[800px]">
+      <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 px-8 py-5 bg-zinc-950/80 backdrop-blur-2xl border-none rounded-3xl shadow-sm flex items-center gap-12 justify-between border-t-2 border-t-indigo-500/20 min-w-[800px]">
          <div className="flex items-center gap-4">
             <div className="w-12 h-12 rounded-2xl bg-indigo-600 flex items-center justify-center text-white shadow-xl">
                <FileCode size={24} />
@@ -294,7 +294,7 @@ export function Designer({ initialTab: propInitialTab }: { initialTab?: string }
             </div>
          </div>
          
-         <div className="flex items-center gap-8 px-8 border-x border-white/5 flex-1 justify-center">
+         <div className="flex items-center gap-8 px-8 border-x border-transparent flex-1 justify-center">
             <div className="text-center">
                <p className="text-[10px] font-black text-zinc-700 uppercase mb-1 italic">Projetos em Eng.</p>
                <p className="text-xl font-black text-white italic">14</p>

@@ -337,7 +337,7 @@ export function Projects() {
   return (
     <div className="p-4 md:p-8 space-y-6 md:space-y-8 animate-in fade-in duration-700 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-zinc-900/20 via-[#050505] to-[#050505] text-left">
       {/* Header & View Selector */}
-      <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-6 bg-[#0c0c10] p-6 border border-white/5 rounded-2xl">
+      <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-6 zinc-900 p-6 border-none rounded-2xl">
         <div>
           <div className="flex items-center gap-2 text-[10px] font-bold tracking-[0.2em] text-zinc-500 mb-2 uppercase">
             <Trello size={14} className="text-blue-500" /> Operação de Projetos [OP-PROJ]
@@ -349,7 +349,7 @@ export function Projects() {
 
         <div className="flex flex-col sm:flex-row items-center gap-6">
            {/* View Selector Professional Style */}
-           <div className="bg-[#050505] border border-white/5 p-1 rounded-xl flex items-center gap-1">
+           <div className="bg-white dark:bg-zinc-900 border-none p-1 rounded-xl flex items-center gap-1">
               {[
                 { id: 'kanban', icon: <Trello size={14} />, label: 'Kanban' },
                 { id: 'list', icon: <List size={14} />, label: 'Lista' },
@@ -379,7 +379,7 @@ export function Projects() {
               <div className="relative flex-1 sm:w-64">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-600" size={16} />
                 <Input 
-                  className="pl-10 h-10 bg-[#0c0c10] border-white/5 text-white placeholder:text-zinc-600 focus-visible:ring-blue-500 transition-all text-xs" 
+                  className="pl-10 h-10 zinc-900 border-transparent text-white placeholder:text-zinc-600 focus-visible:ring-blue-500 transition-all text-xs" 
                   placeholder="Buscar projetos..." 
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
@@ -400,8 +400,8 @@ export function Projects() {
           className={cn(
             "p-4 rounded-2xl border text-left transition-all flex flex-col justify-between h-24",
             alertFilter === 'all' 
-              ? "bg-[#0c0c10] border-blue-500/50 shadow-[0_0_20px_rgba(59,130,246,0.1)] text-white" 
-              : "bg-white/[0.01] border-white/5 text-zinc-400 hover:border-white/10 hover:text-white"
+              ? "bg-white dark:bg-zinc-900 border-blue-500/50 shadow-[0_0_20px_rgba(59,130,246,0.1)] text-white" 
+              : "bg-white/[0.01] border-transparent text-zinc-400 hover:border-transparent hover:text-white"
           )}
         >
           <div className="flex items-center justify-between w-full">
@@ -421,7 +421,7 @@ export function Projects() {
             "p-4 rounded-2xl border text-left transition-all flex flex-col justify-between h-24",
             alertFilter === 'novo_projeto' 
               ? "bg-[#10b981]/10 border-emerald-500/50 shadow-[0_0_20px_rgba(16,185,129,0.1)] text-white" 
-              : "bg-white/[0.01] border-white/5 text-zinc-400 hover:border-white/10 hover:text-white"
+              : "bg-white/[0.01] border-transparent text-zinc-400 hover:border-transparent hover:text-white"
           )}
         >
           <div className="flex items-center justify-between w-full">
@@ -447,7 +447,7 @@ export function Projects() {
             "p-4 rounded-2xl border text-left transition-all flex flex-col justify-between h-24",
             alertFilter === 'retorno_vendas' 
               ? "bg-[#f59e0b]/10 border-amber-500/50 shadow-[0_0_20px_rgba(245,158,11,0.1)] text-white" 
-              : "bg-white/[0.01] border-white/5 text-zinc-400 hover:border-white/10 hover:text-white"
+              : "bg-white/[0.01] border-transparent text-zinc-400 hover:border-transparent hover:text-white"
           )}
         >
           <div className="flex items-center justify-between w-full">
@@ -473,7 +473,7 @@ export function Projects() {
             "p-4 rounded-2xl border text-left transition-all flex flex-col justify-between h-24",
             alertFilter === 'alteracao' 
               ? "bg-[#3b82f6]/10 border-blue-500/50 shadow-[0_0_20px_rgba(59,130,246,0.1)] text-white" 
-              : "bg-white/[0.01] border-white/5 text-zinc-400 hover:border-white/10 hover:text-white"
+              : "bg-white/[0.01] border-transparent text-zinc-400 hover:border-transparent hover:text-white"
           )}
         >
           <div className="flex items-center justify-between w-full">
@@ -499,7 +499,7 @@ export function Projects() {
             "p-4 rounded-2xl border text-left transition-all flex flex-col justify-between h-24",
             alertFilter === 'retrabalho' 
               ? "bg-[#f43f5e]/10 border-rose-500/50 shadow-[0_0_20px_rgba(244,63,94,0.1)] text-white" 
-              : "bg-white/[0.01] border-white/5 text-zinc-400 hover:border-white/10 hover:text-white"
+              : "bg-white/[0.01] border-transparent text-zinc-400 hover:border-transparent hover:text-white"
           )}
         >
           <div className="flex items-center justify-between w-full">
@@ -521,11 +521,11 @@ export function Projects() {
 
       {/* Creation Project Modal Simulation drawer overlay */}
       {isCreateOpen && (
-        <div className="fixed inset-0 bg-[#050505]/80 backdrop-blur-md z-[100] flex items-center justify-center p-4">
+        <div className="fixed inset-0 bg-zinc-900/80 backdrop-blur-md z-[100] flex items-center justify-center p-4">
           <motion.div 
             initial={{ scale: 0.95, opacity: 0 }} 
             animate={{ scale: 1, opacity: 1 }}
-            className="bg-[#0c0c10] border border-white/10 rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-4"
+            className="bg-white dark:bg-zinc-900 border-none rounded-2xl p-6 w-full max-w-md shadow-sm space-y-4"
           >
             <div className="flex justify-between items-center">
                <h3 className="text-sm font-black text-white uppercase italic tracking-widest flex items-center gap-2">
@@ -537,7 +537,7 @@ export function Projects() {
                <div className="space-y-1">
                   <label className="text-[10px] font-black text-zinc-500 uppercase tracking-wider">Título do Projeto</label>
                   <Input 
-                     className="bg-[#050505] border-white/5 text-white placeholder:text-zinc-700 h-10 text-xs" 
+                     className="bg-white dark:bg-zinc-900 border-transparent text-white placeholder:text-zinc-700 h-10 text-xs" 
                      placeholder="Ex: Fachada LED Posto Executivo" 
                      value={newTitle} 
                      onChange={(e) => setNewTitle(e.target.value)} 
@@ -547,7 +547,7 @@ export function Projects() {
                <div className="space-y-1">
                   <label className="text-[10px] font-black text-zinc-500 uppercase tracking-wider">Nome do Cliente</label>
                   <Input 
-                     className="bg-[#050505] border-white/5 text-white placeholder:text-zinc-700 h-10 text-xs" 
+                     className="bg-white dark:bg-zinc-900 border-transparent text-white placeholder:text-zinc-700 h-10 text-xs" 
                      placeholder="Ex: Petrobras S.A." 
                      value={newClient} 
                      onChange={(e) => setNewClient(e.target.value)} 
@@ -559,7 +559,7 @@ export function Projects() {
                      <label className="text-[10px] font-black text-zinc-500 uppercase tracking-wider">Valor total (R$)</label>
                      <Input 
                         type="number"
-                        className="bg-[#050505] border-white/5 text-white h-10 text-xs" 
+                        className="bg-white dark:bg-zinc-900 border-transparent text-white h-10 text-xs" 
                         value={newValue} 
                         onChange={(e) => setNewValue(Number(e.target.value))} 
                      />
@@ -567,7 +567,7 @@ export function Projects() {
                   <div className="space-y-1">
                      <label className="text-[10px] font-black text-zinc-500 uppercase tracking-wider">Designer</label>
                      <select 
-                        className="w-full rounded-md bg-[#050505] border border-white/5 text-white h-10 px-3 text-xs focus:ring-1 focus:ring-blue-500 outline-none" 
+                        className="w-full rounded-md bg-white dark:bg-zinc-900 border-none text-white h-10 px-3 text-xs focus:ring-1 focus:ring-blue-500 outline-none" 
                         value={newDesigner} 
                         onChange={(e) => setNewDesigner(e.target.value)}
                      >
@@ -721,7 +721,7 @@ function KanbanView({
 
       <DragOverlay dropAnimation={dropAnimationConfig}>
         {activeProject ? (
-          <div className="w-[300px] pointer-events-none origin-center rotate-3 scale-105 shadow-2xl">
+          <div className="w-[300px] pointer-events-none origin-center rotate-3 scale-105 shadow-sm">
             <ProjectCard project={activeProject} onClick={() => {}} isDraggingOverlay />
           </div>
         ) : null}
@@ -752,7 +752,7 @@ function AddColumnButton({ onAdd }: { onAdd: (name: string) => void }) {
 
   if (isAdding) {
     return (
-      <div className="min-w-[300px] w-[300px] bg-[#0c0c10]/40 border border-white/5 rounded-2xl p-4 flex flex-col gap-3 shrink-0">
+      <div className="min-w-[300px] w-[300px] zinc-900/40 border-none rounded-2xl p-4 flex flex-col gap-3 shrink-0">
         <h4 className="text-[10px] font-black tracking-widest uppercase text-zinc-400 italic">Nova Coluna</h4>
         <form onSubmit={handleSubmit} className="flex flex-col gap-2">
           <Input
@@ -760,7 +760,7 @@ function AddColumnButton({ onAdd }: { onAdd: (name: string) => void }) {
             value={name}
             onChange={(e) => setName(e.target.value)}
             onKeyDown={handleKeyDown}
-            className="h-9 text-xs bg-black border-white/10 text-white placeholder:text-zinc-600 focus:border-blue-500/50"
+            className="h-9 text-xs bg-black border-transparent text-white placeholder:text-zinc-600 focus:border-blue-500/50"
             autoFocus
           />
           <div className="flex gap-2 justify-end">
@@ -788,7 +788,7 @@ function AddColumnButton({ onAdd }: { onAdd: (name: string) => void }) {
     <Button
       variant="ghost"
       onClick={() => setIsAdding(true)}
-      className="min-w-[300px] w-[300px] h-32 border-2 border-dashed border-white/5 hover:border-white/10 hover:bg-white/[0.01] rounded-2xl flex flex-col items-center justify-center gap-2 group/add-col text-zinc-500 hover:text-blue-400 transition-all duration-300 shrink-0"
+      className="min-w-[300px] w-[300px] h-32 border-2 border-dashed border-transparent hover:border-transparent hover:bg-white/[0.01] rounded-2xl flex flex-col items-center justify-center gap-2 group/add-col text-zinc-500 hover:text-blue-400 transition-all duration-300 shrink-0"
     >
       <Plus size={20} className="group-hover/add-col:scale-125 transition-transform" />
       <span className="text-[10px] font-black tracking-widest uppercase">Adicionar Coluna</span>
@@ -858,7 +858,7 @@ function DroppableColumn({
                 value={editValue}
                 onChange={(e) => setEditValue(e.target.value)}
                 onKeyDown={handleKeyDown}
-                className="h-7 text-xs bg-black border-white/20 text-white py-0 px-2 flex-1 focus-visible:ring-1 focus-visible:ring-blue-500"
+                className="h-7 text-xs bg-black border-transparent text-white py-0 px-2 flex-1 focus-visible:ring-1 focus-visible:ring-blue-500"
                 autoFocus
               />
               <Button size="icon" variant="ghost" className="h-7 w-7 text-emerald-400 hover:text-emerald-300 hover:bg-white/5" onClick={handleSave}>
@@ -902,11 +902,11 @@ function DroppableColumn({
       </div>
 
       <div className={cn(
-        "flex flex-col gap-3 overflow-y-auto max-h-[70vh] p-2 bg-white/[0.01] border border-white/5 rounded-2xl transition-all duration-300 ease-out",
-        isOver ? "bg-white/[0.03] border-blue-500/30" : "group-hover/col:bg-white/[0.02] group-hover/col:border-white/10"
+        "flex flex-col gap-3 overflow-y-auto max-h-[70vh] p-2 bg-white/[0.01] border-none rounded-2xl transition-all duration-300 ease-out",
+        isOver ? "bg-white/[0.03] border-blue-500/30" : "group-hover/col:bg-white/[0.02] group-hover/col:border-transparent"
       )}>
         {children}
-        <Button variant="ghost" className="w-full h-12 border-2 border-dashed border-white/5 hover:border-white/10 text-zinc-600 hover:text-white text-[10px] font-black tracking-widest uppercase mt-1">
+        <Button variant="ghost" className="w-full h-12 border-2 border-dashed border-transparent hover:border-transparent text-zinc-600 hover:text-white text-[10px] font-black tracking-widest uppercase mt-1">
            <Plus size={14} className="mr-2" /> Novo Item
         </Button>
       </div>
@@ -968,10 +968,10 @@ function ProjectCard({
       whileTap={isDraggingOverlay ? {} : { scale: 0.98, y: -2 }}
       onClick={isDraggingOverlay ? undefined : onClick}
       className={cn(
-        "bg-[#0c0c10] border rounded-2xl p-5 shadow-xl transition-all duration-300 relative overflow-hidden flex flex-col justify-between",
+        "bg-white dark:bg-zinc-900 border rounded-2xl p-5 shadow-xl transition-all duration-300 relative overflow-hidden flex flex-col justify-between",
         isDraggingOverlay 
-          ? "border-blue-500 bg-[#0f0f15] scale-105 shadow-[0_0_25px_rgba(59,130,246,0.25)] select-none cursor-grabbing" 
-          : "border-white/5 cursor-pointer group hover:border-white/20"
+          ? "border-blue-500 bg-white dark:bg-zinc-900 scale-105 shadow-[0_0_25px_rgba(59,130,246,0.25)] select-none cursor-grabbing" 
+          : "border-transparent cursor-pointer group hover:border-transparent"
       )}
       transition={{ 
         type: "spring", 
@@ -1025,7 +1025,7 @@ function ProjectCard({
         <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-tighter line-clamp-1">{project.client}</p>
       </div>
 
-      <div className="space-y-2.5 mb-6 bg-white/[0.02] p-3 rounded-xl border border-white/5">
+      <div className="space-y-2.5 mb-6 bg-white/[0.02] p-3 rounded-xl border-none">
         <div className="flex justify-between text-[9px] font-black text-zinc-400 uppercase tracking-widest">
            <span>PROCESSAMENTO</span>
            <span className="text-blue-500">{project.progress}%</span>
@@ -1033,7 +1033,7 @@ function ProjectCard({
         <Progress value={project.progress} className="h-1.5 bg-white/5 animate-pulse" indicatorClassName="bg-blue-500" />
       </div>
 
-      <div className="flex items-center justify-between pt-2 border-t border-white/5">
+      <div className="flex items-center justify-between pt-2 border-t border-transparent">
         <div className="flex items-center gap-2">
            <div className="flex -space-x-1.5"> {/* Minimal overlap for professional look but with better borders */}
               <Avatar className="w-7 h-7 border-2 border-[#0c0c10] shadow-lg ring-1 ring-white/5">
@@ -1066,12 +1066,12 @@ function ProjectCard({
 
 function ListView({ projects, onSelect }: { projects: Project[], onSelect: (p: Project) => void }) {
   return (
-    <Card className="bg-[#0c0c10] border-white/5 overflow-hidden">
+    <Card className="bg-white dark:bg-zinc-900 border-transparent overflow-hidden">
       <ScrollArea className="w-full">
         <div className="min-w-[800px]">
           <Table>
             <TableHeader className="bg-white/[0.02]">
-          <TableRow className="border-white/5 hover:bg-transparent text-[9px] font-bold text-zinc-500 uppercase tracking-[0.2em]">
+          <TableRow className="border-transparent hover:bg-transparent text-[9px] font-bold text-zinc-500 uppercase tracking-[0.2em]">
             <TableHead className="w-12 text-center">Urg</TableHead>
             <TableHead>Projeto</TableHead>
             <TableHead>Cliente</TableHead>
@@ -1089,7 +1089,7 @@ function ListView({ projects, onSelect }: { projects: Project[], onSelect: (p: P
             <TableRow 
               key={p.id} 
               onClick={() => onSelect(p)}
-              className="border-white/5 hover:bg-white/[0.01] cursor-pointer group transition-colors"
+              className="border-transparent hover:bg-white/[0.01] cursor-pointer group transition-colors"
             >
               <TableCell className="text-center">
                  {p.isUrgent && <AlertCircle size={14} className="text-rose-500 mx-auto" />}
@@ -1130,7 +1130,7 @@ function ListView({ projects, onSelect }: { projects: Project[], onSelect: (p: P
               </TableCell>
               <TableCell>
                  <div className="flex items-center gap-2">
-                    <Avatar className="w-6 h-6 border border-white/10 shrink-0">
+                    <Avatar className="w-6 h-6 border-none shrink-0">
                        <AvatarImage src={`https://i.pravatar.cc/100?u=${p.designerResponsible}`} />
                     </Avatar>
                     <span className="text-[9px] font-bold text-zinc-500 uppercase">{p.designerResponsible}</span>
@@ -1210,7 +1210,7 @@ function CalendarView({ projects, onSelect }: { projects: Project[], onSelect: (
                   : format(currentMonth, 'dd MMMM yyyy', { locale: ptBR })
               }
             </h3>
-            <div className="flex bg-[#0c0c10] border border-white/5 p-1 rounded-lg">
+            <div className="flex zinc-900 border-none p-1 rounded-lg">
                {(['month', 'week', 'day'] as const).map(mode => (
                  <button
                    key={mode}
@@ -1226,16 +1226,16 @@ function CalendarView({ projects, onSelect }: { projects: Project[], onSelect: (
             </div>
          </div>
          <div className="flex gap-2">
-            <Button variant="outline" className="bg-white/5 border-white/5 text-[10px] font-bold uppercase tracking-widest h-8 px-4" onClick={handlePrevious}>Anterior</Button>
-            <Button variant="outline" className="bg-white/5 border-white/5 text-[10px] font-bold uppercase tracking-widest h-8 px-4" onClick={handleNext}>Próximo</Button>
+            <Button variant="outline" className="bg-white/5 border-transparent text-[10px] font-bold uppercase tracking-widest h-8 px-4" onClick={handlePrevious}>Anterior</Button>
+            <Button variant="outline" className="bg-white/5 border-transparent text-[10px] font-bold uppercase tracking-widest h-8 px-4" onClick={handleNext}>Próximo</Button>
             <Button className="bg-blue-600 text-white h-8 text-[10px] font-bold uppercase tracking-widest px-4" onClick={handleToday}>Hoje</Button>
          </div>
       </div>
 
       {calendarMode === 'month' ? (
-        <div className="grid grid-cols-7 bg-[#0c0c10] border border-white/5 rounded-2xl overflow-hidden shadow-2xl">
+        <div className="grid grid-cols-7 zinc-900 border-none rounded-2xl overflow-hidden shadow-sm">
           {['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'].map(day => (
-            <div key={day} className="py-4 px-4 text-center border-b border-r border-white/5 bg-white/[0.02] text-[10px] font-black text-zinc-500 uppercase tracking-widest">
+            <div key={day} className="py-4 px-4 text-center border-b border-r border-transparent bg-white/[0.02] text-[10px] font-black text-zinc-500 uppercase tracking-widest">
               {day}
             </div>
           ))}
@@ -1245,7 +1245,7 @@ function CalendarView({ projects, onSelect }: { projects: Project[], onSelect: (
               <div 
                 key={day.toString()} 
                 className={cn(
-                  "min-h-[140px] p-2 border-b border-r border-white/5 transition-all hover:bg-white/[0.01] relative",
+                  "min-h-[140px] p-2 border-b border-r border-transparent transition-all hover:bg-white/[0.01] relative",
                   !isSameMonth(day, currentMonth) && "opacity-25 grayscale",
                   isToday(day) && "bg-blue-600/5"
                 )}
@@ -1279,7 +1279,7 @@ function CalendarView({ projects, onSelect }: { projects: Project[], onSelect: (
           })}
         </div>
       ) : calendarMode === 'week' ? (
-        <div className="grid grid-cols-1 md:grid-cols-7 bg-[#0c0c10] border border-white/5 rounded-2xl overflow-hidden shadow-2xl">
+        <div className="grid grid-cols-1 md:grid-cols-7 zinc-900 border-none rounded-2xl overflow-hidden shadow-2xl">
           {['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'].map((dayName, idx) => {
             const startOfMainWeek = startOfWeek(currentMonth);
             const thisDay = addDays(startOfMainWeek, idx);
@@ -1288,7 +1288,7 @@ function CalendarView({ projects, onSelect }: { projects: Project[], onSelect: (
               <div 
                 key={dayName} 
                 className={cn(
-                  "min-h-[220px] p-4 border-b md:border-b-0 md:border-r border-white/5 transition-all hover:bg-white/[0.01] relative flex flex-col justify-start",
+                  "min-h-[220px] p-4 border-b md:border-b-0 md:border-r border-transparent transition-all hover:bg-white/[0.01] relative flex flex-col justify-start",
                   isToday(thisDay) && "bg-blue-600/5 border-t-2 border-t-blue-500"
                 )}
               >
@@ -1311,7 +1311,7 @@ function CalendarView({ projects, onSelect }: { projects: Project[], onSelect: (
                       <div 
                         key={p.id} 
                         onClick={() => onSelect(p)}
-                        className="p-3 rounded-xl bg-white/[0.02] border border-white/5 hover:border-blue-500/40 cursor-pointer group transition-all text-left space-y-2"
+                        className="p-3 rounded-xl bg-white/[0.02] border-none hover:border-blue-500/40 cursor-pointer group transition-all text-left space-y-2"
                       >
                         <div className="text-[9px] font-black text-white italic truncate uppercase">#{p.id} - {p.title}</div>
                         <p className="text-[8px] font-bold text-zinc-500 uppercase truncate">{p.client}</p>
@@ -1327,11 +1327,11 @@ function CalendarView({ projects, onSelect }: { projects: Project[], onSelect: (
       ) : (
         /* Day view mode */
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="bg-[#0c0c10] border border-white/5 rounded-2xl p-6 shadow-2xl space-y-4 lg:col-span-1 text-left">
+          <div className="bg-white dark:bg-zinc-900 border-none rounded-2xl p-6 shadow-2xl space-y-4 lg:col-span-1 text-left">
             <h4 className="text-xs font-black text-white uppercase italic tracking-widest flex items-center gap-2">
               <CalendarIcon size={14} className="text-blue-500" /> Detalhes do Dia Selecionado
             </h4>
-            <div className="p-4 bg-white/[0.02] border border-white/5 rounded-xl space-y-1">
+            <div className="p-4 bg-white/[0.02] border-none rounded-xl space-y-1">
                <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest leading-none">Data da Agenda</p>
                <p className="text-xl font-black text-white uppercase italic">{format(currentMonth, "dd 'de' MMMM, yyyy", { locale: ptBR })}</p>
             </div>
@@ -1339,7 +1339,7 @@ function CalendarView({ projects, onSelect }: { projects: Project[], onSelect: (
                Abaixo estão listados todos os prazos críticos de designers, orientações, validações e retornos agendados para este dia específico.
             </p>
           </div>
-          <div className="bg-[#0c0c10] border border-white/5 rounded-2xl p-6 shadow-2xl lg:col-span-2 space-y-4 text-left">
+          <div className="bg-white dark:bg-zinc-900 border-none rounded-2xl p-6 shadow-2xl lg:col-span-2 space-y-4 text-left">
              <h4 className="text-xs font-black text-white uppercase italic tracking-widest">Compromissos e Entregas do Dia ({projects.filter(p => isSameDay(new Date(p.deadline), currentMonth)).length})</h4>
              <div className="space-y-3 max-h-[350px] overflow-y-auto pr-2">
                 {projects.filter(p => isSameDay(new Date(p.deadline), currentMonth)).length === 0 ? (
@@ -1353,7 +1353,7 @@ function CalendarView({ projects, onSelect }: { projects: Project[], onSelect: (
                     <div 
                       key={p.id} 
                       onClick={() => onSelect(p)}
-                      className="p-4 rounded-xl bg-white/[0.01] border border-white/5 hover:border-blue-500/30 cursor-pointer flex items-center justify-between gap-4 transition-all"
+                      className="p-4 rounded-xl bg-white/[0.01] border-none hover:border-blue-500/30 cursor-pointer flex items-center justify-between gap-4 transition-all"
                     >
                       <div className="space-y-1">
                          <span className="text-[9px] font-black text-blue-500 italic uppercase">#{p.id}</span>
@@ -1379,17 +1379,17 @@ function GanttView({ projects, onSelect }: { projects: Project[], onSelect: (p: 
   const days = Array.from({ length: 30 }, (_, i) => addDays(new Date(2026, 4, 1), i));
 
   return (
-    <Card className="bg-[#0c0c10] border-white/5 overflow-hidden">
+    <Card className="bg-white dark:bg-zinc-900 border-transparent overflow-hidden">
       <div className="overflow-x-auto">
         <div className="min-w-[1200px]">
           {/* Timeline Header */}
-          <div className="flex bg-white/[0.02] border-b border-white/5">
-            <div className="w-64 p-4 shrink-0 border-r border-white/5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">
+          <div className="flex bg-white/[0.02] border-b border-transparent">
+            <div className="w-64 p-4 shrink-0 border-r border-transparent text-[10px] font-black text-zinc-500 uppercase tracking-widest">
               PROJETO / ETAPAS
             </div>
             <div className="flex-1 flex">
               {days.map(day => (
-                <div key={day.toString()} className="w-12 py-3 text-center border-r border-white/5 shrink-0 flex flex-col items-center">
+                <div key={day.toString()} className="w-12 py-3 text-center border-r border-transparent shrink-0 flex flex-col items-center">
                    <span className="text-[8px] font-bold text-zinc-600 uppercase tracking-widest">{format(day, 'EEE', { locale: ptBR })}</span>
                    <span className={cn("text-[10px] font-black", isToday(day) ? "text-blue-500" : "text-zinc-400")}>{format(day, 'd')}</span>
                 </div>
@@ -1404,8 +1404,8 @@ function GanttView({ projects, onSelect }: { projects: Project[], onSelect: (p: 
                const width = (endIdx - startIdx + 1) * 48; // Each day is 12*4 = 48px? No, w-12 is 48px.
                
                return (
-                 <div key={p.id} className="flex border-b border-white/5 hover:bg-white/[0.01] transition-colors group">
-                    <div className="w-64 p-4 shrink-0 border-r border-white/5">
+                 <div key={p.id} className="flex border-b border-transparent hover:bg-white/[0.01] transition-colors group">
+                    <div className="w-64 p-4 shrink-0 border-r border-transparent">
                        <div className="flex flex-col gap-1 cursor-pointer" onClick={() => onSelect(p)}>
                           <div className="flex items-center gap-1.5 overflow-hidden text-left">
                              {p.alertType && (
@@ -1427,7 +1427,7 @@ function GanttView({ projects, onSelect }: { projects: Project[], onSelect: (p: 
                     <div className="flex-1 relative h-16 flex items-center">
                        {/* Grid lines */}
                        <div className="absolute inset-0 flex pointer-events-none">
-                          {days.map(d => <div key={d.toString()} className="w-12 border-r border-white/5 h-full shrink-0" />)}
+                          {days.map(d => <div key={d.toString()} className="w-12 border-r border-transparent h-full shrink-0" />)}
                        </div>
                        
                        {/* Project Bar */}
@@ -1442,7 +1442,7 @@ function GanttView({ projects, onSelect }: { projects: Project[], onSelect: (p: 
                               style={{ width: `${p.progress}%` }} 
                             />
                             <div className="relative z-10 flex items-center gap-2 overflow-hidden">
-                               <div className="w-5 h-5 rounded-full border border-white/10 shrink-0 overflow-hidden">
+                               <div className="w-5 h-5 rounded-full border-none shrink-0 overflow-hidden">
                                   <img src={`https://i.pravatar.cc/100?u=${p.designerResponsible}`} alt="" />
                                </div>
                                <span className="text-[8px] font-black text-white italic uppercase truncate tracking-widest">{p.client}</span>
@@ -1467,11 +1467,11 @@ function TimelineView({ projects, onSelect }: { projects: Project[], onSelect: (
 
   return (
     <div className="max-w-4xl mx-auto py-8">
-       <div className="relative border-l-2 border-white/5 space-y-12 pl-8 ml-4">
+       <div className="relative border-l-2 border-transparent space-y-12 pl-8 ml-4">
           {sortedProjects.map((p, i) => (
             <div key={p.id} className="relative group">
                {/* Dot */}
-               <div className="absolute -left-[41px] top-0 w-5 h-5 rounded-full bg-[#050505] border-4 border-blue-600 shadow-[0_0_15px_rgba(37,99,235,0.4)] z-10" />
+               <div className="absolute -left-[41px] top-0 w-5 h-5 rounded-full bg-white dark:bg-zinc-900 border-4 border-blue-600 shadow-[0_0_15px_rgba(37,99,235,0.4)] z-10" />
                
                <div className="space-y-4">
                   <div className="flex items-center gap-4">
@@ -1479,7 +1479,7 @@ function TimelineView({ projects, onSelect }: { projects: Project[], onSelect: (
                      <Badge className="bg-emerald-500/10 text-emerald-500 border-0 text-[8px] font-black uppercase italic">Atualização Operacional</Badge>
                   </div>
                   
-                  <Card className="bg-[#0c0c10] border-white/5 p-6 hover:border-white/20 transition-all cursor-pointer" onClick={() => onSelect(p)}>
+                  <Card className="bg-white dark:bg-zinc-900 border-transparent p-6 hover:border-transparent transition-all cursor-pointer" onClick={() => onSelect(p)}>
                      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                         <div className="space-y-2">
                            <div className="flex items-center gap-2">
@@ -1493,7 +1493,7 @@ function TimelineView({ projects, onSelect }: { projects: Project[], onSelect: (
                         </div>
                         <div className="flex flex-col items-end gap-2 shrink-0">
                            <div className="flex items-center gap-2">
-                              <Avatar className="w-8 h-8 border border-white/10">
+                              <Avatar className="w-8 h-8 border-none">
                                  <AvatarImage src={`https://i.pravatar.cc/100?u=${p.designerResponsible}`} />
                               </Avatar>
                               <div className="text-right">
@@ -1515,18 +1515,18 @@ function TimelineView({ projects, onSelect }: { projects: Project[], onSelect: (
 
 function TableView({ projects, onSelect }: { projects: Project[], onSelect: (p: Project) => void }) {
   return (
-    <Card className="bg-[#0c0c10] border-white/5 overflow-hidden">
-       <div className="p-4 bg-white/[0.02] border-b border-white/5 flex gap-4">
+    <Card className="bg-white dark:bg-zinc-900 border-transparent overflow-hidden">
+       <div className="p-4 bg-white/[0.02] border-b border-transparent flex gap-4">
           <div className="relative flex-1">
              <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-600" />
-             <Input placeholder="Filtro rápido na tabela..." className="h-8 bg-transparent border-white/5 text-[10px] pl-9" />
+             <Input placeholder="Filtro rápido na tabela..." className="h-8 bg-transparent border-transparent text-[10px] pl-9" />
           </div>
-          <Button variant="outline" className="h-8 text-[9px] font-black border-white/5 bg-white/5 text-zinc-400">Exportar CSV</Button>
+          <Button variant="outline" className="h-8 text-[9px] font-black border-transparent bg-white/5 text-zinc-400">Exportar CSV</Button>
        </div>
        <ScrollArea className="h-[600px]">
           <Table>
-             <TableHeader className="sticky top-0 bg-[#0c0c10] z-20">
-               <TableRow className="border-white/5 hover:bg-transparent text-[9px] font-black text-zinc-500 uppercase tracking-widest">
+             <TableHeader className="sticky top-0 zinc-900 z-20">
+               <TableRow className="border-transparent hover:bg-transparent text-[9px] font-black text-zinc-500 uppercase tracking-widest">
                   <TableHead className="w-32">Código</TableHead>
                   <TableHead>Projeto</TableHead>
                   <TableHead>Cliente</TableHead>
@@ -1540,7 +1540,7 @@ function TableView({ projects, onSelect }: { projects: Project[], onSelect: (p: 
              </TableHeader>
              <TableBody>
                 {projects.map(p => (
-                  <TableRow key={p.id} className="border-white/5 hover:bg-white/[0.01] group cursor-pointer" onClick={() => onSelect(p)}>
+                  <TableRow key={p.id} className="border-transparent hover:bg-white/[0.01] group cursor-pointer" onClick={() => onSelect(p)}>
                      <TableCell className="text-[10px] font-black text-blue-500">#{p.id}</TableCell>
                      <TableCell className="text-[10px] font-bold text-white uppercase">{p.title}</TableCell>
                      <TableCell className="text-[10px] font-bold text-zinc-500 uppercase">{p.client}</TableCell>
@@ -1584,9 +1584,9 @@ function ProjectsDashboard({ projects, columns }: { projects: Project[], columns
     <div className="space-y-6">
        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {stats.map((s, i) => (
-            <Card key={i} className="bg-[#0c0c10] border-white/5 p-6 hover:border-white/10 transition-all group">
+            <Card key={i} className="bg-white dark:bg-zinc-900 border-transparent p-6 hover:border-transparent transition-all group">
                <div className="flex items-center justify-between mb-4">
-                  <div className="w-10 h-10 rounded-xl bg-white/[0.02] border border-white/5 flex items-center justify-center group-hover:bg-blue-600/10 group-hover:border-blue-600/20 transition-all">
+                  <div className="w-10 h-10 rounded-xl bg-white/[0.02] border-none flex items-center justify-center group-hover:bg-blue-600/10 group-hover:border-blue-600/20 transition-all">
                      {s.icon}
                   </div>
                   <Badge className="bg-blue-600/10 text-blue-500 border-0 text-[8px] font-black italic">MESH-AI DATA</Badge>
@@ -1598,13 +1598,13 @@ function ProjectsDashboard({ projects, columns }: { projects: Project[], columns
        </div>
 
        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <Card className="lg:col-span-2 bg-[#0c0c10] border-white/5 p-6 shadow-2xl">
+          <Card className="lg:col-span-2 zinc-900 border-transparent p-6 shadow-2xl">
              <div className="flex items-center justify-between mb-8">
                 <h4 className="text-xs font-black text-white uppercase italic tracking-[0.2em] flex items-center gap-2">
                    <Target size={16} className="text-blue-500" /> Volume de Operação por Status
                 </h4>
              </div>
-             <div className="h-[300px] w-full flex items-end gap-2 md:gap-4 pb-8 border-b border-white/5 relative">
+             <div className="h-[300px] w-full flex items-end gap-2 md:gap-4 pb-8 border-b border-transparent relative">
                 {finalColumns.map((col, i) => {
                   const count = projects.filter(p => p.status === col).length;
                   const height = projects.length > 0 ? (count / projects.length) * 100 + 10 : 10;
@@ -1630,7 +1630,7 @@ function ProjectsDashboard({ projects, columns }: { projects: Project[], columns
              </div>
           </Card>
 
-          <Card className="bg-[#0c0c10] border-white/5 p-6 shadow-2xl flex flex-col">
+          <Card className="bg-white dark:bg-zinc-900 border-transparent p-6 shadow-2xl flex flex-col">
              <h4 className="text-xs font-black text-white uppercase italic tracking-[0.2em] mb-6 flex items-center gap-2">
                 <Timer size={16} className="text-purple-500" /> Gargalos Operacionais
              </h4>
@@ -1687,12 +1687,12 @@ function ProjectDetailModal({ project, onClose, onUpdateProject }: { project: Pr
       initial={{ scale: 0.9, opacity: 0 }}
       animate={{ scale: 1, opacity: 1 }}
       exit={{ scale: 0.9, opacity: 0 }}
-      className="bg-[#050505] border border-white/10 w-full max-w-5xl h-[90vh] rounded-3xl overflow-hidden shadow-[0_0_100px_rgba(37,99,235,0.15)] flex flex-col"
+      className="bg-white dark:bg-zinc-900 border-none w-full max-w-5xl h-[90vh] rounded-3xl overflow-hidden shadow-[0_0_100px_rgba(37,99,235,0.15)] flex flex-col"
     >
-       <div className="p-6 border-b border-white/5 bg-[#0a0a0f] flex items-center justify-between shrink-0">
+       <div className="p-6 border-b border-transparent bg-white dark:bg-zinc-900 flex items-center justify-between shrink-0">
           <div className="flex items-center gap-4">
              <div className="w-12 h-12 rounded-xl bg-blue-600 flex items-center justify-center p-0.5">
-                <div className="w-full h-full rounded-lg bg-[#050505] flex items-center justify-center font-black text-blue-500 italic">
+                <div className="w-full h-full rounded-lg bg-white dark:bg-zinc-900 flex items-center justify-center font-black text-blue-500 italic">
                    #{project.id}
                 </div>
              </div>
@@ -1722,7 +1722,7 @@ function ProjectDetailModal({ project, onClose, onUpdateProject }: { project: Pr
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 pb-12">
              <div className="lg:col-span-2 space-y-8">
                 <Tabs defaultValue="geral" className="w-full">
-                  <TabsList className="bg-white/5 border border-white/5 p-1 mb-8">
+                  <TabsList className="bg-white/5 border-none p-1 mb-8">
                     <TabsTrigger value="geral" className="text-[10px] font-black uppercase tracking-widest px-6 data-[state=active]:bg-white data-[state=active]:text-black">Geral</TabsTrigger>
                     <TabsTrigger value="produtos" className="text-[10px] font-black uppercase tracking-widest px-6 data-[state=active]:bg-white data-[state=active]:text-black">Produtos ({project.products.length})</TabsTrigger>
                     <TabsTrigger value="arquivos" className="text-[10px] font-black uppercase tracking-widest px-6 data-[state=active]:bg-white data-[state=active]:text-black">Arquivos</TabsTrigger>
@@ -1737,7 +1737,7 @@ function ProjectDetailModal({ project, onClose, onUpdateProject }: { project: Pr
                               {[1, 2, 3, 4, 5].map(v => (
                                 <div key={v} className={cn(
                                   "flex-1 h-8 rounded border flex items-center justify-center text-[10px] font-black transition-all",
-                                  v <= project.difficulty ? "bg-blue-600 text-white border-blue-500" : "bg-white/[0.02] text-zinc-600 border-white/5"
+                                  v <= project.difficulty ? "bg-blue-600 text-white border-blue-500" : "bg-white/[0.02] text-zinc-600 border-transparent"
                                 )}>{v}</div>
                               ))}
                            </div>
@@ -1748,7 +1748,7 @@ function ProjectDetailModal({ project, onClose, onUpdateProject }: { project: Pr
                               {[1, 2, 3, 4, 5].map(v => (
                                 <div key={v} className={cn(
                                   "flex-1 h-8 rounded border flex items-center justify-center text-[10px] font-black transition-all",
-                                  v <= project.priority ? "bg-amber-600 text-white border-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.2)]" : "bg-white/[0.02] text-zinc-600 border-white/5"
+                                  v <= project.priority ? "bg-amber-600 text-white border-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.2)]" : "bg-white/[0.02] text-zinc-600 border-transparent"
                                 )}>{v}</div>
                               ))}
                            </div>
@@ -1758,7 +1758,7 @@ function ProjectDetailModal({ project, onClose, onUpdateProject }: { project: Pr
                      <div className="grid grid-cols-2 gap-6">
                         <div className="space-y-2">
                            <p className="text-[10px] font-black text-zinc-600 uppercase tracking-widest">Responsável Comercial</p>
-                           <div className="p-3 bg-white/[0.02] border border-white/5 rounded-xl flex items-center gap-3">
+                           <div className="p-3 bg-white/[0.02] border-none rounded-xl flex items-center gap-3">
                               <Avatar className="w-8 h-8">
                                  <AvatarImage src={`https://i.pravatar.cc/100?u=${project.commercialResponsible}`} />
                               </Avatar>
@@ -1767,7 +1767,7 @@ function ProjectDetailModal({ project, onClose, onUpdateProject }: { project: Pr
                         </div>
                         <div className="space-y-2">
                            <p className="text-[10px] font-black text-zinc-600 uppercase tracking-widest">Designer Responsável</p>
-                           <div className="p-3 bg-white/[0.02] border border-white/5 rounded-xl flex items-center gap-3">
+                           <div className="p-3 bg-white/[0.02] border-none rounded-xl flex items-center gap-3">
                               <Avatar className="w-8 h-8">
                                  <AvatarImage src={`https://i.pravatar.cc/100?u=${project.designerResponsible}`} />
                               </Avatar>
@@ -1777,7 +1777,7 @@ function ProjectDetailModal({ project, onClose, onUpdateProject }: { project: Pr
                      </div>
 
                      <div className="space-y-4">
-                        <div className="p-4 bg-white/[0.02] border border-white/5 rounded-2xl flex items-center justify-between">
+                        <div className="p-4 bg-white/[0.02] border-none rounded-2xl flex items-center justify-between">
                            <div className="flex items-center gap-4">
                               <div className="w-10 h-10 rounded-xl bg-emerald-600/10 border border-emerald-500/20 flex items-center justify-center text-emerald-500">
                                  <DollarSign size={20} />
@@ -1793,13 +1793,13 @@ function ProjectDetailModal({ project, onClose, onUpdateProject }: { project: Pr
 
                      <div className="space-y-4">
                         <p className="text-[10px] font-black text-zinc-600 uppercase tracking-widest mb-2">Briefing Operacional</p>
-                        <div className="p-6 bg-white/[0.01] border border-white/5 rounded-2xl text-xs text-zinc-400 font-medium leading-relaxed italic">
+                        <div className="p-6 bg-white/[0.01] border-none rounded-2xl text-xs text-zinc-400 font-medium leading-relaxed italic">
                            "Execução de fachadas em ACM 3mm com logotipos em letra caixa iluminada. Instalação noturna necessária no Shopping Ibirapuera. Verificação estrutural do mezanino pendente."
                         </div>
                      </div>
 
                      {/* Central de Alertas [OP-PROJ] */}
-                     <div className="bg-[#0c0c10] border border-white/5 p-6 rounded-2xl space-y-4 text-left">
+                     <div className="bg-white dark:bg-zinc-900 border-none p-6 rounded-2xl space-y-4 text-left">
                        <div className="flex items-center justify-between">
                          <h4 className="text-[10px] font-black text-white uppercase italic tracking-[0.2em] flex items-center gap-2">
                            <Zap size={14} className="text-blue-500 animate-pulse" /> Central de Alertas e Ações de Fluxo
@@ -1831,10 +1831,10 @@ function ProjectDetailModal({ project, onClose, onUpdateProject }: { project: Pr
                              }
                            </p>
                            <p className="text-xs font-bold text-zinc-300 leading-relaxed italic mt-1 pb-1">"{project.alertMessage}"</p>
-                           <p className="text-[8px] font-black text-zinc-600 uppercase tracking-widest pt-1 border-t border-white/5">Registrado em: {project.alertDate}</p>
+                           <p className="text-[8px] font-black text-zinc-600 uppercase tracking-widest pt-1 border-t border-transparent">Registrado em: {project.alertDate}</p>
                          </div>
                        ) : (
-                         <p className="text-xs text-zinc-500 leading-relaxed font-semibold italic text-left p-3 bg-white/[0.01] border border-white/5 rounded-xl">
+                         <p className="text-xs text-zinc-500 leading-relaxed font-semibold italic text-left p-3 bg-white/[0.01] border-none rounded-xl">
                            Nenhum fluxo de retrabalho ou alteração agendado no momento. Estável e operando em regime normal no setor de {project.sector}.
                          </p>
                        )}
@@ -1842,28 +1842,28 @@ function ProjectDetailModal({ project, onClose, onUpdateProject }: { project: Pr
                        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 pt-2">
                           <Button 
                             onClick={() => triggerAlert('novo_projeto', 'Novo briefing de projeto importado do comercial. Pronto para criação urgente.')}
-                            className="bg-emerald-500/10 hover:bg-[#10b981] hover:text-white border border-emerald-500/15 text-emerald-400 text-[8px] font-black uppercase tracking-widest p-2 h-14 flex flex-col justify-center items-center gap-1 transition-all"
+                            className="bg-emerald-500/10 hover:bg-zinc-100 hover:dark:bg-zinc-800 hover:text-white border border-emerald-500/15 text-emerald-400 text-[8px] font-black uppercase tracking-widest p-2 h-14 flex flex-col justify-center items-center gap-1 transition-all"
                           >
                             <Sparkles size={14} />
                             Novo Projeto
                           </Button>
                           <Button 
                             onClick={() => triggerAlert('retorno_vendas', 'Projeto devolvido para aprovação de custos adicionais do setor de vendas de designer.')}
-                            className="bg-amber-500/10 hover:bg-[#f59e0b] hover:text-white border border-amber-500/15 text-amber-500 text-[8px] font-black uppercase tracking-widest p-2 h-14 flex flex-col justify-center items-center gap-1 transition-all"
+                            className="bg-amber-500/10 hover:bg-zinc-100 hover:dark:bg-zinc-800 hover:text-white border border-amber-500/15 text-amber-500 text-[8px] font-black uppercase tracking-widest p-2 h-14 flex flex-col justify-center items-center gap-1 transition-all"
                           >
                             <Undo2 size={14} />
                             Retor. Vendas
                           </Button>
                           <Button 
                             onClick={() => triggerAlert('alteracao', 'Solicitada mudança em dimensões e layout de ACM frontal.')}
-                            className="bg-blue-600/10 hover:bg-[#3b82f6] hover:text-white border border-blue-500/15 text-blue-400 text-[8px] font-black uppercase tracking-widest p-2 h-14 flex flex-col justify-center items-center gap-1 transition-all"
+                            className="bg-blue-600/10 hover:bg-zinc-100 hover:dark:bg-zinc-800 hover:text-white border border-blue-500/15 text-blue-400 text-[8px] font-black uppercase tracking-widest p-2 h-14 flex flex-col justify-center items-center gap-1 transition-all"
                           >
                             <RefreshCw size={14} />
                             Alteração
                           </Button>
                           <Button 
                             onClick={() => triggerAlert('retrabalho', 'Retrabalho acionado devido a re-impressão estrutural de adesivação.')}
-                            className="bg-[#f43f5e]/10 hover:bg-[#f43f5e] hover:text-white border border-rose-500/15 text-rose-500 text-[8px] font-black uppercase tracking-widest p-2 h-14 flex flex-col justify-center items-center gap-1 transition-all animate-pulse hover:animate-none"
+                            className="bg-[#f43f5e]/10 hover:bg-zinc-100 hover:dark:bg-zinc-800 hover:text-white border border-rose-500/15 text-rose-500 text-[8px] font-black uppercase tracking-widest p-2 h-14 flex flex-col justify-center items-center gap-1 transition-all animate-pulse hover:animate-none"
                           >
                             <RotateCcw size={14} />
                             Retrabalho
@@ -1875,10 +1875,10 @@ function ProjectDetailModal({ project, onClose, onUpdateProject }: { project: Pr
                   <TabsContent value="produtos" className="mt-0">
                      <div className="space-y-4">
                         {project.products.map(product => (
-                          <Card key={product.id} className="bg-[#0c0c10] border-white/5 overflow-hidden group hover:border-blue-500/30 transition-all">
+                          <Card key={product.id} className="bg-white dark:bg-zinc-900 border-transparent overflow-hidden group hover:border-blue-500/30 transition-all">
                              <div className="p-6 flex flex-col md:flex-row md:items-center justify-between gap-6">
                                 <div className="flex items-center gap-5">
-                                   <div className="w-16 h-16 rounded-2xl bg-white/5 flex items-center justify-center shrink-0 border border-white/10 group-hover:bg-blue-600/10 transition-all">
+                                   <div className="w-16 h-16 rounded-2xl bg-white/5 flex items-center justify-center shrink-0 border-none group-hover:bg-blue-600/10 transition-all">
                                       <Maximize2 size={24} className="text-zinc-600 group-hover:text-blue-500 transition-all" />
                                    </div>
                                    <div>
@@ -1906,7 +1906,7 @@ function ProjectDetailModal({ project, onClose, onUpdateProject }: { project: Pr
                              </div>
                           </Card>
                         ))}
-                        <Button className="w-full h-14 border-2 border-dashed border-white/5 bg-transparent hover:bg-white/5 hover:border-white/10 text-zinc-500 text-[10px] font-black uppercase tracking-widest">
+                        <Button className="w-full h-14 border-2 border-dashed border-transparent bg-transparent hover:bg-white/5 hover:border-transparent text-zinc-500 text-[10px] font-black uppercase tracking-widest">
                            <Plus size={16} className="mr-2" /> Adicionar Produto ao Projeto
                         </Button>
                      </div>
@@ -1915,7 +1915,7 @@ function ProjectDetailModal({ project, onClose, onUpdateProject }: { project: Pr
              </div>
 
              <div className="space-y-6">
-                <Card className="bg-[#0c0c10] border-white/5 p-6 shadow-2xl space-y-6">
+                <Card className="bg-white dark:bg-zinc-900 border-transparent p-6 shadow-2xl space-y-6">
                    <h4 className="text-[10px] font-black text-white uppercase italic tracking-[0.2em] flex items-center gap-2">
                       <Target size={16} className="text-blue-500" /> Timeline do Projeto
                    </h4>
@@ -1957,7 +1957,7 @@ function ProjectDetailModal({ project, onClose, onUpdateProject }: { project: Pr
                    <Button className="w-full h-12 bg-white text-black hover:bg-zinc-200 font-black text-[10px] uppercase tracking-widest italic group">
                       Salvar Alterações <ArrowRight size={16} className="ml-2 group-hover:translate-x-1 transition-transform" />
                    </Button>
-                   <Button variant="outline" className="w-full h-12 bg-transparent border-white/10 text-white hover:bg-white/5 font-black text-[10px] uppercase tracking-widest" onClick={onClose}>
+                   <Button variant="outline" className="w-full h-12 bg-transparent border-transparent text-white hover:bg-white/5 font-black text-[10px] uppercase tracking-widest" onClick={onClose}>
                       Fechar Visualização
                    </Button>
                 </div>

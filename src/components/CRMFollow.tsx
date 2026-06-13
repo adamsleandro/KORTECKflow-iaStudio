@@ -237,7 +237,7 @@ function LeadCard({ lead }: { lead: Lead, key?: string | number }) {
         render={
           <motion.div
             whileHover={{ y: -4, scale: 1.01 }}
-            className="bg-[#0c0c10] border border-white/5 rounded-2xl p-5 shadow-xl cursor-pointer group hover:border-white/20 transition-all relative overflow-hidden"
+            className="bg-white dark:bg-zinc-900 border-none rounded-2xl p-5 shadow-xl cursor-pointer group hover:border-transparent transition-all relative overflow-hidden"
           />
         }
       >
@@ -253,7 +253,7 @@ function LeadCard({ lead }: { lead: Lead, key?: string | number }) {
           </div>
 
           <div className="flex items-start justify-between mb-4 mt-2">
-            <div className="px-2.5 py-1 bg-white/[0.05] border border-white/5 rounded-lg text-[9px] font-black text-zinc-500 italic uppercase tracking-widest">
+            <div className="px-2.5 py-1 bg-white/[0.05] border-none rounded-lg text-[9px] font-black text-zinc-500 italic uppercase tracking-widest">
                #{lead.id}
             </div>
             <div className="flex items-center gap-2">
@@ -274,9 +274,9 @@ function LeadCard({ lead }: { lead: Lead, key?: string | number }) {
           </div>
 
           <div className="space-y-1 mb-5">
-            <h4 className="text-sm font-bold text-white leading-snug group-hover:text-blue-400 transition-colors uppercase tracking-tight line-clamp-2">{lead.client}</h4>
+            <h4 className="text-sm font-bold text-zinc-900 dark:text-white leading-snug group-hover:text-blue-450 transition-colors uppercase tracking-tight line-clamp-2">{lead.client}</h4>
             <div className="flex items-center gap-2 mt-2">
-               <Avatar className="w-5 h-5 border border-white/10">
+               <Avatar className="w-5 h-5 border-none">
                   <AvatarImage src={`https://i.pravatar.cc/100?u=${lead.salesperson}`} />
                   <AvatarFallback className="text-[6px] font-black bg-zinc-800">SP</AvatarFallback>
                </Avatar>
@@ -284,7 +284,7 @@ function LeadCard({ lead }: { lead: Lead, key?: string | number }) {
             </div>
           </div>
 
-          <div className="p-3 bg-white/[0.02] rounded-xl border border-white/5 mb-6 space-y-2">
+          <div className="p-3 bg-white/[0.02] rounded-xl border-none mb-6 space-y-2">
              <div className="flex items-center justify-between">
                 <span className="text-[9px] font-black text-zinc-600 uppercase italic">Valor Estimado</span>
                 <span className="text-[10px] font-black text-blue-500 italic">R$ {lead.value.toLocaleString('pt-BR')}</span>
@@ -302,7 +302,7 @@ function LeadCard({ lead }: { lead: Lead, key?: string | number }) {
              )}
           </div>
 
-          <div className="flex items-center justify-between pt-3 border-t border-white/5">
+          <div className="flex items-center justify-between pt-3 border-t border-transparent">
              <div className="flex items-center gap-2 text-[9px] font-black text-zinc-500 uppercase italic">
                 <Clock size={12} className={cn(isAging ? "text-rose-500" : "text-blue-500")} />
                 {daysInColumn} dias nesta fase
@@ -321,7 +321,7 @@ function LeadCard({ lead }: { lead: Lead, key?: string | number }) {
           </div>
       </DialogTrigger>
 
-      <DialogContent className="max-w-4xl bg-[#0c0c10] border-white/5 text-white max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-4xl zinc-900 border-transparent text-white max-h-[90vh] overflow-y-auto">
           <DialogHeader>
              <div className="flex items-center justify-between w-full pr-8">
                 <DialogTitle className="text-2xl font-black italic uppercase tracking-tighter flex items-center gap-3">
@@ -343,21 +343,21 @@ function LeadCard({ lead }: { lead: Lead, key?: string | number }) {
              <div className="lg:col-span-2 space-y-8">
                 {/* Project Info Section */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                   <div className="p-4 bg-white/[0.02] border border-white/5 rounded-2xl space-y-3">
+                   <div className="p-4 bg-white/[0.02] border-none rounded-2xl space-y-3">
                       <div className="flex items-center gap-2 text-zinc-500">
                          <FileText size={14} />
                          <span className="text-[10px] font-black uppercase italic tracking-widest">Informações de Cadastro</span>
                       </div>
                       <p className="text-xs text-white font-medium leading-relaxed">{lead.registrationInfo || 'Não informado'}</p>
                    </div>
-                   <div className="p-4 bg-white/[0.02] border border-white/5 rounded-2xl space-y-3">
+                   <div className="p-4 bg-white/[0.02] border-none rounded-2xl space-y-3">
                       <div className="flex items-center gap-2 text-zinc-500">
                          <Layout size={14} />
                          <span className="text-[10px] font-black uppercase italic tracking-widest">Briefing do Projeto</span>
                       </div>
                       <p className="text-xs text-white font-medium leading-relaxed">{lead.briefing || 'Não informado'}</p>
                    </div>
-                   <div className="p-4 bg-white/[0.02] border border-white/5 rounded-2xl space-y-3">
+                   <div className="p-4 bg-white/[0.02] border-none rounded-2xl space-y-3">
                       <div className="flex items-center gap-2 text-zinc-500">
                          <FolderOpen size={14} />
                          <span className="text-[10px] font-black uppercase italic tracking-widest">Link da Pasta</span>
@@ -368,7 +368,7 @@ function LeadCard({ lead }: { lead: Lead, key?: string | number }) {
                         </a>
                       ) : <p className="text-xs text-zinc-600 italic">Sem link vinculado</p>}
                    </div>
-                   <div className="p-4 bg-white/[0.02] border border-white/5 rounded-2xl space-y-3">
+                   <div className="p-4 bg-white/[0.02] border-none rounded-2xl space-y-3">
                       <div className="flex items-center gap-2 text-zinc-500">
                          <User size={14} />
                          <span className="text-[10px] font-black uppercase italic tracking-widest">Equipe Alocada</span>
@@ -406,7 +406,7 @@ function LeadCard({ lead }: { lead: Lead, key?: string | number }) {
 
                    <div className="space-y-2">
                       <Label className="text-[10px] font-black uppercase text-zinc-500 italic tracking-widest">Observações Internas</Label>
-                      <div className="p-4 bg-[#050505] border border-white/5 rounded-2xl">
+                      <div className="p-4 bg-white dark:bg-zinc-900 border-none rounded-2xl">
                          <p className="text-xs text-zinc-400 font-medium leading-relaxed italic">
                             "{lead.observations || 'Sem observações adicionais.'}"
                          </p>
@@ -423,7 +423,7 @@ function LeadCard({ lead }: { lead: Lead, key?: string | number }) {
                         placeholder="Adicionar nova objeção detectada..." 
                         value={newObjection}
                         onChange={(e) => setNewObjection(e.target.value)}
-                        className="bg-white/5 border-white/10 text-xs" 
+                        className="bg-white/5 border-transparent text-xs" 
                       />
                       <Button onClick={addObjection} size="sm" className="bg-blue-600 hover:bg-blue-700 h-9 px-4">
                         <Plus size={16} />
@@ -435,20 +435,20 @@ function LeadCard({ lead }: { lead: Lead, key?: string | number }) {
                         <Badge 
                           key={obj} 
                           onClick={() => !objections.includes(obj) && addObjection()}
-                          className="bg-zinc-900 border-white/10 text-[8px] cursor-pointer hover:bg-blue-600/20 transition-colors py-1"
+                          className="bg-zinc-900 border-transparent text-[8px] cursor-pointer hover:bg-blue-600/20 transition-colors py-1"
                         >
                           + {obj}
                         </Badge>
                       ))}
                     </div>
 
-                    <ScrollArea className="h-[120px] bg-[#050505] rounded-xl p-4 border border-white/5">
+                    <ScrollArea className="h-[120px] bg-white dark:bg-zinc-900 rounded-xl p-4 border-none">
                        <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                           {objections.length === 0 ? (
                             <div className="col-span-2 text-[10px] text-zinc-700 font-bold uppercase italic text-center py-8">Nenhuma objeção registrada</div>
                           ) : (
                             objections.map((obj, i) => (
-                              <div key={i} className="flex items-center justify-between p-3 rounded-xl bg-white/5 border border-white/5 group">
+                              <div key={i} className="flex items-center justify-between p-3 rounded-xl bg-white/5 border-none group">
                                  <span className="text-[10px] font-bold text-white uppercase italic">{obj}</span>
                                  <button 
                                    onClick={() => removeObjection(i)}
@@ -481,7 +481,7 @@ function LeadCard({ lead }: { lead: Lead, key?: string | number }) {
                     
                     <div className="relative group">
                        <div className="absolute inset-0 bg-blue-600/10 blur-3xl rounded-full opacity-50 group-hover:opacity-100 transition-opacity pointer-events-none" />
-                       <div className="relative bg-[#050505] border border-white/5 rounded-2xl p-6 min-h-[400px]">
+                       <div className="relative bg-white dark:bg-zinc-900 border-none rounded-2xl p-6 min-h-[400px]">
                           {isScriptLoading ? (
                             <div className="flex flex-col items-center justify-center h-full gap-4 pt-24">
                                <div className="w-8 h-8 border-2 border-blue-600/30 border-t-blue-600 rounded-full animate-spin" />
@@ -628,33 +628,33 @@ export function CRMFollow() {
       
       {/* Top Performance Report */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card className="bg-[#0c0c10] border-white/5 p-6 shadow-2xl relative overflow-hidden group">
+        <Card className="bg-white dark:bg-zinc-900 border-transparent p-6 shadow-sm relative overflow-hidden group">
            <div className="absolute top-0 right-0 w-24 h-24 bg-blue-600/10 blur-3xl rounded-full -mr-12 -mt-12 group-hover:scale-150 transition-transform" />
            <div className="flex items-center justify-between mb-4">
               <span className="text-[10px] font-black text-zinc-500 uppercase tracking-widest italic">Conversão Global</span>
               <TrendingUp size={16} className="text-emerald-500" />
            </div>
-           <div className="text-4xl font-black text-white italic tracking-tighter">64.8%</div>
+           <div className="text-4xl font-black text-zinc-900 dark:text-white italic tracking-tighter">64.8%</div>
            <p className="text-[9px] font-black text-zinc-600 mt-2 uppercase tracking-widest">+4.2% VS MÊS ANTERIOR</p>
         </Card>
 
-        <Card className="bg-[#0c0c10] border-white/5 p-6 shadow-2xl">
+        <Card className="bg-white dark:bg-zinc-900 border-transparent p-6 shadow-sm">
            <div className="flex items-center justify-between mb-4">
               <span className="text-[10px] font-black text-zinc-500 uppercase tracking-widest italic">Tempo em Coluna (Avg)</span>
               <Clock size={16} className="text-blue-500" />
            </div>
-           <div className="text-4xl font-black text-white italic tracking-tighter">4.2 <span className="text-sm">DIAS</span></div>
+           <div className="text-4xl font-black text-zinc-900 dark:text-white italic tracking-tighter">4.2 <span className="text-sm">DIAS</span></div>
            <div className="w-full h-1.5 bg-white/5 rounded-full mt-4 overflow-hidden">
                <motion.div initial={{ width: 0 }} animate={{ width: '42%' }} className="h-full bg-blue-600" />
            </div>
         </Card>
 
-        <Card className="bg-[#0c0c10] border-white/5 p-6 shadow-2xl">
+        <Card className="bg-white dark:bg-zinc-900 border-transparent p-6 shadow-sm">
            <div className="flex items-center justify-between mb-4">
               <span className="text-[10px] font-black text-zinc-500 uppercase tracking-widest italic">Pipeline Ativo</span>
               <BarChart3 size={16} className="text-amber-500" />
            </div>
-           <div className="text-4xl font-black text-white italic tracking-tighter">R$ 542k</div>
+           <div className="text-4xl font-black text-zinc-900 dark:text-white italic tracking-tighter">R$ 542k</div>
            <p className="text-[9px] font-black text-emerald-500 mt-2 uppercase tracking-widest italic">R$ 124k Previsão p/ Hoje</p>
         </Card>
 
@@ -670,7 +670,7 @@ export function CRMFollow() {
       </div>
 
       {/* Header Controls */}
-      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 bg-[#0c0c10] border border-white/5 p-6 rounded-2xl">
+      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 zinc-900 border-none p-6 rounded-2xl">
          <div className="flex items-center gap-6">
             <div>
                <h1 className="text-2xl font-black text-white italic uppercase tracking-tighter flex items-center gap-3">
@@ -691,7 +691,7 @@ export function CRMFollow() {
          </div>
 
          <div className="flex items-center gap-3">
-            <div className="flex bg-[#050505] border border-white/5 p-1 rounded-xl">
+            <div className="flex bg-white dark:bg-zinc-900 border-none p-1 rounded-xl">
                <button 
                   onClick={() => setActiveView('board')}
                   className={cn(
@@ -745,8 +745,8 @@ export function CRMFollow() {
       ) : (
          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2 space-y-6">
-               <Card className="bg-[#0c0c10] border-white/5 p-6 overflow-hidden">
-                  <h3 className="text-xs font-black text-white uppercase italic tracking-[0.2em] mb-8 flex items-center gap-2">
+               <Card className="bg-white dark:bg-zinc-900 border-transparent p-6 overflow-hidden">
+                  <h3 className="text-xs font-black text-zinc-900 dark:text-white uppercase italic tracking-[0.2em] mb-8 flex items-center gap-2">
                      <TrendingUp size={16} className="text-blue-500" /> Ranking de Conversão [%]
                   </h3>
                   <div className="space-y-10">
@@ -754,12 +754,12 @@ export function CRMFollow() {
                         <div key={sp.name} className="space-y-3">
                            <div className="flex items-center justify-between">
                               <div className="flex items-center gap-4">
-                                 <Avatar className="w-10 h-10 border border-white/10">
+                                 <Avatar className="w-10 h-10 border-none">
                                     <AvatarImage src={`https://i.pravatar.cc/100?u=${sp.name}`} />
                                     <AvatarFallback className="bg-zinc-800 text-[10px] font-black uppercase">{sp.name.split(' ')[0][0]}{sp.name.split(' ')[1][0]}</AvatarFallback>
                                  </Avatar>
                                  <div>
-                                    <h4 className="text-sm font-black text-white uppercase italic">{sp.name}</h4>
+                                    <h4 className="text-sm font-black text-zinc-900 dark:text-white uppercase italic">{sp.name}</h4>
                                     <p className="text-[10px] font-black text-zinc-600 uppercase tracking-widest">Revenue: {sp.revenue}</p>
                                  </div>
                               </div>
@@ -786,27 +786,27 @@ export function CRMFollow() {
             </div>
             
             <div className="space-y-6">
-               <Card className="bg-[#0c0c10] border-white/5 p-8 text-center space-y-6 flex flex-col items-center">
+               <Card className="bg-white dark:bg-zinc-900 border-transparent p-8 text-center space-y-6 flex flex-col items-center">
                   <div className="w-20 h-20 rounded-3xl bg-blue-600/10 border border-blue-600/20 flex items-center justify-center text-blue-500 shadow-[0_0_50px_rgba(37,99,235,0.1)]">
                      <Target size={40} />
                   </div>
                   <div>
-                     <h3 className="text-sm font-black text-white uppercase italic tracking-[0.2em] mb-2">Meta de Vendas Korteck</h3>
-                     <p className="text-xs text-zinc-500 font-medium uppercase tracking-tighter">Faltam <span className="text-white">R$ 145.000,00</span> para bater a meta global do trimestre.</p>
+                     <h3 className="text-sm font-black text-zinc-900 dark:text-white uppercase italic tracking-[0.2em] mb-2">Meta de Vendas Korteck</h3>
+                     <p className="text-xs text-zinc-500 font-medium uppercase tracking-tighter">Faltam <span className="text-zinc-900 dark:text-white font-bold">R$ 145.000,00</span> para bater a meta global do trimestre.</p>
                   </div>
                   <div className="w-full space-y-2">
                      <div className="flex justify-between text-[10px] font-black italic uppercase">
                         <span className="text-zinc-600">Progresso Atual</span>
                         <span className="text-blue-600">72%</span>
                      </div>
-                     <Progress value={72} className="h-2 bg-white/5" indicatorClassName="bg-blue-600" />
+                     <Progress value={72} className="h-2 bg-zinc-100 dark:bg-white/5" indicatorClassName="bg-blue-600" />
                   </div>
-                  <Button className="w-full border-white/5 bg-white/5 text-[10px] font-black uppercase tracking-widest h-12 hover:bg-white/10 transition-colors">
+                  <Button className="w-full border-transparent bg-zinc-100 dark:bg-white/5 border border-zinc-200/50 dark:border-transparent text-zinc-900 dark:text-white hover:bg-zinc-200/60 dark:hover:bg-white/10 text-[10px] font-black uppercase tracking-widest h-12 transition-all">
                      Ver Detalhamento Financeiro
                   </Button>
                </Card>
 
-               <Card className="bg-gradient-to-br from-[#0c0c10] to-[#050505] border-white/5 p-6">
+               <Card className="bg-gradient-to-br from-[#0c0c10] to-[#050505] border-transparent p-6">
                   <h4 className="text-[10px] font-black text-white uppercase italic tracking-widest flex items-center gap-2 mb-6">
                      <Zap size={14} className="text-amber-500" /> Ações Sugeridas (AI)
                   </h4>
@@ -816,7 +816,7 @@ export function CRMFollow() {
                        { action: 'Re-atribuir Lead Frio', client: 'Restaurante Sabor', type: 'Call', icon: <Phone /> },
                        { action: 'Finalizar Proposta', client: 'Condomínio Alpha', type: 'Review', icon: <UserCheck /> },
                      ].map((item, idx) => (
-                        <div key={idx} className="flex items-center gap-4 p-3 rounded-xl hover:bg-white/[0.02] transition-all cursor-pointer group border border-transparent hover:border-white/5">
+                        <div key={idx} className="flex items-center gap-4 p-3 rounded-xl hover:bg-white/[0.02] transition-all cursor-pointer group border-none hover:border-transparent">
                            <div className="w-8 h-8 rounded-lg bg-zinc-900 flex items-center justify-center text-zinc-500 group-hover:text-blue-500 transition-colors">
                               {React.cloneElement(item.icon as React.ReactElement, { size: 14 })}
                            </div>

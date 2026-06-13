@@ -135,7 +135,7 @@ export function Stock({ initialTab: propInitialTab }: { initialTab?: string }) {
   return (
     <div className="p-4 md:p-8 space-y-8 animate-in fade-in duration-750 max-w-[1700px] mx-auto pb-24">
       {/* Industrial Stock Header */}
-      <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-8 border-b border-white/5 pb-8">
+      <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-8 border-b border-transparent pb-8">
         <div className="space-y-3">
           <div className="flex items-center gap-3">
              <div className="p-2.5 bg-emerald-600/10 rounded-xl border border-emerald-500/20">
@@ -151,7 +151,7 @@ export function Stock({ initialTab: propInitialTab }: { initialTab?: string }) {
         </div>
 
         <div className="flex flex-wrap items-center gap-3">
-           <div className="hidden lg:flex items-center gap-8 px-8 border-r border-white/5 mr-3">
+           <div className="hidden lg:flex items-center gap-8 px-8 border-r border-transparent mr-3">
               <div className="text-right">
                  <p className="text-[9px] font-black text-zinc-600 uppercase tracking-widest mb-1">VALOR ATIVO</p>
                  <p className="text-xl font-black text-white italic tracking-tighter">R$ 452.8k</p>
@@ -163,10 +163,10 @@ export function Stock({ initialTab: propInitialTab }: { initialTab?: string }) {
            </div>
            
            <div className="flex items-center gap-2">
-              <Button variant="outline" className="h-14 px-6 bg-white/5 border-white/10 text-zinc-400 hover:text-white font-black uppercase text-[10px] tracking-widest gap-2">
+              <Button variant="outline" className="h-14 px-6 bg-white/5 border-transparent text-zinc-400 hover:text-white font-black uppercase text-[10px] tracking-widest gap-2">
                  <History size={16} /> Movimentações
               </Button>
-              <Button className="bg-emerald-600 text-white hover:bg-emerald-500 h-14 px-8 font-black uppercase text-[11px] tracking-widest shadow-2xl shadow-emerald-600/10 transition-all gap-2">
+              <Button className="bg-emerald-600 text-white hover:bg-emerald-500 h-14 px-8 font-black uppercase text-[11px] tracking-widest shadow-sm shadow-emerald-600/10 transition-all gap-2">
                  <Plus size={18} /> Entrada de Nota
               </Button>
            </div>
@@ -180,7 +180,7 @@ export function Stock({ initialTab: propInitialTab }: { initialTab?: string }) {
           { label: 'Aproveitamento (Retalhos)', value: '18%', trend: '+4% este mês', icon: <Scissors className="text-amber-500" />, color: 'amber' },
           { label: 'Pedidos Compra', value: '12', trend: '4 em trânsito', icon: <Truck className="text-blue-500" />, color: 'blue' },
         ].map((kpi, i) => (
-          <Card key={i} className="bg-[#0c0c10] border-white/5 group hover:border-white/10 transition-all relative overflow-hidden">
+          <Card key={i} className="bg-white dark:bg-zinc-900 border-transparent group hover:border-transparent transition-all relative overflow-hidden">
             <div className={cn("absolute top-0 right-0 w-32 h-32 blur-[60px] opacity-10 -mr-16 -mt-16", `bg-${kpi.color}-500`)} />
             <CardContent className="p-6 flex items-center justify-between">
               <div className="space-y-1">
@@ -188,7 +188,7 @@ export function Stock({ initialTab: propInitialTab }: { initialTab?: string }) {
                 <h3 className="text-2xl font-black text-white italic tracking-tighter">{kpi.value}</h3>
                 <p className="text-[9px] text-zinc-500 font-bold uppercase leading-none">{kpi.trend}</p>
               </div>
-              <div className="w-12 h-12 rounded-xl bg-white/[0.02] border border-white/5 flex items-center justify-center group-hover:scale-110 transition-transform">{kpi.icon}</div>
+              <div className="w-12 h-12 rounded-xl bg-white/[0.02] border-none flex items-center justify-center group-hover:scale-110 transition-transform">{kpi.icon}</div>
             </CardContent>
           </Card>
         ))}
@@ -205,7 +205,7 @@ export function Stock({ initialTab: propInitialTab }: { initialTab?: string }) {
             <TabsTrigger 
               key={tab.id}
               value={tab.id}
-              className="data-[state=active]:bg-blue-600 data-[state=active]:text-white text-zinc-400 bg-zinc-900/60 hover:bg-zinc-800/80 hover:text-zinc-200 border border-zinc-800/85 data-[state=active]:border-blue-500 text-xs font-semibold px-5 h-11 rounded-xl transition-all whitespace-nowrap flex items-center justify-center gap-2.5 cursor-pointer shadow-sm relative"
+              className="data-[state=active]:bg-blue-600 data-[state=active]:text-white text-zinc-400 bg-zinc-900/60 hover:bg-zinc-800/80 hover:text-zinc-200 border-none/85 data-[state=active]:border-blue-500 text-xs font-semibold px-5 h-11 rounded-xl transition-all whitespace-nowrap flex items-center justify-center gap-2.5 cursor-pointer shadow-sm relative"
             >
               {tab.icon} {tab.label}
               {tab.promo && <Badge className="bg-amber-500 text-amber-950 border-0 text-[8px] font-black h-4 px-1 ml-1.5">PRO</Badge>}
@@ -217,7 +217,7 @@ export function Stock({ initialTab: propInitialTab }: { initialTab?: string }) {
            <BaseTable 
               data={STOCK_DATA}
               columns={STOCK_COLUMNS}
-              className="bg-[#0c0c10] border border-white/5 rounded-2xl overflow-hidden"
+              className="bg-white dark:bg-zinc-900 border-none rounded-2xl overflow-hidden"
               searchPlaceholder="Localizar insumo no estoque industrial..."
               onRowClick={(item) => console.log('Selected:', item.id)}
            />
@@ -226,11 +226,11 @@ export function Stock({ initialTab: propInitialTab }: { initialTab?: string }) {
         <TabsContent value="fornecedores" className="mt-0 outline-none space-y-6">
            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {SUPPLIERS_DATA.map((forn) => (
-                <Card key={forn.id} className="bg-[#111116] border-white/5 hover:border-emerald-500/30 transition-all group relative overflow-hidden">
+                <Card key={forn.id} className="bg-white dark:bg-zinc-900 border-transparent hover:border-emerald-500/30 transition-all group relative overflow-hidden">
                    <div className="absolute top-0 right-0 w-24 h-24 bg-emerald-500/5 blur-3xl opacity-0 group-hover:opacity-100 transition-opacity" />
                    <CardHeader className="p-6 pb-2">
                       <div className="flex justify-between items-start mb-4">
-                         <div className="w-12 h-12 rounded-xl bg-white/[0.02] border border-white/5 flex items-center justify-center text-zinc-500 group-hover:text-emerald-500 transition-colors">
+                         <div className="w-12 h-12 rounded-xl bg-white/[0.02] border-none flex items-center justify-center text-zinc-500 group-hover:text-emerald-500 transition-colors">
                             <Truck size={22} />
                          </div>
                          <Badge className="bg-emerald-600/10 text-emerald-500 border-0 text-[10px] font-black">{forn.rating} ★</Badge>
@@ -242,7 +242,7 @@ export function Stock({ initialTab: propInitialTab }: { initialTab?: string }) {
                          <p className="text-[9px] font-black text-zinc-700 uppercase tracking-widest">Gestor de Conta</p>
                          <p className="text-sm font-bold text-zinc-400 uppercase italic tracking-tight">{forn.contact}</p>
                       </div>
-                      <div className="flex items-center justify-between pt-4 border-t border-white/5">
+                      <div className="flex items-center justify-between pt-4 border-t border-transparent">
                          <div className="space-y-1">
                             <p className="text-[9px] font-black text-zinc-700 uppercase tracking-widest">Especialidade</p>
                             <p className="text-[11px] font-black text-emerald-500 uppercase italic">{forn.category}</p>
@@ -258,8 +258,8 @@ export function Stock({ initialTab: propInitialTab }: { initialTab?: string }) {
         </TabsContent>
 
         <TabsContent value="lista" className="mt-0 outline-none">
-           <Card className="bg-[#0c0c10] border-white/5 p-20 text-center flex flex-col items-center justify-center rounded-3xl border-dashed border-2">
-              <div className="w-20 h-20 rounded-full bg-white/5 flex items-center justify-center text-zinc-800 mb-8 border border-white/5 shadow-2xl">
+           <Card className="bg-white dark:bg-zinc-900 border-transparent p-20 text-center flex flex-col items-center justify-center rounded-3xl border-dashed border-2">
+              <div className="w-20 h-20 rounded-full bg-white/5 flex items-center justify-center text-zinc-800 mb-8 border-none shadow-sm">
                  <Package size={40} />
               </div>
               <h3 className="text-3xl font-black text-white uppercase italic tracking-tighter mb-4">Master Index Industrial</h3>
@@ -278,7 +278,7 @@ export function Stock({ initialTab: propInitialTab }: { initialTab?: string }) {
               <div className="lg:col-span-8 space-y-8">
                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {SCRAP_DATA.map((scrap, i) => (
-                      <Card key={i} className="bg-[#111116] border-white/5 group hover:border-amber-500/20 transition-all overflow-hidden cursor-pointer relative">
+                      <Card key={i} className="bg-white dark:bg-zinc-900 border-transparent group hover:border-amber-500/20 transition-all overflow-hidden cursor-pointer relative">
                          <div className="absolute top-0 right-0 px-4 py-2 opacity-0 group-hover:opacity-100 transition-opacity">
                             <div className="flex gap-2">
                                <button className="p-1.5 bg-white/5 rounded-md text-zinc-400 hover:text-white"><Maximize2 size={14} /></button>
@@ -290,7 +290,7 @@ export function Stock({ initialTab: propInitialTab }: { initialTab?: string }) {
                             <CardTitle className="text-xl font-black text-white uppercase italic tracking-tighter">{scrap.material}</CardTitle>
                          </CardHeader>
                          <CardContent className="p-6 pt-0 space-y-6">
-                            <div className="p-5 bg-white/[0.02] border border-white/5 rounded-2xl">
+                            <div className="p-5 bg-white/[0.02] border-none rounded-2xl">
                                <span className="text-[10px] font-black text-zinc-700 uppercase tracking-widest mb-2 block italic">Área Remanescente</span>
                                <span className="text-2xl font-black text-white italic tracking-tighter">{scrap.size}</span>
                             </div>
@@ -306,7 +306,7 @@ export function Stock({ initialTab: propInitialTab }: { initialTab?: string }) {
                                </div>
                             </div>
 
-                            <div className="pt-6 border-t border-white/5 flex items-center justify-between">
+                            <div className="pt-6 border-t border-transparent flex items-center justify-between">
                                <span className="text-[9px] font-black text-zinc-600 uppercase tracking-widest italic">{scrap.addedAt} em quarentena</span>
                                <Button className="h-10 bg-white text-black hover:bg-zinc-200 text-[10px] font-black uppercase tracking-widest px-6 italic">Reservar</Button>
                             </div>
@@ -314,7 +314,7 @@ export function Stock({ initialTab: propInitialTab }: { initialTab?: string }) {
                       </Card>
                     ))}
 
-                    <button className="group border-2 border-dashed border-white/5 rounded-3xl p-10 flex flex-col items-center justify-center gap-6 hover:border-amber-500/20 transition-all hover:bg-amber-500/[0.02]">
+                    <button className="group border-2 border-dashed border-transparent rounded-3xl p-10 flex flex-col items-center justify-center gap-6 hover:border-amber-500/20 transition-all hover:bg-amber-500/[0.02]">
                        <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center text-zinc-700 group-hover:text-amber-500 group-hover:scale-110 transition-all duration-300">
                           <Plus size={32} />
                        </div>
@@ -327,7 +327,7 @@ export function Stock({ initialTab: propInitialTab }: { initialTab?: string }) {
               </div>
 
               <div className="lg:col-span-4 space-y-8">
-                 <Card className="bg-[#0c0c10] border-white/5 overflow-hidden relative p-10 space-y-8">
+                 <Card className="bg-white dark:bg-zinc-900 border-transparent overflow-hidden relative p-10 space-y-8">
                     <div className="absolute top-0 right-0 w-48 h-48 bg-amber-500/10 blur-[80px] -mr-24 -mt-24 rounded-full" />
                     
                     <div className="space-y-2 relative">
@@ -342,7 +342,7 @@ export function Stock({ initialTab: propInitialTab }: { initialTab?: string }) {
                          { os: 'OS-4256', target: 'RET-452', material: 'ACM PRATA (3mm)', saving: 'R$ 540,20', desc: 'Sobra exata para 4 letras-caixa Banco Itaú.' },
                          { os: 'OS-4258', target: 'RET-456', material: 'PVC W-FOAM (10mm)', saving: 'R$ 180,00', desc: 'Ideal para base de reforço totem interno.' },
                        ].map((match, i) => (
-                         <div key={i} className="p-6 bg-white/[0.02] border border-white/10 rounded-2xl space-y-4 hover:border-amber-500/30 transition-colors group">
+                         <div key={i} className="p-6 bg-white/[0.02] border-none rounded-2xl space-y-4 hover:border-amber-500/30 transition-colors group">
                             <div className="flex items-center justify-between">
                                <Badge className="bg-blue-600/20 text-blue-400 border-0 text-[9px] font-black italic tracking-widest">{match.os}</Badge>
                                <ChevronRight size={14} className="text-zinc-700 group-hover:translate-x-1 transition-transform" />
@@ -351,7 +351,7 @@ export function Stock({ initialTab: propInitialTab }: { initialTab?: string }) {
                             <p className="text-[11px] font-bold text-zinc-400 leading-relaxed uppercase tracking-tighter italic">
                                {match.desc}
                             </p>
-                            <div className="flex items-center justify-between pt-2 border-t border-white/5">
+                            <div className="flex items-center justify-between pt-2 border-t border-transparent">
                                <div className="flex items-center gap-2">
                                   <TrendingDown size={14} className="text-emerald-500" />
                                   <span className="text-[10px] font-black text-emerald-500 uppercase tracking-widest italic">{match.saving}</span>
@@ -361,15 +361,15 @@ export function Stock({ initialTab: propInitialTab }: { initialTab?: string }) {
                          </div>
                        ))}
 
-                       <Button className="w-full bg-amber-500 text-amber-950 hover:bg-amber-400 font-black text-[11px] tracking-widest h-14 shadow-2xl shadow-amber-500/10">
+                       <Button className="w-full bg-amber-500 text-amber-950 hover:bg-amber-400 font-black text-[11px] tracking-widest h-14 shadow-sm shadow-amber-500/10">
                           RELATÓRIO DE SUSTENTABILIDADE
                        </Button>
                     </div>
                  </Card>
 
-                 <Card className="bg-[#0c0c10] border-white/5 p-10 space-y-6">
+                 <Card className="bg-white dark:bg-zinc-900 border-transparent p-10 space-y-6">
                     <div className="flex items-center gap-3">
-                       <div className="w-10 h-10 rounded-xl bg-white/[0.02] border border-white/5 flex items-center justify-center text-zinc-600">
+                       <div className="w-10 h-10 rounded-xl bg-white/[0.02] border-none flex items-center justify-center text-zinc-600">
                           <Scale size={20} />
                        </div>
                        <div className="space-y-0.5">

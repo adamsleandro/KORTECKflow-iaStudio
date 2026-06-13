@@ -269,7 +269,7 @@ export function Financeiro({ initialTab: propInitialTab }: { initialTab?: string
         {fluxoSubTab === 'fluxo' && (
           <div className="space-y-6">
             {/* Title & Filter bar */}
-            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 bg-zinc-950/5 dark:bg-zinc-900/30 p-4 rounded-xl border border-zinc-200/50 dark:border-zinc-850">
+            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 bg-zinc-950/5 dark:bg-zinc-900/30 p-4 rounded-xl border-none/50 dark:border-zinc-850">
               <div className="flex items-center gap-3">
                 <div className="p-2.5 bg-purple-600 rounded-xl text-white shadow-sm">
                   <Wallet size={18} />
@@ -284,7 +284,7 @@ export function Financeiro({ initialTab: propInitialTab }: { initialTab?: string
 
               {/* Header variables */}
               <div className="flex flex-wrap items-center gap-3">
-                <div className="flex items-center gap-2 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg px-2 h-9 text-[11px] font-semibold text-zinc-600 dark:text-zinc-300">
+                <div className="flex items-center gap-2 bg-white dark:bg-zinc-900 border-none dark:border-zinc-800 rounded-lg px-2 h-9 text-[11px] font-semibold text-zinc-600 dark:text-zinc-300">
                   <input 
                     type="text" 
                     value={startDate} 
@@ -303,7 +303,7 @@ export function Financeiro({ initialTab: propInitialTab }: { initialTab?: string
                 <select 
                   value={companyFilter} 
                   onChange={(e) => setCompanyFilter(e.target.value)}
-                  className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg h-9 px-3 text-[11px] font-bold text-zinc-700 dark:text-zinc-300 outline-none focus:border-purple-500 cursor-pointer"
+                  className="bg-white dark:bg-zinc-900 border-none dark:border-zinc-800 rounded-lg h-9 px-3 text-[11px] font-bold text-zinc-700 dark:text-zinc-300 outline-none focus:border-purple-500 cursor-pointer"
                 >
                   <option>Todas as empresas</option>
                   <option>KORTECK Soluções Industriais</option>
@@ -313,7 +313,7 @@ export function Financeiro({ initialTab: propInitialTab }: { initialTab?: string
             </div>
 
             {/* Monthly Navigation Submenu */}
-            <div className="overflow-x-auto scrollbar-none flex items-center gap-1.5 p-1 bg-zinc-100 dark:bg-zinc-900/60 rounded-xl border border-zinc-200/50 dark:border-zinc-850">
+            <div className="overflow-x-auto scrollbar-none flex items-center gap-1.5 p-1 bg-zinc-100 dark:bg-zinc-900/60 rounded-xl border-none/50 dark:border-zinc-850">
               {['Anual', 'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'].map((m) => {
                 const isActive = selectedMonth === m;
                 return (
@@ -347,7 +347,7 @@ export function Financeiro({ initialTab: propInitialTab }: { initialTab?: string
                 type="text" 
                 value={selectedYear} 
                 onChange={(e) => setSelectedYear(e.target.value)} 
-                className="w-16 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-lg h-8 text-[11px] font-black text-center text-zinc-700 dark:text-zinc-200 focus:outline-none" 
+                className="w-16 bg-white dark:bg-zinc-950 border-none dark:border-zinc-800 rounded-lg h-8 text-[11px] font-black text-center text-zinc-700 dark:text-zinc-200 focus:outline-none" 
               />
             </div>
 
@@ -407,7 +407,7 @@ export function Financeiro({ initialTab: propInitialTab }: { initialTab?: string
                   {['60 dias', '30 dias', 'Ontem', 'Hoje'].map((period) => (
                     <button
                       key={period}
-                      className={`h-9 px-3 border border-zinc-200 dark:border-zinc-800 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all cursor-pointer ${
+                      className={`h-9 px-3 border-none dark:border-zinc-800 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all cursor-pointer ${
                         period === '30 dias' 
                           ? 'bg-zinc-900 dark:bg-white text-white dark:text-black border-transparent' 
                           : 'bg-white dark:bg-zinc-950 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-900'
@@ -442,7 +442,7 @@ export function Financeiro({ initialTab: propInitialTab }: { initialTab?: string
                     </CardTitle>
                     <CardDescription className="text-[9px] uppercase font-bold text-zinc-500 dark:text-zinc-600 mt-0.5">Visão consolidada do período selecionado</CardDescription>
                   </div>
-                  <div className="w-8 h-8 rounded-lg bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 flex items-center justify-center cursor-pointer">
+                  <div className="w-8 h-8 rounded-lg bg-zinc-100 dark:bg-zinc-800 border-none dark:border-zinc-700 flex items-center justify-center cursor-pointer">
                     <FileText size={14} className="text-zinc-500" />
                   </div>
                 </CardHeader>
@@ -476,12 +476,12 @@ export function Financeiro({ initialTab: propInitialTab }: { initialTab?: string
               {/* Column 2: Bank Accounts & Actions (35%) */}
               <div className="lg:col-span-4 space-y-5">
                 {/* Control Action pill */}
-                <div className="flex items-center justify-between bg-zinc-100 dark:bg-zinc-900 p-3 rounded-2xl border border-zinc-200/50 dark:border-zinc-800">
+                <div className="flex items-center justify-between bg-zinc-100 dark:bg-zinc-900 p-3 rounded-2xl border-none/50 dark:border-zinc-800">
                   <div className="flex gap-2">
-                    <button className="h-8 px-3.5 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-850 rounded-lg text-[9px] font-black uppercase tracking-wider text-zinc-700 dark:text-zinc-300 shadow-xs cursor-pointer">
+                    <button className="h-8 px-3.5 bg-white dark:bg-zinc-950 border-none dark:border-zinc-850 rounded-lg text-[9px] font-black uppercase tracking-wider text-zinc-700 dark:text-zinc-300 shadow-xs cursor-pointer">
                       Exibir todas
                     </button>
-                    <button className="h-8 px-3.5 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-850 rounded-lg text-[9px] font-black uppercase tracking-wider text-zinc-700 dark:text-zinc-300 shadow-xs cursor-pointer">
+                    <button className="h-8 px-3.5 bg-white dark:bg-zinc-950 border-none dark:border-zinc-850 rounded-lg text-[9px] font-black uppercase tracking-wider text-zinc-700 dark:text-zinc-300 shadow-xs cursor-pointer">
                       Transferências
                     </button>
                   </div>
@@ -504,7 +504,7 @@ export function Financeiro({ initialTab: propInitialTab }: { initialTab?: string
                       <CardContent className="p-4 pt-4">
                         <div className="flex justify-between items-start gap-4">
                           <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-xl bg-zinc-100 dark:bg-zinc-800 border border-zinc-200/60 dark:border-zinc-750 flex items-center justify-center text-lg shadow-inner">
+                            <div className="w-10 h-10 rounded-xl bg-zinc-100 dark:bg-zinc-800 border-none/60 dark:border-zinc-750 flex items-center justify-center text-lg shadow-inner">
                               {ac.logo}
                             </div>
                             <div>
@@ -665,7 +665,7 @@ export function Financeiro({ initialTab: propInitialTab }: { initialTab?: string
         </div>
 
         {/* Dynamic metrics bar */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 bg-zinc-50 dark:bg-zinc-900/40 p-4.5 rounded-2xl border border-zinc-200 dark:border-zinc-805">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 bg-zinc-50 dark:bg-zinc-900/40 p-4.5 rounded-2xl border-none dark:border-zinc-805">
           <div>
             <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider mb-1">Total em Aberto</p>
             <p className="text-2xl font-black text-zinc-900 dark:text-white font-mono">
@@ -755,7 +755,7 @@ export function Financeiro({ initialTab: propInitialTab }: { initialTab?: string
             <motion.div 
               initial={{ scale: 0.95 }}
               animate={{ scale: 1 }}
-              className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl max-w-md w-full p-6 shadow-2xl relative"
+              className="bg-white dark:bg-zinc-900 border-none dark:border-zinc-800 rounded-3xl max-w-md w-full p-6 shadow-sm relative"
             >
               <button 
                 onClick={() => setIsPayableModalOpen(false)}
@@ -805,7 +805,7 @@ export function Financeiro({ initialTab: propInitialTab }: { initialTab?: string
                     <select 
                       value={newPayable.category} 
                       onChange={e => setNewPayable({ ...newPayable, category: e.target.value })}
-                      className="bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl h-11 px-3 text-xs text-zinc-600 outline-none"
+                      className="bg-zinc-50 dark:bg-zinc-950 border-none dark:border-zinc-800 rounded-xl h-11 px-3 text-xs text-zinc-600 outline-none"
                     >
                       <option>Produção</option>
                       <option>Administrativo</option>
@@ -820,7 +820,7 @@ export function Financeiro({ initialTab: propInitialTab }: { initialTab?: string
                     <select 
                       value={newPayable.status} 
                       onChange={e => setNewPayable({ ...newPayable, status: e.target.value })}
-                      className="bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl h-11 px-3 text-xs text-zinc-600 outline-none"
+                      className="bg-zinc-50 dark:bg-zinc-950 border-none dark:border-zinc-800 rounded-xl h-11 px-3 text-xs text-zinc-600 outline-none"
                     >
                       <option>Pendente</option>
                       <option>Agendado</option>
@@ -865,7 +865,7 @@ export function Financeiro({ initialTab: propInitialTab }: { initialTab?: string
         </div>
 
         {/* Metrics bar */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 bg-zinc-50 dark:bg-zinc-900/40 p-4.5 rounded-2xl border border-zinc-200 dark:border-zinc-805">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 bg-zinc-50 dark:bg-zinc-900/40 p-4.5 rounded-2xl border-none dark:border-zinc-805">
           <div>
             <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider mb-1">Previsão de Recebimento</p>
             <p className="text-2xl font-black text-zinc-900 dark:text-white font-mono">
@@ -951,7 +951,7 @@ export function Financeiro({ initialTab: propInitialTab }: { initialTab?: string
             <motion.div 
               initial={{ scale: 0.95 }}
               animate={{ scale: 1 }}
-              className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl max-w-md w-full p-6 shadow-2xl relative"
+              className="bg-white dark:bg-zinc-900 border-none dark:border-zinc-800 rounded-3xl max-w-md w-full p-6 shadow-sm relative"
             >
               <button 
                 onClick={() => setIsReceivableModalOpen(false)}
@@ -1001,7 +1001,7 @@ export function Financeiro({ initialTab: propInitialTab }: { initialTab?: string
                     <select 
                       value={newReceivable.method} 
                       onChange={e => setNewReceivable({ ...newReceivable, method: e.target.value })}
-                      className="bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl h-11 px-3 text-xs text-zinc-650 outline-none"
+                      className="bg-zinc-50 dark:bg-zinc-950 border-none dark:border-zinc-800 rounded-xl h-11 px-3 text-xs text-zinc-650 outline-none"
                     >
                       <option>Boleto</option>
                       <option>Pix</option>
@@ -1014,7 +1014,7 @@ export function Financeiro({ initialTab: propInitialTab }: { initialTab?: string
                     <select 
                       value={newReceivable.status} 
                       onChange={e => setNewReceivable({ ...newReceivable, status: e.target.value })}
-                      className="bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl h-11 px-3 text-xs text-zinc-650 outline-none"
+                      className="bg-zinc-50 dark:bg-zinc-950 border-none dark:border-zinc-800 rounded-xl h-11 px-3 text-xs text-zinc-650 outline-none"
                     >
                       <option>Pendente</option>
                       <option>Em Dia</option>
@@ -1201,7 +1201,7 @@ export function Financeiro({ initialTab: propInitialTab }: { initialTab?: string
             <CardDescription className="text-[9px] font-bold uppercase text-zinc-500 mt-1">Relatório eletrônico de escrituração mercantil</CardDescription>
           </CardHeader>
           <CardContent className="p-5 space-y-6 font-sans">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-5 bg-zinc-50 dark:bg-zinc-950 p-4 rounded-xl border border-zinc-200 dark:border-zinc-850">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-5 bg-zinc-50 dark:bg-zinc-950 p-4 rounded-xl border-none dark:border-zinc-850">
               <div className="space-y-1">
                 <span className="text-[9px] font-black uppercase text-zinc-500">Situação da Transmissão</span>
                 <h4 className="text-xs font-bold text-emerald-650 flex items-center gap-1.5 uppercase">
@@ -1223,7 +1223,7 @@ export function Financeiro({ initialTab: propInitialTab }: { initialTab?: string
                 { label: 'Bloco E (Apuração)', val: 'R$ 24.196,37' },
                 { label: 'Bloco H (Inventário)', val: 'Completo' }
               ].map((b, i) => (
-                <div key={i} className="p-4 bg-zinc-100/50 dark:bg-zinc-900/40 rounded-xl border border-zinc-200 dark:border-zinc-800">
+                <div key={i} className="p-4 bg-zinc-100/50 dark:bg-zinc-900/40 rounded-xl border-none dark:border-zinc-800">
                   <p className="text-[9px] font-bold text-zinc-500 uppercase tracking-wider mb-1 font-sans">{b.label}</p>
                   <span className="font-extrabold text-zinc-850 dark:text-zinc-150">{b.val}</span>
                 </div>

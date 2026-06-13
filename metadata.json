@@ -2,5 +2,5 @@
   "name": "KORTECKflowERP",
   "description": "Sistema SaaS/ERP industrial completo para comunicação visual, fabricação e produção industrial personalizada.",
   "requestFramePermissions": [],
-  "majorCapabilities": ["ERP", "CRM", "PCP", "Industrial Management", "IA Operations"]
+  "majorCapabilities": ["ERP", "CRM", "PCP", "Industrial Management", "IA Operations", "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

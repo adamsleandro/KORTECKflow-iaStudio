@@ -87,7 +87,7 @@ export function Permissions() {
   return (
     <div className="p-4 md:p-8 space-y-8 animate-in fade-in duration-750 max-w-[1700px] mx-auto pb-24">
       {/* Mesh Permissions Header */}
-      <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-8 border-b border-white/5 pb-8">
+      <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-8 border-b border-transparent pb-8">
         <div className="space-y-3">
           <div className="flex items-center gap-3">
              <div className="p-2.5 bg-blue-600/10 rounded-xl border border-blue-500/20">
@@ -105,7 +105,7 @@ export function Permissions() {
            <Button 
             onClick={handleSave}
             disabled={isSaving}
-            className="bg-blue-600 text-white hover:bg-blue-500 font-black h-14 px-10 text-[11px] uppercase tracking-widest shadow-2xl shadow-blue-600/20 transition-all border-0"
+            className="bg-blue-600 text-white hover:bg-blue-500 font-black h-14 px-10 text-[11px] uppercase tracking-widest shadow-sm shadow-blue-600/20 transition-all border-0"
           >
             {isSaving ? <Activity className="mr-3 animate-spin" size={18} /> : <Save className="mr-3" size={18} />}
             Salvar Hierarquia
@@ -116,8 +116,8 @@ export function Permissions() {
       <div className="grid grid-cols-1 xl:grid-cols-12 gap-8">
         {/* Left Column: Role Selector */}
         <div className="xl:col-span-3 space-y-8">
-          <Card className="bg-[#0c0c10] border-white/5 overflow-hidden">
-            <div className="p-8 border-b border-white/5 bg-white/[0.01]">
+          <Card className="bg-white dark:bg-zinc-900 border-transparent overflow-hidden">
+            <div className="p-8 border-b border-transparent bg-white/[0.01]">
               <h3 className="text-[10px] font-black text-zinc-600 uppercase tracking-[0.3em]">Perfis Operacionais</h3>
             </div>
             <div className="p-3 space-y-2">
@@ -130,8 +130,8 @@ export function Permissions() {
                   key={role.id}
                   onClick={() => setSelectedRole(role.id)}
                   className={cn(
-                    "w-full p-5 rounded-2xl flex items-start gap-5 transition-all text-left group border border-transparent",
-                    selectedRole === role.id ? "bg-white text-black shadow-2xl" : "hover:bg-white/[0.02] hover:border-white/5"
+                    "w-full p-5 rounded-2xl flex items-start gap-5 transition-all text-left group border-none",
+                    selectedRole === role.id ? "bg-white text-black shadow-sm" : "hover:bg-white/[0.02] hover:border-transparent"
                   )}
                 >
                   <div className={cn(
@@ -180,13 +180,13 @@ export function Permissions() {
         </div>
 
         {/* Matrix Area */}
-        <Card className="xl:col-span-9 bg-[#0c0c10] border-white/5 overflow-hidden rounded-3xl">
-          <div className="p-8 border-b border-white/5 bg-white/[0.01] flex flex-col md:flex-row md:items-center justify-between gap-6 px-10">
+        <Card className="xl:col-span-9 zinc-900 border-transparent overflow-hidden rounded-3xl">
+          <div className="p-8 border-b border-transparent bg-white/[0.01] flex flex-col md:flex-row md:items-center justify-between gap-6 px-10">
             <div>
               <CardTitle className="text-xl font-black text-white uppercase tracking-tight italic">Granular Matrix Access Control</CardTitle>
               <CardDescription className="text-[10px] font-bold text-zinc-600 uppercase mt-1 tracking-widest">Current Profile: {selectedRole}</CardDescription>
             </div>
-            <div className="flex flex-wrap items-center gap-6 text-[9px] font-black uppercase text-zinc-500 tracking-widest bg-black/50 p-3 px-6 rounded-2xl border border-white/5 shadow-inner">
+            <div className="flex flex-wrap items-center gap-6 text-[9px] font-black uppercase text-zinc-500 tracking-widest bg-black/50 p-3 px-6 rounded-2xl border-none shadow-inner">
                 <span className="flex items-center gap-2"><Eye size={16} className="text-blue-500" /> View</span>
                 <span className="flex items-center gap-2"><Edit3 size={16} className="text-emerald-500" /> Write</span>
                 <span className="flex items-center gap-2"><Trash2 size={16} className="text-rose-500" /> Delete</span>
@@ -198,7 +198,7 @@ export function Permissions() {
                 {perms[selectedRole].map((perm, idx) => (
                   <div key={perm.module} className="p-8 px-10 flex flex-col md:flex-row md:items-center justify-between gap-8 group hover:bg-white/[0.01] transition-all border-l-4 border-transparent hover:border-blue-600">
                     <div className="flex items-center gap-6">
-                       <div className="p-4 bg-white/[0.02] rounded-2xl border border-white/5 group-hover:bg-blue-600/10 group-hover:border-blue-600/20 transition-all">
+                       <div className="p-4 bg-white/[0.02] rounded-2xl border-none group-hover:bg-blue-600/10 group-hover:border-blue-600/20 transition-all">
                           <Key size={20} className="text-zinc-600 group-hover:text-blue-500" />
                        </div>
                        <div>
@@ -218,7 +218,7 @@ export function Permissions() {
                             <Switch 
                                checked={perm[toggle.type as keyof PermissionNode] as boolean}
                                onCheckedChange={() => togglePerm(perm.module, toggle.type as keyof PermissionNode)}
-                               className="data-[state=checked]:bg-blue-600 border-white/10"
+                               className="data-[state=checked]:bg-blue-600 border-transparent"
                             />
                            <span className={cn(
                              "text-[9px] font-black uppercase tracking-tighter transition-colors",
@@ -237,10 +237,10 @@ export function Permissions() {
       </div>
 
       {/* Security Logs Area */}
-      <Card className="bg-[#0c0c10] border-white/5 overflow-hidden rounded-3xl mt-8">
-        <div className="p-8 border-b border-white/5 bg-white/[0.01] flex flex-row items-center justify-between px-10">
+      <Card className="bg-white dark:bg-zinc-900 border-transparent overflow-hidden rounded-3xl mt-8">
+        <div className="p-8 border-b border-transparent bg-white/[0.01] flex flex-row items-center justify-between px-10">
           <CardTitle className="text-sm font-black text-white uppercase tracking-widest italic">Auditoria Global de Segurança</CardTitle>
-          <Button variant="ghost" className="text-zinc-600 font-black text-[10px] uppercase tracking-widest h-10 px-6 border border-white/5 hover:text-white">
+          <Button variant="ghost" className="text-zinc-600 font-black text-[10px] uppercase tracking-widest h-10 px-6 border-none hover:text-white">
              Exportar Logs <History size={16} className="ml-3" />
           </Button>
         </div>
@@ -253,7 +253,7 @@ export function Permissions() {
              ].map((log, i) => (
                <div key={i} className="p-6 px-10 flex items-center justify-between hover:bg-white/[0.01] transition-all">
                   <div className="flex items-center gap-6">
-                     <div className="w-12 h-12 rounded-xl bg-zinc-900 border border-white/5 flex items-center justify-center text-zinc-700 group-hover:text-white transition-colors">
+                     <div className="w-12 h-12 rounded-xl bg-zinc-900 border-none flex items-center justify-center text-zinc-700 group-hover:text-white transition-colors">
                         <History size={20} />
                      </div>
                      <div>

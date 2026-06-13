@@ -95,7 +95,7 @@ export function Clients({ initialTab = 'cli-list' }: { initialTab?: string }) {
   return (
     <div className="p-4 md:p-8 space-y-8 animate-in fade-in duration-750 max-w-[1700px] mx-auto pb-24">
       {/* Mesh Clients Header */}
-      <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-8 border-b border-white/5 pb-8">
+      <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-8 border-b border-transparent pb-8">
         <div className="space-y-3">
           <div className="flex items-center gap-3">
              <div className="p-2.5 bg-blue-600/10 rounded-xl border border-blue-500/20">
@@ -110,11 +110,11 @@ export function Clients({ initialTab = 'cli-list' }: { initialTab?: string }) {
           </div>
         </div>
         <div className="flex flex-wrap items-center gap-3">
-           <Button variant="ghost" className="h-14 border-white/5 text-zinc-500 hover:text-white uppercase font-black text-[10px] tracking-widest px-8">
+           <Button variant="ghost" className="h-14 border-transparent text-zinc-500 hover:text-white uppercase font-black text-[10px] tracking-widest px-8">
               <Download size={18} className="mr-3" /> Export Dados
            </Button>
            <Button 
-            className="bg-blue-600 text-white hover:bg-blue-500 font-black h-14 px-10 text-[11px] uppercase tracking-widest shadow-2xl shadow-blue-600/20 transition-all border-0"
+            className="bg-blue-600 text-white hover:bg-blue-500 font-black h-14 px-10 text-[11px] uppercase tracking-widest shadow-sm shadow-blue-600/20 transition-all border-0"
           >
             <Plus className="mr-3" size={18} /> Novo Contrato
           </Button>
@@ -129,7 +129,7 @@ export function Clients({ initialTab = 'cli-list' }: { initialTab?: string }) {
           { label: 'Churn Rate', val: '2.4%', trend: 'Nível Estável', icon: <AlertCircle className="text-rose-500" /> },
           { label: 'Market Share', val: '14.2%', trend: '+2.1% share', icon: <Building2 className="text-blue-500" /> },
         ].map((stat, i) => (
-          <Card key={i} className="bg-[#0c0c10] border-white/5 p-8 relative overflow-hidden group hover:border-blue-600/20 transition-all">
+          <Card key={i} className="bg-white dark:bg-zinc-900 border-transparent p-8 relative overflow-hidden group hover:border-blue-600/20 transition-all">
             <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity transform group-hover:scale-110">
                {stat.icon}
             </div>
@@ -146,7 +146,7 @@ export function Clients({ initialTab = 'cli-list' }: { initialTab?: string }) {
 
       {/* Main Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="bg-[#0c0c10] border border-white/5 p-1 h-auto flex flex-wrap gap-1">
+        <TabsList className="bg-white dark:bg-zinc-900 border-none p-1 h-auto flex flex-wrap gap-1">
           <TabsTrigger value="cli-list" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white text-[10px] font-black uppercase tracking-widest px-8 py-3 italic">
             Listagem Global
           </TabsTrigger>
@@ -165,8 +165,8 @@ export function Clients({ initialTab = 'cli-list' }: { initialTab?: string }) {
           <div className="xl:col-span-3">
             <TabsContent value="cli-list" className="mt-0 space-y-6 animate-in slide-in-from-left-4 duration-500">
                {/* CNPJ Lookup Section */}
-               <Card className="bg-[#0c0c10] border-white/5 border-l-4 border-l-blue-600 overflow-hidden">
-                  <CardHeader className="bg-white/[0.02] p-6 border-b border-white/5">
+               <Card className="bg-white dark:bg-zinc-900 border-transparent border-l-4 border-l-blue-600 overflow-hidden">
+                  <CardHeader className="bg-white/[0.02] p-6 border-b border-transparent">
                     <CardTitle className="text-xs font-black text-white uppercase italic tracking-widest flex items-center gap-2">
                       <SearchCode size={16} className="text-blue-500" /> Lookup Inteligente de CNPJ
                     </CardTitle>
@@ -178,7 +178,7 @@ export function Clients({ initialTab = 'cli-list' }: { initialTab?: string }) {
                            <div className="relative">
                               <Input 
                                 placeholder="Digite o CNPJ para busca..." 
-                                className="bg-[#050505] border-white/5 text-white h-12 text-sm font-bold tracking-widest pl-12"
+                                className="bg-white dark:bg-zinc-900 border-transparent text-white h-12 text-sm font-bold tracking-widest pl-12"
                                 value={cnpjValue}
                                 onChange={(e) => setCnpjValue(e.target.value)}
                               />
@@ -224,11 +224,11 @@ export function Clients({ initialTab = 'cli-list' }: { initialTab?: string }) {
                   </CardContent>
                </Card>
 
-               <Card className="bg-[#0c0c10] border-white/5 overflow-hidden">
-                  <CardHeader className="bg-white/[0.02] p-6 flex flex-row items-center justify-between border-b border-white/5">
+               <Card className="bg-white dark:bg-zinc-900 border-transparent overflow-hidden">
+                  <CardHeader className="bg-white/[0.02] p-6 flex flex-row items-center justify-between border-b border-transparent">
                     <div className="flex gap-4">
                        <Input placeholder="Filtrar por nome, cnpj ou tag..." className="bg-white/5 border-0 text-[10px] font-bold uppercase tracking-widest w-64 h-9" />
-                       <Button variant="outline" className="border-white/5 text-[9px] font-black uppercase h-9"><Filter size={14} className="mr-2" /> Segmentos</Button>
+                       <Button variant="outline" className="border-transparent text-[9px] font-black uppercase h-9"><Filter size={14} className="mr-2" /> Segmentos</Button>
                     </div>
                     <div className="text-[10px] font-black text-zinc-500 italic uppercase">Exibindo {CLIENTS_MOCK.length} de 1,248 resultados</div>
                   </CardHeader>
@@ -236,7 +236,7 @@ export function Clients({ initialTab = 'cli-list' }: { initialTab?: string }) {
                      <div className="p-2">
                         <table className="w-full text-left">
                            <thead>
-                              <tr className="text-[9px] font-black text-zinc-600 uppercase tracking-[0.2em] italic border-b border-white/5">
+                              <tr className="text-[9px] font-black text-zinc-600 uppercase tracking-[0.2em] italic border-b border-transparent">
                                  <th className="p-4">Cliente</th>
                                  <th className="p-4">CNPJ</th>
                                  <th className="p-4">Score IA</th>
@@ -247,10 +247,10 @@ export function Clients({ initialTab = 'cli-list' }: { initialTab?: string }) {
                            </thead>
                            <tbody>
                               {CLIENTS_MOCK.map((client) => (
-                                <tr key={client.id} className="group hover:bg-white/[0.02] border-b border-white/5 transition-colors">
+                                <tr key={client.id} className="group hover:bg-white/[0.02] border-b border-transparent transition-colors">
                                    <td className="p-4">
                                       <div className="flex items-center gap-4">
-                                         <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center font-black italic border border-white/5 text-blue-500">
+                                         <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center font-black italic border-none text-blue-500">
                                             {client.name.charAt(0)}
                                          </div>
                                          <div className="flex flex-col">
@@ -303,7 +303,7 @@ export function Clients({ initialTab = 'cli-list' }: { initialTab?: string }) {
             <TabsContent value="cli-seg" className="mt-0 space-y-6 animate-in slide-in-from-right-4 duration-500">
                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {['High Velocity Clientes', 'Churn Risk 30d', 'Top Decile - Growth', 'Dormant Champions'].map((seg) => (
-                    <Card key={seg} className="bg-[#0c0c10] border-white/5 hover:border-blue-600/30 transition-all group">
+                    <Card key={seg} className="bg-white dark:bg-zinc-900 border-transparent hover:border-blue-600/30 transition-all group">
                        <CardContent className="p-8">
                           <div className="flex items-center justify-between mb-6">
                              <div className="w-12 h-12 rounded-2xl bg-blue-600/10 flex items-center justify-center text-blue-500 group-hover:scale-110 transition-transform">
@@ -329,17 +329,17 @@ export function Clients({ initialTab = 'cli-list' }: { initialTab?: string }) {
             </TabsContent>
 
             <TabsContent value="cli-rfm" className="mt-0 space-y-6 animate-in zoom-in-95 duration-500">
-               <Card className="bg-[#0c0c10] border-white/5 p-8">
+               <Card className="bg-white dark:bg-zinc-900 border-transparent p-8">
                   <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
                      <div className="lg:col-span-2 space-y-8">
-                        <div className="relative aspect-square md:aspect-video bg-[#050505] rounded-3xl border border-white/5 flex items-center justify-center">
+                        <div className="relative aspect-square md:aspect-video bg-white dark:bg-zinc-900 rounded-3xl border-none flex items-center justify-center">
                            {/* Simplified RFM Grid Visual */}
                            <div className="grid grid-cols-3 grid-rows-3 w-3/4 h-3/4 gap-2">
                               {[...Array(9)].map((_, i) => (
                                 <div key={i} className={cn(
                                   "rounded-xl flex items-center justify-center border transition-all hover:scale-105 cursor-pointer",
                                   i === 0 ? "bg-emerald-500/20 border-emerald-500/40" : 
-                                  i === 8 ? "bg-rose-500/20 border-rose-500/40" : "bg-white/[0.02] border-white/5"
+                                  i === 8 ? "bg-rose-500/20 border-rose-500/40" : "bg-white/[0.02] border-transparent"
                                 )}>
                                    <div className="text-[10px] font-black text-white italic">{['MVP', 'Fiel', 'Top', 'Mid', 'Avg', 'Low', 'Risk', 'Lost', 'Dead'][i]}</div>
                                 </div>
@@ -390,7 +390,7 @@ export function Clients({ initialTab = 'cli-list' }: { initialTab?: string }) {
                     { title: 'Promoção Fachadas 2024', type: 'Push/Direct', reach: '1.2k Leads', status: 'Ativa' },
                     { title: 'Lançamento Letra Caixa', type: 'Exclusivo MVP', reach: '85 Clientes', status: 'Finalizada' },
                   ].map((camp) => (
-                    <Card key={camp.title} className="bg-[#0c0c10] border-white/5 overflow-hidden group">
+                    <Card key={camp.title} className="bg-white dark:bg-zinc-900 border-transparent overflow-hidden group">
                        <div className="h-32 bg-gradient-to-br from-blue-900/20 to-transparent p-6 relative">
                           <Badge className="absolute top-4 right-4 bg-blue-600/10 text-blue-500 border-blue-600/20 text-[9px] font-black uppercase">{camp.status}</Badge>
                           <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-zinc-400 mb-2">
@@ -408,13 +408,13 @@ export function Clients({ initialTab = 'cli-list' }: { initialTab?: string }) {
                              <span className="text-white">{camp.reach}</span>
                           </div>
                           <Separator className="bg-white/5" />
-                          <Button className="w-full bg-white/5 border border-white/5 text-white hover:bg-white/10 text-[10px] font-black uppercase italic tracking-widest h-10">
+                          <Button className="w-full bg-white/5 border-none text-white hover:bg-white/10 text-[10px] font-black uppercase italic tracking-widest h-10">
                              Ver Performance
                           </Button>
                        </CardContent>
                     </Card>
                   ))}
-                  <Card className="bg-dashed bg-[#0c0c10] border-2 border-dashed border-white/5 hover:border-blue-600/30 transition-all flex items-center justify-center cursor-pointer min-h-[300px] group">
+                  <Card className="bg-dashed zinc-900 border-2 border-dashed border-transparent hover:border-blue-600/30 transition-all flex items-center justify-center cursor-pointer min-h-[300px] group">
                      <div className="flex flex-col items-center gap-4">
                         <div className="w-12 h-12 rounded-full bg-blue-600/10 flex items-center justify-center text-blue-500 group-hover:scale-110 transition-transform">
                            <Plus size={24} />
@@ -445,10 +445,10 @@ export function Clients({ initialTab = 'cli-list' }: { initialTab?: string }) {
                   </div>
                 </CardHeader>
                 <CardContent className="p-6 pt-4 space-y-4 relative">
-                   <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-4 border border-white/10 min-h-[160px]">
+                   <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-4 border-none min-h-[160px]">
                       {isAiLoading ? (
                         <div className="flex flex-col items-center justify-center h-full gap-3 pt-6">
-                           <div className="w-6 h-6 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+                           <div className="w-6 h-6 border-none border-t-white rounded-full animate-spin" />
                            <span className="text-[9px] font-black text-white uppercase tracking-widest animate-pulse">Processando Big Data...</span>
                         </div>
                       ) : (
@@ -465,7 +465,7 @@ export function Clients({ initialTab = 'cli-list' }: { initialTab?: string }) {
                 </CardContent>
              </Card>
 
-             <Card className="bg-[#0c0c10] border-white/5 p-6 space-y-6">
+             <Card className="bg-white dark:bg-zinc-900 border-transparent p-6 space-y-6">
                 <h4 className="text-[10px] font-black text-white uppercase italic tracking-widest flex items-center gap-2">
                    <Target size={14} className="text-blue-500" /> Próximos Alvos (IA)
                 </h4>
@@ -474,7 +474,7 @@ export function Clients({ initialTab = 'cli-list' }: { initialTab?: string }) {
                      { name: 'KORTECK IND', gain: '+R$ 12k', prob: 92 },
                      { name: 'ZETA TECH', gain: '+R$ 8k', prob: 78 },
                    ].map((target) => (
-                     <div key={target.name} className="p-3 rounded-xl bg-white/[0.02] border border-white/5 flex items-center justify-between group cursor-pointer hover:border-blue-500/30 transition-all">
+                     <div key={target.name} className="p-3 rounded-xl bg-white/[0.02] border-none flex items-center justify-between group cursor-pointer hover:border-blue-500/30 transition-all">
                         <div className="flex flex-col gap-1">
                            <span className="text-[10px] font-black text-white uppercase italic">{target.name}</span>
                            <span className="text-[9px] font-bold text-emerald-500 uppercase">{target.gain} Potential</span>
@@ -485,12 +485,12 @@ export function Clients({ initialTab = 'cli-list' }: { initialTab?: string }) {
                      </div>
                    ))}
                 </div>
-                <Button className="w-full bg-white/5 border border-white/5 text-[9px] font-black text-zinc-500 uppercase italic h-9 hover:text-white transition-all">
+                <Button className="w-full bg-white/5 border-none text-[9px] font-black text-zinc-500 uppercase italic h-9 hover:text-white transition-all">
                    Gerar Novo Planejamento
                 </Button>
              </Card>
 
-             <Card className="bg-[#0c0c10] border-white/5 p-6 text-center space-y-4">
+             <Card className="bg-white dark:bg-zinc-900 border-transparent p-6 text-center space-y-4">
                 <div className="w-12 h-12 rounded-full bg-emerald-500/10 flex items-center justify-center text-emerald-500 mx-auto">
                    <ShieldCheck size={24} />
                 </div>

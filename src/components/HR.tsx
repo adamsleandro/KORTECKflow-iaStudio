@@ -358,7 +358,7 @@ const PROFICIENCY_LEVELS = {
       sortable: true,
       cell: (c) => (
         <div className="flex items-center gap-3">
-          <Avatar className="w-9 h-9 border border-white/10">
+          <Avatar className="w-9 h-9 border-none">
             <AvatarImage src={`https://i.pravatar.cc/100?u=${c.avatar}`} />
             <AvatarFallback className="bg-zinc-900 text-zinc-500">{c.name.charAt(0)}</AvatarFallback>
           </Avatar>
@@ -556,13 +556,13 @@ const PROFICIENCY_LEVELS = {
              )}>
                <UserPlus size={18} className="mr-2" /> Admitir Talento
              </DialogTrigger>
-             <DialogContent className="bg-zinc-950 border-white/10 text-white max-w-2xl w-[95vw] md:w-full">
+             <DialogContent className="bg-zinc-950 border-transparent text-white max-w-2xl w-[95vw] md:w-full">
                 <DialogHeader>
                    <DialogTitle className="text-xl md:text-2xl font-black italic uppercase tracking-tighter text-left">Onboarding Técnico Industrial</DialogTitle>
                    <DialogDescription className="text-zinc-500 text-[10px] font-bold uppercase tracking-widest mt-1 text-left">Sincronização de Prontuário Digital e Compliance</DialogDescription>
                 </DialogHeader>
                 <Tabs defaultValue="pessoal" className="mt-4">
-                   <TabsList className="bg-white/5 border-white/5 w-full justify-start p-1 mb-6 flex-wrap h-auto">
+                   <TabsList className="bg-white/5 border-transparent w-full justify-start p-1 mb-6 flex-wrap h-auto">
                       <TabsTrigger value="pessoal" className="flex-1 text-[9px] font-black uppercase tracking-widest">1. Dados Base</TabsTrigger>
                       <TabsTrigger value="cert" className="flex-1 text-[9px] font-black uppercase tracking-widest">2. Certificações</TabsTrigger>
                       <TabsTrigger value="epi" className="flex-1 text-[9px] font-black uppercase tracking-widest">3. Logística EPI</TabsTrigger>
@@ -571,19 +571,19 @@ const PROFICIENCY_LEVELS = {
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                          <div className="space-y-2">
                             <Label className="text-[9px] font-black uppercase tracking-widest text-zinc-500">Nome Completo</Label>
-                            <Input className="bg-black border-white/5 uppercase text-xs" placeholder="Ex: JOÃO DA SILVA" />
+                            <Input className="bg-black border-transparent uppercase text-xs" placeholder="Ex: JOÃO DA SILVA" />
                          </div>
                          <div className="space-y-2">
                             <Label className="text-[9px] font-black uppercase tracking-widest text-zinc-500">CPF / Registro</Label>
-                            <Input className="bg-black border-white/5 text-xs" placeholder="000.000.000-00" />
+                            <Input className="bg-black border-transparent text-xs" placeholder="000.000.000-00" />
                          </div>
                          <div className="space-y-2">
                             <Label className="text-[9px] font-black uppercase tracking-widest text-zinc-500">Setor Operativo</Label>
                             <Select>
-                               <SelectTrigger className="bg-black border-white/5 text-xs">
+                               <SelectTrigger className="bg-black border-transparent text-xs">
                                   <SelectValue placeholder="Selecione..." />
                                </SelectTrigger>
-                               <SelectContent className="bg-zinc-900 border-white/5 text-white">
+                               <SelectContent className="bg-zinc-900 border-transparent text-white">
                                   <SelectItem value="industrial">INDUSTRIAL / CHÃO</SelectItem>
                                   <SelectItem value="design">DESIGN / CRIAÇÃO</SelectItem>
                                   <SelectItem value="inst">INSTALAÇÃO</SelectItem>
@@ -592,12 +592,12 @@ const PROFICIENCY_LEVELS = {
                          </div>
                          <div className="space-y-2">
                             <Label className="text-[9px] font-black uppercase tracking-widest text-zinc-500">Data de Admissão</Label>
-                            <Input type="date" className="bg-black border-white/5 text-xs" />
+                            <Input type="date" className="bg-black border-transparent text-xs" />
                          </div>
                       </div>
                    </TabsContent>
                    <TabsContent value="cert" className="space-y-6">
-                      <div className="p-4 rounded-xl border border-white/5 bg-white/[0.02] space-y-4">
+                      <div className="p-4 rounded-xl border-none bg-white/[0.02] space-y-4">
                          <h4 className="text-[10px] font-black text-blue-500 uppercase italic">Auditoria NR Obrigatória</h4>
                          <div className="space-y-3">
                             {['NR-35 (TRABALHO EM ALTURA)', 'NR-10 (ELÉTRICA)', 'ASO (SAÚDE OCUPACIONAL)'].map(nr => (
@@ -610,8 +610,8 @@ const PROFICIENCY_LEVELS = {
                       </div>
                    </TabsContent>
                    <TabsContent value="epi" className="space-y-4">
-                      <div className="p-4 rounded-xl border border-white/5 bg-white/[0.02] flex items-center gap-4">
-                         <div className="p-3 bg-zinc-950 rounded-xl border border-white/5">
+                      <div className="p-4 rounded-xl border-none bg-white/[0.02] flex items-center gap-4">
+                         <div className="p-3 bg-zinc-950 rounded-xl border-none">
                             <HardHat size={20} className="text-zinc-500" />
                          </div>
                          <div>
@@ -621,7 +621,7 @@ const PROFICIENCY_LEVELS = {
                       </div>
                    </TabsContent>
                 </Tabs>
-                <DialogFooter className="mt-8 pt-6 border-t border-white/5 flex flex-col md:flex-row gap-4">
+                <DialogFooter className="mt-8 pt-6 border-t border-transparent flex flex-col md:flex-row gap-4">
                    <Button variant="ghost" className="text-[10px] font-black uppercase tracking-widest text-zinc-500 md:mr-auto">Cancelar</Button>
                    <Button className="bg-blue-600 hover:bg-blue-500 text-white font-black text-[10px] uppercase tracking-widest px-8 h-12">Confirmar Admissão</Button>
                 </DialogFooter>
@@ -643,7 +643,7 @@ const PROFICIENCY_LEVELS = {
             <TabsTrigger 
               key={tab.id}
               value={tab.id}
-              className="data-[state=active]:bg-blue-600 data-[state=active]:text-white text-zinc-400 bg-zinc-900/60 hover:bg-zinc-800/80 hover:text-zinc-200 border border-zinc-800/85 data-[state=active]:border-blue-500 text-xs font-semibold px-5 h-11 rounded-xl transition-all whitespace-nowrap flex items-center justify-center gap-2.5 cursor-pointer shadow-sm flex-none"
+              className="data-[state=active]:bg-blue-600 data-[state=active]:text-white text-zinc-400 bg-zinc-900/60 hover:bg-zinc-800/80 hover:text-zinc-200 border-none/85 data-[state=active]:border-blue-500 text-xs font-semibold px-5 h-11 rounded-xl transition-all whitespace-nowrap flex items-center justify-center gap-2.5 cursor-pointer shadow-sm flex-none"
             >
               {tab.icon} {tab.label}
             </TabsTrigger>
@@ -660,14 +660,14 @@ const PROFICIENCY_LEVELS = {
               { label: 'Absenteísmo Médio', val: '1.2%', detail: 'Abaixo do target (3%)', icon: <Activity className="text-amber-500" />, color: 'amber' },
               { label: 'Indice de Retrabalho', val: '0.4%', detail: 'Baixa crítica', icon: <Scissors className="text-rose-500" />, color: 'rose' },
             ].map((stat, i) => (
-              <Card key={i} className="bg-[#0c0c10] border-white/5 relative overflow-hidden group">
+              <Card key={i} className="bg-white dark:bg-zinc-900 border-transparent relative overflow-hidden group">
                  <div className={cn("absolute top-0 right-0 w-32 h-32 blur-[60px] -mr-16 -mt-16 opacity-10", `bg-${stat.color}-500`)} />
                  <CardContent className="p-6">
                     <div className="flex justify-between items-start mb-4">
-                       <div className="p-3 rounded-xl bg-white/[0.02] border border-white/5">
+                       <div className="p-3 rounded-xl bg-white/[0.02] border-none">
                           {stat.icon}
                        </div>
-                       <Badge variant="outline" className="text-[9px] font-black border-white/10 text-zinc-500">{stat.detail}</Badge>
+                       <Badge variant="outline" className="text-[9px] font-black border-transparent text-zinc-500">{stat.detail}</Badge>
                     </div>
                     <div className="space-y-1">
                        <h3 className="text-3xl font-black text-white italic tracking-tighter">{stat.val}</h3>
@@ -681,8 +681,8 @@ const PROFICIENCY_LEVELS = {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
              {/* Productivity Chart */}
              <div className="lg:col-span-8 space-y-8">
-                <Card className="bg-[#0c0c10] border-white/5">
-                   <CardHeader className="flex flex-row items-center justify-between border-b border-white/5 bg-white/[0.01]">
+                <Card className="bg-white dark:bg-zinc-900 border-transparent">
+                   <CardHeader className="flex flex-row items-center justify-between border-b border-transparent bg-white/[0.01]">
                       <div>
                          <CardTitle className="text-xs font-black text-white uppercase tracking-[0.2em] italic">Análise de Rendimento Industrial</CardTitle>
                          <CardDescription className="text-[9px] font-bold text-zinc-500 uppercase mt-1">Sincronia de produção e eficiência humana semanal</CardDescription>
@@ -728,7 +728,7 @@ const PROFICIENCY_LEVELS = {
                       <CardTitle className="text-base font-black text-white uppercase italic tracking-tighter leading-tight">Insight de Capacidade</CardTitle>
                    </CardHeader>
                    <CardContent className="space-y-6">
-                      <div className="p-4 rounded-2xl bg-black/60 border border-white/5 space-y-3 relative">
+                      <div className="p-4 rounded-2xl bg-black/60 border-none space-y-3 relative">
                          <div className="flex items-center gap-2 text-rose-500 text-[9px] font-black uppercase">
                             <AlertCircle size={14} /> Gargalo Identificado
                          </div>
@@ -749,8 +749,8 @@ const PROFICIENCY_LEVELS = {
                    </CardContent>
                 </Card>
 
-                <Card className="bg-[#0c0c10] border-white/5">
-                   <CardHeader className="bg-white/[0.01] border-b border-white/5">
+                <Card className="bg-white dark:bg-zinc-900 border-transparent">
+                   <CardHeader className="bg-white/[0.01] border-b border-transparent">
                       <CardTitle className="text-[10px] font-black text-white uppercase tracking-widest italic">Distribuição por Setor</CardTitle>
                    </CardHeader>
                    <CardContent className="p-6">
@@ -775,7 +775,7 @@ const PROFICIENCY_LEVELS = {
                    </CardContent>
                 </Card>
 
-                <Card className="bg-[#0c0c10] border-white/5 p-6">
+                <Card className="bg-white dark:bg-zinc-900 border-transparent p-6">
                    <h4 className="text-[10px] font-black text-zinc-500 uppercase tracking-widest mb-4">Linha do Tempo Recente</h4>
                    <div className="space-y-4">
                       {HISTORY_LOG.slice(0, 3).map((log, i) => (
@@ -797,8 +797,8 @@ const PROFICIENCY_LEVELS = {
         <TabsContent value="colaboradores" className="space-y-8 mt-0 outline-none">
            <Tabs defaultValue="grid" className="space-y-8">
               {!selectedColab && (
-                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-[#0c0c10] border border-white/5 p-2 rounded-2xl">
-                    <TabsList className="bg-white/5 border-white/5 p-1">
+                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 zinc-900 border-none p-2 rounded-2xl">
+                    <TabsList className="bg-white/5 border-transparent p-1">
                        <TabsTrigger value="grid" className="text-[10px] font-black uppercase px-6 h-10 data-[state=active]:bg-white/10 data-[state=active]:text-white">
                           <LayoutGrid size={14} className="mr-2" /> Grid
                        </TabsTrigger>
@@ -813,9 +813,9 @@ const PROFICIENCY_LEVELS = {
                     <div className="flex items-center gap-3 px-2">
                        <div className="relative">
                           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-600" size={14} />
-                          <Input className="bg-black/40 border-white/10 pl-9 h-10 w-64 text-[10px] text-white uppercase font-bold tracking-widest" placeholder="Filtrar talentos..." />
+                          <Input className="bg-black/40 border-transparent pl-9 h-10 w-64 text-[10px] text-white uppercase font-bold tracking-widest" placeholder="Filtrar talentos..." />
                        </div>
-                       <Button variant="outline" className="h-10 px-4 border-white/10 text-white text-[9px] font-black uppercase">
+                       <Button variant="outline" className="h-10 px-4 border-transparent text-white text-[9px] font-black uppercase">
                           <Filter size={14} className="mr-2" /> Avançado
                        </Button>
                     </div>
@@ -839,7 +839,7 @@ const PROFICIENCY_LEVELS = {
                      <ArrowLeft size={14} /> Voltar para Workforce
                    </Button>
                    <div className="flex items-center gap-2">
-                      <Button variant="outline" className="h-9 px-4 border-white/5 text-zinc-500 hover:text-white text-[9px] font-black uppercase gap-2">
+                      <Button variant="outline" className="h-9 px-4 border-transparent text-zinc-500 hover:text-white text-[9px] font-black uppercase gap-2">
                          <Download size={14} /> Baixar Prontuário
                       </Button>
                       <Button className="h-9 px-4 bg-blue-600 hover:bg-blue-500 text-white text-[9px] font-black uppercase gap-2">
@@ -851,7 +851,7 @@ const PROFICIENCY_LEVELS = {
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
                    {/* Col Left: Main Info */}
                    <div className="lg:col-span-4 space-y-8">
-                      <Card className="bg-[#0c0c10] border-white/10 overflow-hidden relative">
+                      <Card className="bg-white dark:bg-zinc-900 border-transparent overflow-hidden relative">
                          <div className="absolute top-0 inset-x-0 h-24 bg-gradient-to-b from-blue-600/10 to-transparent" />
                          <CardContent className="p-8 pt-12 flex flex-col items-center text-center relative">
                             <Avatar className="w-32 h-32 border-4 border-black ring-4 ring-blue-600/20 mb-6">
@@ -861,12 +861,12 @@ const PROFICIENCY_LEVELS = {
                             <h2 className="text-3xl font-black text-white uppercase italic tracking-tighter mb-1">{selectedColab.name}</h2>
                             <p className="text-blue-500 text-[11px] font-black uppercase tracking-[0.2em] mb-6">{selectedColab.role}</p>
                             
-                            <div className="w-full grid grid-cols-2 gap-1 border-y border-white/5 py-4 my-2">
+                            <div className="w-full grid grid-cols-2 gap-1 border-y border-transparent py-4 my-2">
                                <div className="text-center">
                                   <p className="text-[8px] font-black text-zinc-600 uppercase">Setor</p>
                                   <p className="text-[10px] font-black text-zinc-300 uppercase">{selectedColab.dept}</p>
                                </div>
-                               <div className="text-center border-l border-white/5">
+                               <div className="text-center border-l border-transparent">
                                   <p className="text-[8px] font-black text-zinc-600 uppercase">Contrato</p>
                                   <p className="text-[10px] font-black text-zinc-300 uppercase">{selectedColab.type}</p>
                                </div>
@@ -874,13 +874,13 @@ const PROFICIENCY_LEVELS = {
 
                             <div className="w-full space-y-4 mt-6">
                                <div className="flex items-center gap-3 text-zinc-400 group cursor-default">
-                                  <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-zinc-600 group-hover:text-blue-500 transition-colors border border-white/5">
+                                  <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-zinc-600 group-hover:text-blue-500 transition-colors border-none">
                                      <Mail size={14} />
                                   </div>
                                   <span className="text-[10px] font-bold tracking-tight lowercase">{selectedColab.email}</span>
                                </div>
                                <div className="flex items-center gap-3 text-zinc-400 group cursor-default">
-                                  <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-zinc-600 group-hover:text-blue-500 transition-colors border border-white/5">
+                                  <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-zinc-600 group-hover:text-blue-500 transition-colors border-none">
                                      <Phone size={14} />
                                   </div>
                                   <span className="text-[10px] font-bold tracking-tight">{selectedColab.phone}</span>
@@ -889,8 +889,8 @@ const PROFICIENCY_LEVELS = {
                          </CardContent>
                       </Card>
 
-                      <Card className="bg-[#0c0c10] border-white/5">
-                         <CardHeader className="border-b border-white/5 pb-4">
+                      <Card className="bg-white dark:bg-zinc-900 border-transparent">
+                         <CardHeader className="border-b border-transparent pb-4">
                             <CardTitle className="text-xs font-black text-white uppercase italic tracking-widest">Compliance Audit</CardTitle>
                          </CardHeader>
                          <CardContent className="p-6 space-y-4">
@@ -899,7 +899,7 @@ const PROFICIENCY_LEVELS = {
                               { label: 'NR-10 Elétrica', status: selectedColab.nrs.nr10 },
                               { label: 'ASO Periódico', status: selectedColab.nrs.aso },
                             ].map((audit, i) => (
-                              <div key={i} className="flex justify-between items-center p-3 rounded-xl bg-white/[0.01] border border-white/5">
+                              <div key={i} className="flex justify-between items-center p-3 rounded-xl bg-white/[0.01] border-none">
                                  <span className="text-[10px] font-black text-zinc-400 uppercase italic">{audit.label}</span>
                                  <div className={cn(
                                    "w-2 h-2 rounded-full",
@@ -909,7 +909,7 @@ const PROFICIENCY_LEVELS = {
                                  )} />
                               </div>
                             ))}
-                            <Button className="w-full bg-white/5 hover:bg-white/10 text-white text-[9px] font-black uppercase h-10 border border-white/5">
+                            <Button className="w-full bg-white/5 hover:bg-white/10 text-white text-[9px] font-black uppercase h-10 border-none">
                                Ver Documentação Completa
                             </Button>
                          </CardContent>
@@ -924,7 +924,7 @@ const PROFICIENCY_LEVELS = {
                            { label: 'Ult. Treinamento', val: selectedColab.lastTraining, icon: <GraduationCap size={16} /> },
                            { label: 'Remuneração Base', val: selectedColab.salary, icon: <DollarSign size={16} /> },
                          ].map((item, i) => (
-                           <Card key={i} className="bg-[#0c0c10] border-white/5 group">
+                           <Card key={i} className="bg-white dark:bg-zinc-900 border-transparent group">
                               <CardContent className="p-6">
                                  <div className="flex items-center gap-3 mb-3">
                                     <div className="text-zinc-600 group-hover:text-blue-500 transition-colors">
@@ -938,8 +938,8 @@ const PROFICIENCY_LEVELS = {
                          ))}
                       </div>
 
-                      <Card className="bg-[#0c0c10] border-white/5">
-                         <CardHeader className="border-b border-white/5 flex flex-row items-center justify-between">
+                      <Card className="bg-white dark:bg-zinc-900 border-transparent">
+                         <CardHeader className="border-b border-transparent flex flex-row items-center justify-between">
                             <div>
                                <CardTitle className="text-sm font-black text-white uppercase italic tracking-widest">Matriz Técnica & Pontuação IA</CardTitle>
                                <CardDescription className="text-[9px] font-bold text-zinc-500 uppercase mt-1">Análise de competência vs meta do cargo</CardDescription>
@@ -962,7 +962,7 @@ const PROFICIENCY_LEVELS = {
                             <Separator className="bg-white/5" />
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                               <div className="p-6 rounded-2xl bg-white/[0.01] border border-white/5 relative overflow-hidden group">
+                               <div className="p-6 rounded-2xl bg-white/[0.01] border-none relative overflow-hidden group">
                                   <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-100 transition-opacity">
                                      <ArrowUpRight className="text-emerald-500" />
                                   </div>
@@ -970,7 +970,7 @@ const PROFICIENCY_LEVELS = {
                                   <p className="text-4xl font-black text-white italic tracking-tighter">8.2<span className="text-zinc-700 text-xl">/10</span></p>
                                   <p className="text-[9px] text-zinc-500 mt-2 leading-relaxed uppercase font-bold">Baseado em resolução de problemas e auxílio em bancada.</p>
                                </div>
-                               <div className="p-6 rounded-2xl bg-white/[0.01] border border-white/5 relative overflow-hidden group">
+                               <div className="p-6 rounded-2xl bg-white/[0.01] border-none relative overflow-hidden group">
                                   <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-100 transition-opacity">
                                      <Activity className="text-blue-500" />
                                   </div>
@@ -982,8 +982,8 @@ const PROFICIENCY_LEVELS = {
                          </CardContent>
                       </Card>
 
-                      <Card className="bg-[#0c0c10] border-white/5">
-                         <CardHeader className="bg-white/[0.01] border-b border-white/5">
+                      <Card className="bg-white dark:bg-zinc-900 border-transparent">
+                         <CardHeader className="bg-white/[0.01] border-b border-transparent">
                             <CardTitle className="text-[10px] font-black text-white uppercase tracking-widest italic">Timeline de Eventos RH</CardTitle>
                          </CardHeader>
                          <CardContent className="p-6">
@@ -1009,23 +1009,23 @@ const PROFICIENCY_LEVELS = {
            ) : (
              <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
                 {/* Filter Sidebar */}
-                <Card className="bg-[#0c0c10] border-white/5 lg:col-span-1 h-fit sticky top-8">
-                   <CardHeader className="border-b border-white/5 pb-4">
+                <Card className="bg-white dark:bg-zinc-900 border-transparent lg:col-span-1 h-fit sticky top-8">
+                   <CardHeader className="border-b border-transparent pb-4">
                       <CardTitle className="text-xs font-black text-white uppercase italic tracking-widest leading-none">Intelligence Filters</CardTitle>
                    </CardHeader>
                    <CardContent className="p-6 space-y-6">
                       <div className="relative">
                          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-600" size={14} />
-                         <Input className="bg-black border-white/5 pl-9 h-10 text-[10px] text-white uppercase font-bold tracking-widest" placeholder="Pesquisar por nome ou cargo..." />
+                         <Input className="bg-black border-transparent pl-9 h-10 text-[10px] text-white uppercase font-bold tracking-widest" placeholder="Pesquisar por nome ou cargo..." />
                       </div>
                       <div className="space-y-4">
                          <div className="space-y-2">
                             <Label className="text-[9px] font-black text-zinc-500 uppercase tracking-widest">Setor Industrial</Label>
                             <Select defaultValue="industrial">
-                               <SelectTrigger className="bg-black border-white/5 h-10 text-[10px] uppercase font-bold">
+                               <SelectTrigger className="bg-black border-transparent h-10 text-[10px] uppercase font-bold">
                                   <SelectValue placeholder="Selecione..." />
                                </SelectTrigger>
-                               <SelectContent className="bg-zinc-950 border-white/10 text-white">
+                               <SelectContent className="bg-zinc-950 border-transparent text-white">
                                   <SelectItem value="comercial">COMERCIAL / CRM</SelectItem>
                                   <SelectItem value="industrial">INDUSTRIAL / CHÃO</SelectItem>
                                   <SelectItem value="design">DESIGN / PROJETOS</SelectItem>
@@ -1045,11 +1045,11 @@ const PROFICIENCY_LEVELS = {
                       <div className="space-y-3">
                          <p className="text-[9px] font-black text-white/20 uppercase tracking-[0.2em] mb-2 px-1">Filtros Inteligentes Ativos</p>
                          <div className="flex flex-col gap-2">
-                            <div className="flex items-center justify-between bg-white/[0.02] p-2 rounded border border-white/5">
+                            <div className="flex items-center justify-between bg-white/[0.02] p-2 rounded border-none">
                                <span className="text-[8px] font-bold text-zinc-600 uppercase">Geolocalização</span>
                                <Badge className="bg-blue-500/10 text-blue-500 text-[7px] border-0 h-4">Ativo</Badge>
                             </div>
-                            <div className="flex items-center justify-between bg-white/[0.02] p-2 rounded border border-white/5">
+                            <div className="flex items-center justify-between bg-white/[0.02] p-2 rounded border-none">
                                <span className="text-[8px] font-bold text-zinc-600 uppercase">Disponibilidade</span>
                                <Badge className="bg-emerald-500/10 text-emerald-500 text-[7px] border-0 h-4">Sincronizado</Badge>
                             </div>
@@ -1064,12 +1064,12 @@ const PROFICIENCY_LEVELS = {
                            <Card 
                              key={c.id} 
                              onClick={() => setSelectedColabId(c.id)}
-                             className="bg-[#0c0c10] border-white/5 hover:border-blue-500/30 transition-all group cursor-pointer relative overflow-hidden"
+                             className="bg-white dark:bg-zinc-900 border-transparent hover:border-blue-500/30 transition-all group cursor-pointer relative overflow-hidden"
                            >
                              <div className="p-6">
                                 <div className="flex items-start justify-between mb-6">
                                    <div className="flex items-center gap-4">
-                                      <Avatar className="w-14 h-14 border-2 border-white/5 group-hover:border-blue-500 transition-all duration-500">
+                                      <Avatar className="w-14 h-14 border-none group-hover:border-blue-500 transition-all duration-500">
                                          <AvatarImage src={`https://i.pravatar.cc/100?u=${c.avatar}`} />
                                          <AvatarFallback className="bg-zinc-900 font-black italic">{c.name.charAt(0)}</AvatarFallback>
                                       </Avatar>
@@ -1086,11 +1086,11 @@ const PROFICIENCY_LEVELS = {
                                    </Badge>
                                 </div>
                                 <div className="grid grid-cols-2 gap-4 mb-6">
-                                   <div className="p-3 rounded-xl bg-white/[0.01] border border-white/5">
+                                   <div className="p-3 rounded-xl bg-white/[0.01] border-none">
                                       <p className="text-[8px] font-black text-zinc-600 uppercase tracking-widest">Setor</p>
                                       <p className="text-[10px] font-black text-zinc-300 uppercase mt-0.5">{c.dept}</p>
                                    </div>
-                                   <div className="p-3 rounded-xl bg-white/[0.01] border border-white/5">
+                                   <div className="p-3 rounded-xl bg-white/[0.01] border-none">
                                       <p className="text-[8px] font-black text-zinc-600 uppercase tracking-widest">Contrato</p>
                                       <p className="text-[10px] font-black text-zinc-300 uppercase mt-0.5">{c.type}</p>
                                    </div>
@@ -1109,12 +1109,12 @@ const PROFICIENCY_LEVELS = {
                                    </div>
                                    <div className="flex gap-2 pt-2">
                                       {c.tags.slice(0, 2).map(tag => (
-                                        <span key={tag} className="text-[8px] font-black text-zinc-700 border border-white/5 px-2 py-0.5 rounded uppercase tracking-tighter">{tag}</span>
+                                        <span key={tag} className="text-[8px] font-black text-zinc-700 border-none px-2 py-0.5 rounded uppercase tracking-tighter">{tag}</span>
                                       ))}
                                    </div>
                                 </div>
                              </div>
-                             <div className="px-6 py-3 bg-white/[0.02] border-t border-white/5 flex items-center justify-between opacity-0 group-hover:opacity-100 transition-all">
+                             <div className="px-6 py-3 bg-white/[0.02] border-t border-transparent flex items-center justify-between opacity-0 group-hover:opacity-100 transition-all">
                                 <span className="text-[8px] font-black text-white uppercase tracking-widest italic">Acessar Prontuário Digital</span>
                                 <ChevronRight size={14} className="text-blue-500" />
                              </div>
@@ -1138,7 +1138,7 @@ const PROFICIENCY_LEVELS = {
            <TabsContent value="matrix" className="mt-0 outline-none">
               <div className="space-y-6">
                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <Card className="bg-[#0c0c10] border-white/5 p-4 border-l-4 border-l-rose-500">
+                    <Card className="bg-white dark:bg-zinc-900 border-transparent p-4 border-l-4 border-l-rose-500">
                        <div className="flex items-center gap-3 mb-2">
                           <Flame size={16} className="text-rose-500" />
                           <h4 className="text-[10px] font-black text-white uppercase italic tracking-widest">Gargalos Técnicos</h4>
@@ -1148,7 +1148,7 @@ const PROFICIENCY_LEVELS = {
                              const highProficiency = COLLABORATORS.filter(c => (c.skillMatrix as any)[skill] >= 3).length;
                              if (highProficiency <= 1) {
                                 return (
-                                   <div key={skill} className="flex justify-between items-center bg-white/[0.02] p-2 rounded border border-white/5">
+                                   <div key={skill} className="flex justify-between items-center bg-white/[0.02] p-2 rounded border-none">
                                       <span className="text-[9px] font-bold text-zinc-400 uppercase">{skill}</span>
                                       <Badge className="bg-rose-500/10 text-rose-500 text-[8px] border-0 h-4 uppercase">Risco Crítico</Badge>
                                    </div>
@@ -1159,7 +1159,7 @@ const PROFICIENCY_LEVELS = {
                        </div>
                     </Card>
 
-                    <Card className="bg-[#0c0c10] border-white/5 p-4 border-l-4 border-l-amber-500">
+                    <Card className="bg-white dark:bg-zinc-900 border-transparent p-4 border-l-4 border-l-amber-500">
                        <div className="flex items-center gap-3 mb-2">
                           <Shield size={16} className="text-amber-500" />
                           <h4 className="text-[10px] font-black text-white uppercase italic tracking-widest">Dependências Operacionais</h4>
@@ -1169,7 +1169,7 @@ const PROFICIENCY_LEVELS = {
                              const specialists = COLLABORATORS.filter(c => (c.skillMatrix as any)[skill] === 4);
                              if (specialists.length === 1) {
                                 return (
-                                   <div key={skill} className="flex justify-between items-center bg-white/[0.02] p-2 rounded border border-white/5">
+                                   <div key={skill} className="flex justify-between items-center bg-white/[0.02] p-2 rounded border-none">
                                       <span className="text-[9px] font-bold text-zinc-400 uppercase">{skill}</span>
                                       <span className="text-[8px] font-black text-amber-500 uppercase">{specialists[0].name} (Único Esp.)</span>
                                    </div>
@@ -1181,11 +1181,11 @@ const PROFICIENCY_LEVELS = {
                     </Card>
                  </div>
 
-                 <Card className="bg-[#0c0c10] border-white/5 overflow-x-auto">
+                 <Card className="bg-white dark:bg-zinc-900 border-transparent overflow-x-auto">
                     <Table className="min-w-[800px]">
                        <TableHeader className="bg-white/[0.01]">
-                          <TableRow className="border-white/5 hover:bg-transparent">
-                             <TableHead className="px-6 text-[9px] font-black text-zinc-500 uppercase sticky left-0 bg-[#0c0c10] z-20">Colaborador</TableHead>
+                          <TableRow className="border-transparent hover:bg-transparent">
+                             <TableHead className="px-6 text-[9px] font-black text-zinc-500 uppercase sticky left-0 zinc-900 z-20">Colaborador</TableHead>
                              {SKILLS_LIST.map(skill => (
                                 <TableHead key={skill} className="text-center text-[9px] font-black text-zinc-500 uppercase px-4">{skill}</TableHead>
                              ))}
@@ -1193,10 +1193,10 @@ const PROFICIENCY_LEVELS = {
                        </TableHeader>
                        <TableBody>
                           {COLLABORATORS.map((c) => (
-                             <TableRow key={c.id} className="border-white/5 hover:bg-white/[0.01] group">
-                                <TableCell className="px-6 py-4 sticky left-0 bg-[#0c0c10] z-10 border-r border-white/5 group-hover:bg-zinc-900/50">
+                             <TableRow key={c.id} className="border-transparent hover:bg-white/[0.01] group">
+                                <TableCell className="px-6 py-4 sticky left-0 zinc-900 z-10 border-r border-transparent group-hover:bg-zinc-900/50">
                                    <div className="flex items-center gap-3">
-                                      <Avatar className="w-8 h-8 border border-white/10 shrink-0">
+                                      <Avatar className="w-8 h-8 border-none shrink-0">
                                          <AvatarImage src={`https://i.pravatar.cc/100?u=${c.avatar}`} />
                                          <AvatarFallback className="text-[10px] font-black italic">{c.name.charAt(0)}</AvatarFallback>
                                       </Avatar>
@@ -1243,8 +1243,8 @@ const PROFICIENCY_LEVELS = {
         <TabsContent value="performance" className="space-y-8 mt-0 outline-none">
            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
               {/* Operational Log */}
-              <Card className="lg:col-span-8 bg-[#0c0c10] border-white/5 overflow-hidden">
-                 <CardHeader className="bg-white/[0.01] border-b border-white/5 flex flex-row items-center justify-between">
+              <Card className="lg:col-span-8 zinc-900 border-transparent overflow-hidden">
+                 <CardHeader className="bg-white/[0.01] border-b border-transparent flex flex-row items-center justify-between">
                     <div>
                        <CardTitle className="text-sm font-black text-white uppercase italic tracking-widest">Apontamento Operacional Realtime</CardTitle>
                        <CardDescription className="text-[9px] font-bold text-zinc-500 uppercase mt-1">Timeline de execução vs Horas produtivas</CardDescription>
@@ -1254,7 +1254,7 @@ const PROFICIENCY_LEVELS = {
                  <CardContent className="p-0">
                     <Table>
                        <TableHeader className="bg-white/[0.01]">
-                          <TableRow className="border-white/5 hover:bg-transparent">
+                          <TableRow className="border-transparent hover:bg-transparent">
                              <TableHead className="text-[10px] font-black text-zinc-500 uppercase px-6">Colaborador</TableHead>
                              <TableHead className="text-[10px] font-black text-zinc-500 uppercase">Atividade Atual</TableHead>
                              <TableHead className="text-[10px] font-black text-zinc-500 uppercase">Tempo Dec.</TableHead>
@@ -1269,7 +1269,7 @@ const PROFICIENCY_LEVELS = {
                             { name: 'Eduardo Souza', act: 'Supervisão de Chão', time: '08:12:33', prog: 100, eff: 88, status: 'prod' },
                             { name: 'Ricardo Melo', act: 'Pausa Almoço', time: '00:15:22', prog: 0, eff: 0, status: 'pause' },
                           ].map((log, i) => (
-                            <TableRow key={i} className="border-white/5 hover:bg-white/[0.01] group">
+                            <TableRow key={i} className="border-transparent hover:bg-white/[0.01] group">
                                <TableCell className="px-6 py-5">
                                   <span className="text-[11px] font-black text-white uppercase italic">{log.name}</span>
                                </TableCell>
@@ -1300,7 +1300,7 @@ const PROFICIENCY_LEVELS = {
 
               {/* Rework & Quality */}
               <div className="lg:col-span-4 space-y-6">
-                 <Card className="bg-[#0c0c10] border-white/5 p-6">
+                 <Card className="bg-white dark:bg-zinc-900 border-transparent p-6">
                     <div className="flex items-center justify-between mb-6">
                        <h4 className="text-xs font-black text-white uppercase italic tracking-widest">Fator de Retrabalho</h4>
                        <Badge className="bg-rose-500/10 text-rose-500 border-0 text-[9px] font-black uppercase">Crítico</Badge>
@@ -1312,7 +1312,7 @@ const PROFICIENCY_LEVELS = {
                        </div>
                        <TrendingUp className="text-rose-500" size={32} />
                     </div>
-                    <div className="p-4 rounded-xl bg-white/[0.01] border border-white/5 space-y-3">
+                    <div className="p-4 rounded-xl bg-white/[0.01] border-none space-y-3">
                        <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Principais Causas:</p>
                        <div className="space-y-2">
                           <div className="flex justify-between items-center text-[10px] font-bold">
@@ -1350,8 +1350,8 @@ const PROFICIENCY_LEVELS = {
            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
               {/* Alert Center */}
               <div className="lg:col-span-4 space-y-6">
-                 <Card className="bg-[#0c0c10] border-white/5 overflow-hidden">
-                    <CardHeader className="bg-white/[0.01] border-b border-white/5 p-4 py-3">
+                 <Card className="bg-white dark:bg-zinc-900 border-transparent overflow-hidden">
+                    <CardHeader className="bg-white/[0.01] border-b border-transparent p-4 py-3">
                        <CardTitle className="text-[10px] font-black text-rose-500 uppercase tracking-[0.2em] italic flex items-center gap-2">
                           <Shield size={14} /> Critical Compliance Alerts
                        </CardTitle>
@@ -1389,8 +1389,8 @@ const PROFICIENCY_LEVELS = {
                     </CardContent>
                  </Card>
 
-                 <Card className="bg-[#0c0c10] border-white/5">
-                    <CardHeader className="border-b border-white/5">
+                 <Card className="bg-white dark:bg-zinc-900 border-transparent">
+                    <CardHeader className="border-b border-transparent">
                        <CardTitle className="text-xs font-black text-white uppercase tracking-widest italic">Inventário Operacional RH</CardTitle>
                     </CardHeader>
                     <CardContent className="p-6 space-y-6">
@@ -1399,7 +1399,7 @@ const PROFICIENCY_LEVELS = {
                          { label: 'Uniformes Disponíveis', val: '42 Unid', status: 'ALERTA' },
                          { label: 'Treinamentos Realizados', val: '124', status: 'OK' },
                        ].map((item, i) => (
-                         <div key={i} className="flex justify-between items-center p-3 rounded-xl bg-white/[0.01] border border-white/5">
+                         <div key={i} className="flex justify-between items-center p-3 rounded-xl bg-white/[0.01] border-none">
                             <div className="space-y-0.5">
                                <p className="text-[9px] font-black text-zinc-600 uppercase italic tracking-widest">{item.label}</p>
                                <p className="text-sm font-black text-white italic tracking-tighter uppercase">{item.val}</p>
@@ -1410,7 +1410,7 @@ const PROFICIENCY_LEVELS = {
                             )}>{item.status}</Badge>
                          </div>
                        ))}
-                       <Button className="w-full bg-white/5 border border-white/10 text-white font-black text-[9px] uppercase tracking-widest h-10 hover:bg-white/15">
+                       <Button className="w-full bg-white/5 border-none text-white font-black text-[9px] uppercase tracking-widest h-10 hover:bg-white/15">
                           Gerir Ativos & EPIs
                        </Button>
                     </CardContent>
@@ -1418,8 +1418,8 @@ const PROFICIENCY_LEVELS = {
               </div>
 
               {/* Compliance Matrix */}
-              <Card className="lg:col-span-8 bg-[#0c0c10] border-white/5 overflow-hidden">
-                 <CardHeader className="bg-white/[0.01] border-b border-white/5 p-6 py-4 flex flex-row items-center justify-between">
+              <Card className="lg:col-span-8 zinc-900 border-transparent overflow-hidden">
+                 <CardHeader className="bg-white/[0.01] border-b border-transparent p-6 py-4 flex flex-row items-center justify-between">
                     <div>
                        <CardTitle className="text-sm font-black text-white uppercase italic tracking-widest">Matriz de Compliance Legal & NR</CardTitle>
                        <CardDescription className="text-[9px] font-black text-zinc-600 uppercase mt-1 tracking-widest">Status de Normas Regulamentadoras da Equipe Industrial</CardDescription>
@@ -1432,7 +1432,7 @@ const PROFICIENCY_LEVELS = {
                  <CardContent className="p-0">
                     <Table>
                        <TableHeader className="bg-white/[0.01]">
-                          <TableRow className="border-white/5 hover:bg-transparent">
+                          <TableRow className="border-transparent hover:bg-transparent">
                              <TableHead className="text-[10px] font-black text-zinc-500 uppercase px-6">Colaborador</TableHead>
                              <TableHead className="text-[10px] font-black text-zinc-500 uppercase text-center">NR-35 (Altura)</TableHead>
                              <TableHead className="text-[10px] font-black text-zinc-500 uppercase text-center">NR-10 (Elét.)</TableHead>
@@ -1448,7 +1448,7 @@ const PROFICIENCY_LEVELS = {
                             { name: 'Eduardo Souza', nr35: 'success', nr10: 'success', aso: 'success', nr12: 'success' },
                             { name: 'Ana Beatriz', nr35: 'success', nr10: 'success', aso: 'error', nr12: 'n/a' },
                           ].map((row, i) => (
-                            <TableRow key={i} className="border-white/5 hover:bg-white/[0.01]">
+                            <TableRow key={i} className="border-transparent hover:bg-white/[0.01]">
                                <TableCell className="px-6 py-5">
                                   <span className="text-[11px] font-black text-white italic uppercase tracking-tight">{row.name}</span>
                                </TableCell>
@@ -1497,11 +1497,11 @@ const PROFICIENCY_LEVELS = {
         <TabsContent value="skills" className="space-y-8 mt-0 outline-none">
            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {SKILL_MAP.map((group, i) => (
-                <Card key={i} className="bg-[#0c0c10] border-white/5 group hover:border-blue-500/30 transition-all cursor-pointer">
-                   <CardHeader className="bg-white/[0.01] border-b border-white/5 py-4">
+                <Card key={i} className="bg-white dark:bg-zinc-900 border-transparent group hover:border-blue-500/30 transition-all cursor-pointer">
+                   <CardHeader className="bg-white/[0.01] border-b border-transparent py-4">
                       <CardTitle className="text-xs font-black text-white italic uppercase tracking-[0.2em] flex items-center justify-between">
                          {group.group}
-                         <Badge variant="outline" className="text-[8px] font-black border-white/5 text-zinc-600 uppercase">MESH-A{i+1}</Badge>
+                         <Badge variant="outline" className="text-[8px] font-black border-transparent text-zinc-600 uppercase">MESH-A{i+1}</Badge>
                       </CardTitle>
                    </CardHeader>
                    <CardContent className="p-6 space-y-6">
@@ -1527,7 +1527,7 @@ const PROFICIENCY_LEVELS = {
                 </Card>
               ))}
 
-              <Card className="bg-[#0c0c10] border-white/5 border-dashed relative flex flex-col items-center justify-center p-12 text-center group hover:bg-white/[0.01] transition-all">
+              <Card className="bg-white dark:bg-zinc-900 border-transparent border-dashed relative flex flex-col items-center justify-center p-12 text-center group hover:bg-white/[0.01] transition-all">
                  <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center text-zinc-800 group-hover:text-blue-500 transition-all mb-4">
                     <Plus size={32} />
                  </div>
@@ -1538,8 +1538,8 @@ const PROFICIENCY_LEVELS = {
            </div>
 
            {/* Skill Density Heatmap (Abstracted) */}
-           <Card className="bg-[#0c0c10] border-white/5 overflow-hidden">
-              <CardHeader className="bg-white/[0.01] border-b border-white/5">
+           <Card className="bg-white dark:bg-zinc-900 border-transparent overflow-hidden">
+              <CardHeader className="bg-white/[0.01] border-b border-transparent">
                  <CardTitle className="text-xs font-black text-white uppercase tracking-widest italic">Heatmap de Densidade Técnica Operacional</CardTitle>
               </CardHeader>
               <CardContent className="p-8">
@@ -1592,8 +1592,8 @@ const PROFICIENCY_LEVELS = {
               {/* Sidebar: Analytics, Search, and Directory Operations */}
               <div className="xl:col-span-1 space-y-6">
                  {/* Stats Card */}
-                 <Card className="bg-[#0c0c10] border-white/5 overflow-hidden">
-                    <CardHeader className="bg-gradient-to-r from-blue-600/20 to-transparent border-b border-white/5 py-4">
+                 <Card className="bg-white dark:bg-zinc-900 border-transparent overflow-hidden">
+                    <CardHeader className="bg-gradient-to-r from-blue-600/20 to-transparent border-b border-transparent py-4">
                        <div className="flex items-center gap-2 text-blue-400 text-[10px] font-black tracking-widest uppercase mb-1">
                           <BrainCircuit size={14} className="animate-pulse" /> Org Intelligence
                        </div>
@@ -1651,8 +1651,8 @@ const PROFICIENCY_LEVELS = {
                  </Card>
 
                  {/* Custom search filter & direct list edit directory */}
-                 <Card className="bg-[#0c0c10] border-white/5 overflow-hidden">
-                    <CardHeader className="py-4 border-b border-white/5">
+                 <Card className="bg-white dark:bg-zinc-900 border-transparent overflow-hidden">
+                    <CardHeader className="py-4 border-b border-transparent">
                        <CardTitle className="text-[10px] font-black text-white uppercase italic tracking-widest">Diretório de Busca Fiel</CardTitle>
                        <CardDescription className="text-[9px] text-zinc-500 uppercase">Busque e edite nós sem navegar no gráfico</CardDescription>
                     </CardHeader>
@@ -1663,7 +1663,7 @@ const PROFICIENCY_LEVELS = {
                             value={orgSearchQuery}
                             onChange={e => setOrgSearchQuery(e.target.value)}
                             placeholder="Buscar nome, cargo ou setor..." 
-                            className="bg-black/50 border-white/5 text-[11px] h-9 pl-9 text-white placeholder-zinc-600 uppercase tracking-tighter"
+                            className="bg-black/50 border-transparent text-[11px] h-9 pl-9 text-white placeholder-zinc-600 uppercase tracking-tighter"
                           />
                        </div>
 
@@ -1674,7 +1674,7 @@ const PROFICIENCY_LEVELS = {
                             n.role.toLowerCase().includes(orgSearchQuery.toLowerCase()) ||
                             n.dept.toLowerCase().includes(orgSearchQuery.toLowerCase())
                           ).map(node => (
-                            <div key={node.id} className="p-2 bg-white/[0.01] border border-white/5 hover:border-white/10 rounded-lg flex items-center justify-between gap-2 group transition-all">
+                            <div key={node.id} className="p-2 bg-white/[0.01] border-none hover:border-transparent rounded-lg flex items-center justify-between gap-2 group transition-all">
                                <div className="min-w-0">
                                   <p className="text-[10px] font-black text-white truncate leading-none uppercase">{node.name}</p>
                                   <p className="text-[8px] text-zinc-500 font-bold truncate mt-0.5 leading-none uppercase">{node.role} • {node.dept}</p>
@@ -1715,7 +1715,7 @@ const PROFICIENCY_LEVELS = {
 
               {/* Main Panel: Interactive Tree layout vs rotating 3D Mesh layout */}
               <div className="xl:col-span-3">
-                 <Card className="bg-[#0c0c10] border-white/5 overflow-hidden min-h-[700px] flex flex-col relative">
+                 <Card className="bg-white dark:bg-zinc-900 border-transparent overflow-hidden min-h-[700px] flex flex-col relative">
                     <div className="absolute top-6 right-6 z-20 flex gap-2">
                        <Button 
                          variant={orgViewMode === 'flat' ? 'secondary' : 'outline'}
@@ -1723,7 +1723,7 @@ const PROFICIENCY_LEVELS = {
                          onClick={() => setOrgViewMode('flat')}
                          className={cn(
                            "text-[9px] font-black uppercase h-8 px-4",
-                           orgViewMode === 'flat' ? 'bg-blue-600 hover:bg-blue-500 text-white border-0' : 'bg-black/40 border-white/10 text-zinc-400 hover:text-white backdrop-blur-md'
+                           orgViewMode === 'flat' ? 'bg-blue-600 hover:bg-blue-500 text-white border-0' : 'bg-black/40 border-transparent text-zinc-400 hover:text-white backdrop-blur-md'
                          )}
                        >
                          Visão Tradicional
@@ -1734,7 +1734,7 @@ const PROFICIENCY_LEVELS = {
                          onClick={() => setOrgViewMode('mesh')}
                          className={cn(
                            "text-[9px] font-black uppercase h-8 px-4",
-                           orgViewMode === 'mesh' ? 'bg-blue-600 hover:bg-blue-500 text-white border-0 animate-pulse' : 'bg-black/40 border-white/10 text-zinc-400 hover:text-white backdrop-blur-md'
+                           orgViewMode === 'mesh' ? 'bg-blue-600 hover:bg-blue-500 text-white border-0 animate-pulse' : 'bg-black/40 border-transparent text-zinc-400 hover:text-white backdrop-blur-md'
                          )}
                        >
                          Visualizador 3D Mesh
@@ -1759,7 +1759,7 @@ const PROFICIENCY_LEVELS = {
                                onSelectNode={(node) => handleStartEditNode(node)}
                              />
                              <div className="absolute bottom-4 left-4 right-4 pointer-events-none flex items-center justify-center">
-                                <div className="p-3 bg-black/80 border border-white/5 backdrop-blur-md rounded-xl flex items-center gap-3">
+                                <div className="p-3 bg-black/80 border-none backdrop-blur-md rounded-xl flex items-center gap-3">
                                    <Info size={14} className="text-blue-500 animate-bounce" />
                                    <p className="text-[8.5px] font-black text-zinc-400 uppercase tracking-widest">
                                       Arraste com o cursor para navegar na visão tridimensional. Clique em um nó para editá-lo.
@@ -1794,7 +1794,7 @@ const PROFICIENCY_LEVELS = {
                     </div>
 
                     <div className="absolute bottom-8 left-8 right-8 flex items-center justify-between pointer-events-none xl:pointer-events-auto">
-                       <div className="p-3 bg-white/[0.01] border border-white/5 rounded-xl flex items-center gap-3">
+                       <div className="p-3 bg-white/[0.01] border-none rounded-xl flex items-center gap-3">
                           <div className="flex gap-2">
                              <span className="flex items-center gap-1.5 text-[8.5px] font-black text-rose-400 uppercase">
                                 <span className="w-2 h-2 rounded-full bg-rose-500 shadow-[0_0_8px_rgba(244,63,94,0.5)]" /> ESTRATÉGICO
@@ -1811,7 +1811,7 @@ const PROFICIENCY_LEVELS = {
                           <Button 
                             variant="outline" 
                             size="sm" 
-                            className="bg-white/5 border-white/10 text-[9px] font-black uppercase h-8 px-4"
+                            className="bg-white/5 border-transparent text-[9px] font-black uppercase h-8 px-4"
                             onClick={() => window.print()}
                           >
                              Exportar PDF
@@ -1824,7 +1824,7 @@ const PROFICIENCY_LEVELS = {
 
            {/* DIALOG FOR ADDING A NODE */}
            <Dialog open={isAddingNode} onOpenChange={setIsAddingNode}>
-              <DialogContent className="bg-[#0c0c10] border-white/5 text-white max-w-md">
+              <DialogContent className="bg-white dark:bg-zinc-900 border-transparent text-white max-w-md">
                  <DialogHeader>
                     <DialogTitle className="text-base font-black uppercase tracking-tight italic">
                        Adicionar Membro ao Organograma
@@ -1842,7 +1842,7 @@ const PROFICIENCY_LEVELS = {
                          value={orgNodeForm.name}
                          onChange={e => setOrgNodeForm(prev => ({ ...prev, name: e.target.value }))}
                          placeholder="Ex: Carlos Eduardo Medeiros"
-                         className="bg-black/50 border-white/5 text-xs text-white uppercase tracking-tighter"
+                         className="bg-black/50 border-transparent text-xs text-white uppercase tracking-tighter"
                        />
                     </div>
 
@@ -1853,7 +1853,7 @@ const PROFICIENCY_LEVELS = {
                          value={orgNodeForm.role}
                          onChange={e => setOrgNodeForm(prev => ({ ...prev, role: e.target.value }))}
                          placeholder="Ex: Engenheiro de Processos CNC"
-                         className="bg-black/50 border-white/5 text-xs text-white uppercase tracking-tighter"
+                         className="bg-black/50 border-transparent text-xs text-white uppercase tracking-tighter"
                        />
                     </div>
 
@@ -1864,10 +1864,10 @@ const PROFICIENCY_LEVELS = {
                             value={orgNodeForm.level}
                             onValueChange={val => setOrgNodeForm(prev => ({ ...prev, level: val as any }))}
                           >
-                             <SelectTrigger className="bg-black/50 border-white/5 text-xs uppercase">
+                             <SelectTrigger className="bg-black/50 border-transparent text-xs uppercase">
                                 <SelectValue placeholder="Nível" />
                              </SelectTrigger>
-                             <SelectContent className="bg-[#0c0c10] border-white/5 text-white uppercase text-xs">
+                             <SelectContent className="bg-white dark:bg-zinc-900 border-transparent text-white uppercase text-xs">
                                 <SelectItem value="Estratégico">Estratégico</SelectItem>
                                 <SelectItem value="Tático">Tático</SelectItem>
                                 <SelectItem value="Operacional">Operacional</SelectItem>
@@ -1881,10 +1881,10 @@ const PROFICIENCY_LEVELS = {
                             value={orgNodeForm.dept}
                             onValueChange={val => setOrgNodeForm(prev => ({ ...prev, dept: val }))}
                           >
-                             <SelectTrigger className="bg-black/50 border-white/5 text-xs uppercase">
+                             <SelectTrigger className="bg-black/50 border-transparent text-xs uppercase">
                                 <SelectValue placeholder="Setor" />
                              </SelectTrigger>
-                             <SelectContent className="bg-[#0c0c10] border-white/5 text-white uppercase text-xs">
+                             <SelectContent className="bg-white dark:bg-zinc-900 border-transparent text-white uppercase text-xs">
                                 <SelectItem value="Presidência">Presidência</SelectItem>
                                 <SelectItem value="Industrial">Industrial (Produção)</SelectItem>
                                 <SelectItem value="Comercial">Comercial (Vendas)</SelectItem>
@@ -1902,10 +1902,10 @@ const PROFICIENCY_LEVELS = {
                          value={orgNodeForm.parentId}
                          onValueChange={val => setOrgNodeForm(prev => ({ ...prev, parentId: val }))}
                        >
-                          <SelectTrigger className="bg-black/50 border-white/5 text-xs uppercase">
+                          <SelectTrigger className="bg-black/50 border-transparent text-xs uppercase">
                              <SelectValue placeholder="Selecione o Líder..." />
                           </SelectTrigger>
-                          <SelectContent className="bg-[#0c0c10] border-white/5 text-white uppercase text-xs">
+                          <SelectContent className="bg-white dark:bg-zinc-900 border-transparent text-white uppercase text-xs">
                              {orgNodes.map(n => (
                                <SelectItem key={n.id} value={n.id}>
                                   {n.name} ({n.role} • {n.dept})
@@ -1915,7 +1915,7 @@ const PROFICIENCY_LEVELS = {
                        </Select>
                     </div>
 
-                    <DialogFooter className="pt-4 border-t border-white/5 flex gap-2">
+                    <DialogFooter className="pt-4 border-t border-transparent flex gap-2">
                        <Button 
                          type="button" 
                          variant="ghost" 
@@ -1937,7 +1937,7 @@ const PROFICIENCY_LEVELS = {
 
            {/* DIALOG FOR EDITING A NODE */}
            <Dialog open={isEditingNode} onOpenChange={setIsEditingNode}>
-              <DialogContent className="bg-[#0c0c10] border-white/5 text-white max-w-md">
+              <DialogContent className="bg-white dark:bg-zinc-900 border-transparent text-white max-w-md">
                  <DialogHeader>
                     <DialogTitle className="text-base font-black uppercase tracking-tight italic">
                        Editar Membro: {editingNode?.name}
@@ -1954,7 +1954,7 @@ const PROFICIENCY_LEVELS = {
                          required
                          value={orgNodeForm.name}
                          onChange={e => setOrgNodeForm(prev => ({ ...prev, name: e.target.value }))}
-                         className="bg-black/50 border-white/5 text-xs text-white uppercase tracking-tighter"
+                         className="bg-black/50 border-transparent text-xs text-white uppercase tracking-tighter"
                        />
                     </div>
 
@@ -1964,7 +1964,7 @@ const PROFICIENCY_LEVELS = {
                          required
                          value={orgNodeForm.role}
                          onChange={e => setOrgNodeForm(prev => ({ ...prev, role: e.target.value }))}
-                         className="bg-black/50 border-white/5 text-xs text-white uppercase tracking-tighter"
+                         className="bg-black/50 border-transparent text-xs text-white uppercase tracking-tighter"
                        />
                     </div>
 
@@ -1975,10 +1975,10 @@ const PROFICIENCY_LEVELS = {
                             value={orgNodeForm.level}
                             onValueChange={val => setOrgNodeForm(prev => ({ ...prev, level: val as any }))}
                           >
-                             <SelectTrigger className="bg-black/50 border-white/5 text-xs uppercase">
+                             <SelectTrigger className="bg-black/50 border-transparent text-xs uppercase">
                                 <SelectValue placeholder="Nível" />
                              </SelectTrigger>
-                             <SelectContent className="bg-[#0c0c10] border-white/5 text-white uppercase text-xs">
+                             <SelectContent className="bg-white dark:bg-zinc-900 border-transparent text-white uppercase text-xs">
                                 <SelectItem value="Estratégico">Estratégico</SelectItem>
                                 <SelectItem value="Tático">Tático</SelectItem>
                                 <SelectItem value="Operacional">Operacional</SelectItem>
@@ -1992,10 +1992,10 @@ const PROFICIENCY_LEVELS = {
                             value={orgNodeForm.dept}
                             onValueChange={val => setOrgNodeForm(prev => ({ ...prev, dept: val }))}
                           >
-                             <SelectTrigger className="bg-black/50 border-white/5 text-xs uppercase">
+                             <SelectTrigger className="bg-black/50 border-transparent text-xs uppercase">
                                 <SelectValue placeholder="Setor" />
                              </SelectTrigger>
-                             <SelectContent className="bg-[#0c0c10] border-white/5 text-white uppercase text-xs">
+                             <SelectContent className="bg-white dark:bg-zinc-900 border-transparent text-white uppercase text-xs">
                                 <SelectItem value="Presidência">Presidência</SelectItem>
                                 <SelectItem value="Industrial">Industrial (Produção)</SelectItem>
                                 <SelectItem value="Comercial">Comercial (Vendas)</SelectItem>
@@ -2014,10 +2014,10 @@ const PROFICIENCY_LEVELS = {
                             value={orgNodeForm.parentId}
                             onValueChange={val => setOrgNodeForm(prev => ({ ...prev, parentId: val }))}
                           >
-                             <SelectTrigger className="bg-black/50 border-white/5 text-xs uppercase">
+                             <SelectTrigger className="bg-black/50 border-transparent text-xs uppercase">
                                 <SelectValue placeholder="Líder" />
                              </SelectTrigger>
-                             <SelectContent className="bg-[#0c0c10] border-white/5 text-white uppercase text-xs">
+                             <SelectContent className="bg-white dark:bg-zinc-900 border-transparent text-white uppercase text-xs">
                                 {orgNodes
                                   .filter(n => n.id !== editingNode?.id && !getOrgDescendants(editingNode?.id || '', orgNodes).includes(n.id))
                                   .map(n => (
@@ -2030,7 +2030,7 @@ const PROFICIENCY_LEVELS = {
                        </div>
                     )}
 
-                    <DialogFooter className="pt-4 border-t border-white/5 flex gap-2">
+                    <DialogFooter className="pt-4 border-t border-transparent flex gap-2">
                        <Button 
                          type="button" 
                          variant="ghost" 
@@ -2056,9 +2056,9 @@ const PROFICIENCY_LEVELS = {
    </Tabs>
 
       {/* Global Status Footer */}
-      <div className="flex flex-col md:flex-row items-center justify-between pt-8 border-t border-white/5 gap-4">
+      <div className="flex flex-col md:flex-row items-center justify-between pt-8 border-t border-transparent gap-4">
          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-white/[0.02] border border-white/5 flex items-center justify-center text-blue-500">
+            <div className="w-10 h-10 rounded-xl bg-white/[0.02] border-none flex items-center justify-center text-blue-500">
                <History size={18} />
             </div>
             <div>
@@ -2107,7 +2107,7 @@ function TreeNode({ node, nodes, onEdit, onDelete, onAddSub }: TreeNodeProps) {
     <div className="flex flex-col items-center">
       {/* Node card and actions wrapper */}
       <div className={cn(
-        "w-52 p-4 bg-[#0a0a0f] border rounded-2xl text-center group relative backdrop-blur-md transition-all duration-300 hover:scale-[1.03] hover:bg-black/60",
+        "w-52 p-4 bg-white dark:bg-zinc-900 border rounded-2xl text-center group relative backdrop-blur-md transition-all duration-300 hover:scale-[1.03] hover:bg-black/60",
         levelBorder[node.level]
       )}>
         <p className="text-[7.5px] font-black text-zinc-500 uppercase tracking-[0.2em]">{node.dept}</p>
@@ -2121,7 +2121,7 @@ function TreeNode({ node, nodes, onEdit, onDelete, onAddSub }: TreeNodeProps) {
         </div>
 
         {/* Hover overlay menu with actions */}
-        <div className="absolute inset-0 bg-[#07070a]/95 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex flex-col justify-center items-center gap-1 px-3 z-30">
+        <div className="absolute inset-0 bg-white dark:bg-zinc-900/95 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex flex-col justify-center items-center gap-1 px-3 z-30">
           <p className="text-[8px] font-mono text-zinc-500 uppercase truncate max-w-full italic mb-0.5">{node.name}</p>
           <div className="flex gap-1 w-full justify-center">
             <Button 
@@ -2519,7 +2519,7 @@ function OrgMesh3D({ nodes, onSelectNode }: OrgMesh3DProps) {
           if (e.touches[0]) onDrag(e.touches[0].clientX, e.touches[0].clientY);
         }}
         onTouchEnd={stopDrag}
-        className="w-full h-full min-h-[580px] bg-[#050508] border border-blue-500/10 cursor-grab active:cursor-grabbing block"
+        className="w-full h-full min-h-[580px] bg-white dark:bg-zinc-900 border border-blue-500/10 cursor-grab active:cursor-grabbing block"
       />
     </div>
   );

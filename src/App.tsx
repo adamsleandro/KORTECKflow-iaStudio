@@ -23,6 +23,9 @@ import { Permissions } from '@/src/components/Permissions';
 import { LevelsManagement } from '@/src/components/Levels';
 import { ThemeSettings } from '@/src/components/ThemeSettings';
 import { GlobalSettings } from '@/src/components/GlobalSettings';
+import { Gestao } from '@/src/components/Gestao';
+import { Calendario } from '@/src/components/Calendario';
+import { CRMPipe } from '@/src/components/CRMPipe';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { GlobalAudit } from '@/src/components/common/GlobalAudit';
 import { useStore } from '@/src/lib/store';
@@ -35,12 +38,22 @@ export default function App() {
 
   const renderView = () => {
     switch (currentView) {
+      case 'calendario':
+        return <Calendario />;
       case 'dashboard':
       case 'dash-fin':
       case 'dash-com':
       case 'dash-prod':
       case 'dash-est':
         return <Dashboard />;
+      case 'gestao':
+      case 'ges-preco':
+      case 'ges-markup':
+      case 'ges-rrt':
+      case 'ges-bitola':
+      case 'ges-led-fonte':
+      case 'ges-pgv':
+        return <Gestao initialTab={currentView} />;
       case 'prod-chao':
       case 'prod-cnc':
       case 'prod-imp':
@@ -49,8 +62,10 @@ export default function App() {
       case 'pcp-main':
       case 'pcp-os':
       case 'producao':
+      case 'qualidade':
         return <Production initialTab={currentView} />;
       case 'crm-pipe':
+        return <CRMPipe />;
       case 'comercial':
       case 'crm-follow':
       case 'com-leads':
@@ -86,6 +101,9 @@ export default function App() {
       case 'hr-cad':
       case 'hr-colab':
       case 'hr-org':
+      case 'hr-docs':
+      case 'hr-aso':
+      case 'hr-horas':
       case 'hr':
         return <HR initialTab={currentView} />;
       case 'op-arte':
@@ -94,8 +112,10 @@ export default function App() {
         return <Projects />;
       case 'edu-cursos':
       case 'edu-trein':
+      case 'edu-cert':
+      case 'edu-carreira':
       case 'educa':
-        return <EducaCV />;
+        return <EducaCV initialTab={currentView} />;
       case 'sys-adm-gest':
       case 'sistema':
         return <Admin />;
@@ -117,7 +137,7 @@ export default function App() {
       default:
         return (
           <div className="flex items-center justify-center h-screen text-zinc-500 animate-in fade-in duration-500">
-            <div className="text-center p-12 border border-white/5 bg-white/[0.01] rounded-3xl">
+            <div className="text-center p-12 border border-transparent bg-white/[0.01] rounded-3xl">
               <h2 className="text-2xl font-black text-white mb-2 uppercase tracking-[0.2em] italic">Módulo em Integração</h2>
               <p className="text-sm font-medium opacity-60">
                 A funcionalidade <span className="text-white font-bold tracking-tight">[{currentView.toUpperCase()}]</span> está sendo configurada<br/>
@@ -152,7 +172,7 @@ export default function App() {
 
            <button 
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="w-10 h-10 rounded-full bg-white/5 text-white flex items-center justify-center border border-white/10"
+              className="w-10 h-10 rounded-full bg-white/5 text-white flex items-center justify-center border border-transparent"
            >
               {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
            </button>

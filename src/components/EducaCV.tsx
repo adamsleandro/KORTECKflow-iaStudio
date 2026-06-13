@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   GraduationCap, 
@@ -46,12 +46,13 @@ interface Lesson {
   title: string;
   duration: string;
   completed: boolean;
+  youtubeUrl?: string;
 }
 
 interface Course {
   id: string;
   title: string;
-  sector: 'corte' | 'montagem' | 'eletrica' | 'pintura' | 'solda' | 'seguranca';
+  sector: 'comunicacao-visual' | 'impressao-digital' | 'impressao-3d';
   level: 'Iniciante' | 'Intermediador' | 'Avançado' | 'Especialista';
   time: string;
   xp: number;
@@ -67,12 +68,13 @@ interface Course {
   };
 }
 
-// Complete industry list of Courses
+// Complete industry list of Courses (15 Courses total, 5 per sector)
 const VISUAL_COMMUNICATION_COURSES: Course[] = [
+  // ==================== COMUNICAÇÃO VISUAL (5 Cursos) ====================
   {
-    id: 'corte-cnc',
-    title: 'Nesting Avançado para Router CNC',
-    sector: 'corte',
+    id: 'cv-router-cnc',
+    title: 'Nesting Avançado e Operação de Router CNC',
+    sector: 'comunicacao-visual',
     level: 'Especialista',
     time: '12h',
     xp: 450,
@@ -82,7 +84,7 @@ const VISUAL_COMMUNICATION_COURSES: Course[] = [
     lessons: [
       { id: '1', title: 'Fundamentos de Nesting em Software CAM', duration: '25 min', completed: true },
       { id: '2', title: 'Configuração de Pontes e Junções Técnicas', duration: '40 min', completed: true },
-      { id: '3', title: 'Fatores de Tolerância e Res friamento de ACM', duration: '35 min', completed: true },
+      { id: '3', title: 'Fatores de Tolerância e Resfriamento de ACM', duration: '35 min', completed: true },
       { id: '4', title: 'Maximização de Retalhos Sobressalentes', duration: '50 min', completed: false }
     ],
     quiz: {
@@ -98,40 +100,13 @@ const VISUAL_COMMUNICATION_COURSES: Course[] = [
     }
   },
   {
-    id: 'corte-laser',
-    title: 'Corte e Gravação a Laser Fibra & CO2',
-    sector: 'corte',
-    level: 'Avançado',
-    time: '10h',
-    xp: 350,
-    desc: 'Parametrização precisa de velocidade, frequência e potência de gás para cortes limpos sem rebarbas em aço inox e acrilicos espelhados.',
-    img: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&q=80&w=600',
-    progress: 0,
-    lessons: [
-      { id: '1', title: 'Focalização das Lentes e Comprimento de Onda', duration: '30 min', completed: false },
-      { id: '2', title: 'Diferenças de Gases Auxiliares: N2 vs O2', duration: '45 min', completed: false },
-      { id: '3', title: 'Corte Limpo em Acrílico de Alta Espessura', duration: '40 min', completed: false }
-    ],
-    quiz: {
-      question: 'Ao cortar aço carbono com Laser Fibra, qual gás auxiliar promove uma reação exotérmica para acelerar o corte?',
-      options: [
-        'Nitrogênio (N2)',
-        'Argônio (Ar)',
-        'Oxigênio (O2)',
-        'Dióxido de Carbono (CO2)'
-      ],
-      correctIndex: 2,
-      explanation: 'O oxigênio reage com o ferro quente gerando calor adicional, acelerando a queima e expulsando o material derretido, ideal para corte de aços ferrosos densos.'
-    }
-  },
-  {
-    id: 'montagem-acm',
-    title: 'Dobra, Vinco e Montagem de Fachadas ACM',
-    sector: 'montagem',
+    id: 'cv-montagem-acm',
+    title: 'Dobra, Vinco e Estruturação de Fachadas ACM',
+    sector: 'comunicacao-visual',
     level: 'Avançado',
     time: '15h',
     xp: 600,
-    desc: 'Estruturação de bandejas de ACM, fresagem regulada do núcleo termoplástico, instalação sob perfis e vedação contra infiltrações com elastômero de PU.',
+    desc: 'Uso correto de fresas V-Groove de 90° e 135°, calandra e curvaturas estruturais, cálculo de juntas de dilatação e vedações de poliuretano (PU) na montagem externa.',
     img: 'https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&q=80&w=600',
     progress: 30,
     lessons: [
@@ -153,200 +128,409 @@ const VISUAL_COMMUNICATION_COURSES: Course[] = [
     }
   },
   {
-    id: 'montagem-letras',
-    title: 'Montagem de Letra Caixa & Logotipos Premium',
-    sector: 'montagem',
-    level: 'Intermediador',
-    time: '8h',
-    xp: 300,
-    desc: 'Confecção de caixas de acrílico tridimensional, metal galvanizado e PVC expandido. Métodos de colagem invisível, encaixes e fixação flutuante.',
-    img: 'https://images.unsplash.com/photo-1513542789411-b6a5d4f31634?auto=format&fit=crop&q=80&w=600',
-    progress: 100,
-    lessons: [
-      { id: '1', title: 'Corte de Laterais de Acrílico em Soprador Térmico', duration: '20 min', completed: true },
-      { id: '2', title: 'Colas para Acrílico: Acrílico Líquido vs Cianoacrilato', duration: '30 min', completed: true },
-      { id: '3', title: 'Montagem de Gabaritos de Plotagem de Instalação espacial', duration: '35 min', completed: true }
-    ],
-    quiz: {
-      question: 'Qual o adesivo ideal para a união de acrílico cristal que promove uma solda química de fusão molecular pura, sem bolhas e perfeitamente transparente?',
-      options: [
-        'Cola instantânea de cianoacrilato comum.',
-        'Fita dupla face VHB.',
-        'Adesivo monômero por polimerização (solvente clorofórmio estabilizado).',
-        'Silicone acético transparente.'
-      ],
-      correctIndex: 2,
-      explanation: 'Adesivos específicos à base de solvente reagem dissolvendo temporariamente as superfícies de acrílico. Ao evaporar, as moléculas fundem-se em uma única estrutura monolítica transparente com máxima resistência de carga.'
-    }
-  },
-  {
-    id: 'eletrica-fontes',
-    title: 'Sistemas de Iluminação LED & Fontes 12V/24V',
-    sector: 'eletrica',
-    level: 'Iniciante',
-    time: '6h',
-    xp: 250,
-    desc: 'Cálculo de potência de fontes chaveadas, blindagem IP contra intempéries, limitação de queda de tensão em circuitos longos e cabeamento apropriado.',
-    img: 'https://images.unsplash.com/photo-1558244661-d248897f7bc4?auto=format&fit=crop&q=80&w=600',
-    progress: 10,
-    lessons: [
-      { id: '1', title: 'Dimensionamento Geral de Fontes Chaveadas', duration: '25 min', completed: true },
-      { id: '2', title: 'Cálculo de Queda de Tensão por Bitola de Fio', duration: '35 min', completed: false },
-      { id: '3', title: 'Conectores Estanques e Isolação Hidro-resistente', duration: '30 min', completed: false }
-    ],
-    quiz: {
-      question: 'Uma placa necessita de 120 módulos de LED 12V. Sabendo que cada módulo consome 1.2W e aplicando a margem de segurança industrial padrão de 20%, qual a potência mínima que a fonte robusta de 12V deve prover?',
-      options: [
-        '144 Watts',
-        '172.8 Watts',
-        '120 Watts',
-        '200 Watts'
-      ],
-      correctIndex: 1,
-      explanation: 'Consumo real = 120 unidades * 1.2W = 144W. Adicionando a margem protetiva contra sobressaltos e picos industriais de 20% (144 * 1.2), obtemos 172.8W.'
-    }
-  },
-  {
-    id: 'eletrica-neon',
-    title: 'Instalação Prática de Neon LED Flexível',
-    sector: 'eletrica',
-    level: 'Intermediador',
-    time: '8h',
-    xp: 350,
-    desc: 'Técnicas de corte e soldagem em placas acrílicas gravadas para Neon, isolamento de pontas, curvas complexas e gabarito estético.',
-    img: 'https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&q=80&w=600',
-    progress: 0,
-    lessons: [
-      { id: '1', title: 'Terminologia e Marcadores de Corte do Neon Flex', duration: '20 min', completed: false },
-      { id: '2', title: 'Soldagem Rápida com Estanho e Trigo de Vedação', duration: '30 min', completed: false },
-      { id: '3', title: 'Acabamentos e Colagem em Acrílico Cristal', duration: '40 min', completed: false }
-    ],
-    quiz: {
-      question: 'Qual a temperatura ideal da ponta do ferro de solda para soldar fios finos de alimentação aos pontos de cobre do Neon Flex sem queimar o guia de silicone?',
-      options: [
-        '150°C a 200°C',
-        '320°C a 360°C aplicada em toques rápidos de menos de 3 segundos',
-        '450°C a 500°C durante cerca de 10 segundos',
-        'O silicone deve ser fundido e prensado junto com o fio'
-      ],
-      correctIndex: 1,
-      explanation: 'A soldagem de fios em contato com fitas Neon LED requer calor rápido de 320°C a 360°C para fundir o estanho instantaneamente. Períodos maiores de contato dissipam calor e destroem o circuito flexível de cobre interno e as trilhas de LED.'
-    }
-  },
-  {
-    id: 'pintura-pu',
-    title: 'Pintura Automotiva PU para Letras Metálicas',
-    sector: 'pintura',
-    level: 'Avançado',
-    time: '14h',
-    xp: 500,
-    desc: 'Preparação com Primer Wash para galvanizado, catálise e diluição de tinta PU, controle de pressão da pistola e técnicas de aplicação uniforme sem escorrer.',
-    img: 'https://images.unsplash.com/photo-1562259949-e8e7689d7828?auto=format&fit=crop&q=80&w=600',
-    progress: 0,
-    lessons: [
-      { id: '1', title: 'Preparação Básica de Superfície e Polimento do Aço', duration: '35 min', completed: false },
-      { id: '2', title: 'Aplicação de Wash Primer: Fundamento Químico de Aderência', duration: '30 min', completed: false },
-      { id: '3', title: 'Técnica de Passadas Cruzadas e Distância de Canecos', duration: '45 min', completed: false },
-      { id: '4', title: 'Secagem, Cura e Polimento de Letras Metálicas', duration: '40 min', completed: false }
-    ],
-    quiz: {
-      question: 'Por que o uso de Wash Primer (ou fundo fosfatizante) é considerado uma etapa estritamente obrigatória antes de pintar estruturas de chapa galvanizada ou alumínio com tinta poliuretano (PU)?',
-      options: [
-        'Para dar o brilho espelhado final.',
-        'Porque chapas galvanizadas e alumínio possuem superfícies inertes e oleosas que impedem a aderência mecânica da tinta comum. O Wash Primer cria uma ancoragem química estável por fosfatização.',
-        'Apenas para acelerar o tempo de secagem da estufa.',
-        'Para deixar a tinta mais densa e resistente a impactos de corte.'
-      ],
-      correctIndex: 1,
-      explanation: 'O zinco da galvanização e a camada de óxido de alumínio nativos dificultam a fixação de tintas PU diretamente. O Wash Primer reage quimicamente com os metais, criando uma camada fosfatizada que ancora o acabamento final indefinitivamente, prevenindo descascamentos.'
-    }
-  },
-  {
-    id: 'pintura-verniz',
-    title: 'Acabamentos Premium e Mascaramento de Dupla Cor',
-    sector: 'pintura',
-    level: 'Intermediador',
-    time: '8h',
-    xp: 300,
-    desc: 'Lixamento entre demãos de verniz, uso de fitas automotivas de mascaramento sem deixar resíduo, pinturas bicomponente texturizadas e foscas.',
-    img: 'https://images.unsplash.com/photo-1541535650810-10d26f5c2ab3?auto=format&fit=crop&q=80&w=600',
-    progress: 0,
-    lessons: [
-      { id: '1', title: 'Tipagem de Grãos de Lixa D’água: Do #320 ao #1200', duration: '25 min', completed: false },
-      { id: '2', title: 'Mascaramento Preciso de Linhas Retas e Logos Complexos', duration: '40 min', completed: false },
-      { id: '3', title: 'Efeito Verniz Resistente a Raios Solares UV Externos', duration: '30 min', completed: false }
-    ],
-    quiz: {
-      question: 'Qual o tempo ideal para remover a fita de mascaramento após aplicar a segunda camada de tinta em uma letra caixa bicolor para garantir uma linha divisória limpa e sem remover a camada inferior?',
-      options: [
-        'Remover imediatamente após secagem ao toque (cerca de 25-40 minutos), com a tinta ainda macia, puxando em ângulo agudo de 45°.',
-        'Remover após 48 horas da cura total no forno.',
-        'Antes de aplicar a tinta secundária.',
-        'Umedecer com Thinner de diluição para soltar as pontas antes de puxar.'
-      ],
-      correctIndex: 0,
-      explanation: 'A fita deve ser removida quando a película de tinta secundária estiver estável porém flexível (toque). Se secar demais, a tinta curada racha na borda da fita deixando lascas; se estiver muito líquida, escorre.'
-    }
-  },
-  {
-    id: 'solda-mig',
-    title: 'Soldagem MIG/MAG em Metalon e Chaparia',
-    sector: 'solda',
+    id: 'cv-solda-metalon',
+    title: 'Serralheria e Soldagem MIG/TIG para Painéis',
+    sector: 'comunicacao-visual',
     level: 'Avançado',
     time: '16h',
-    xp: 600,
-    desc: 'Montagem de quadros de sustentação metálica para painéis de fachada. Ajuste fino de amperagem e velocidade do arame, gás protetor CO2/Argônio e esquadro térmico.',
+    xp: 500,
+    desc: 'Dimensionamento e esquadro de metalon para letras caixa e painéis robustos. Técnicas e ponteamentos intercalados para evitar o empenamento térmico de perfis finos.',
     img: 'https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?auto=format&fit=crop&q=80&w=600',
     progress: 0,
     lessons: [
-      { id: '1', title: 'Configuração Básica de Gás de Blindagem e Tochas MIG', duration: '30 min', completed: false },
-      { id: '2', title: 'Prevenção de Empenamento Térmico por Pontos Estáveis', duration: '45 min', completed: false },
-      { id: '3', title: 'Solda em Pontos de Canto e Chanfros de Penetração Avançada', duration: '50 min', completed: false },
-      { id: '4', title: 'Inspeção por Ensaios Não-Destrutivos Práticos de Campo', duration: '35 min', completed: false }
+      { id: '1', title: 'Corte de Perfis de Metalon em Meia-Esquadria', duration: '30 min', completed: false },
+      { id: '2', title: 'Ajuste de Amperagem da Tocha MIG/MAG', duration: '40 min', completed: false },
+      { id: '3', title: 'Evitando Deformações por Ponteamento Espacial', duration: '35 min', completed: false },
+      { id: '4', title: 'Acabamento de Cordões de Solda com Flap', duration: '25 min', completed: false }
     ],
     quiz: {
-      question: 'O empenamento térmico é um problema crucial na soldagem de estruturas em esquadro de metalon leve de chapa fina (ex: chapa #18 ou #20). Qual técnica de montagem mitiga este efeito prejudicial?',
+      question: 'Qual técnica de soldagem é recomendada para atenuar o empenamento térmico em estruturas leves de metalon?',
       options: [
-        'Soldar de forma corrida e ininterrupta de um canto a outro com corrente máxima.',
-        'Realizar soldagem pontual alternada (técnica do passo peregrino ou pontas cruzadas) e prender as peças rigidamente ao gabarito de solda em esquadro.',
-        'Soldar sem gás auxiliar para refrigerar o metal fundido.',
-        'Resfriar a solda quente jogando água sob pressão no metalon.'
+        'Realizar um único cordão contínuo e rápido com potência máxima.',
+        'Fazer ponteamento intercalado estático, deixando a estrutura resfriar antes de fechar os cordões.',
+        'Refrescar a solda imediatamente jogando água gelada sob pressão.',
+        'Soldar no sentido das extremidades para o centro direto.'
       ],
       correctIndex: 1,
-      explanation: 'A soldagem alternada e o ponteamento prévio distribuem o aporte térmico homogeneamente ao longo da estrutura de metalon leve. Fixar gabaritos robustos restringe a contração mecânica do metal do cordão durante a fase crítica de resfriamento, mantendo o perfeito esquadro de 90° das grades do painel.'
+      explanation: 'O ponteamento intercalado distribui o aporte de calor de forma homogênea, reduzindo as tensões internas de contração mecânica das chapas e mantendo o esquadro perfeito.'
     }
   },
   {
-    id: 'solda-tig',
-    title: 'Soldagem TIG de Alta Precisão para Letras Inox',
-    sector: 'solda',
+    id: 'cv-instalacao-comercial',
+    title: 'Instalação de Fachadas e Ancoragem Química',
+    sector: 'comunicacao-visual',
     level: 'Especialista',
-    time: '18h',
-    xp: 650,
-    desc: 'Solda invisível micro-TIG sem aporte excessivo de material. Acabamentos requintados e espelhados em letras caixas de Aço Inoxidável 304.',
+    time: '10h',
+    xp: 400,
+    desc: 'Fixação segura de fachadas de grande porte, manuseio de parabolts de impacto, químicos de ancoragem epóxi e cálculo de resistência contra ventos na comunicação visual exterior.',
+    img: 'https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&q=80&w=600',
+    progress: 0,
+    lessons: [
+      { id: '1', title: 'Análise de Prumo, Nível e Gabaritos de Fachada', duration: '25 min', completed: false },
+      { id: '2', title: 'Parabolts Mecânicos vs. Ancoragem Epóxi Química', duration: '40 min', completed: false },
+      { id: '3', title: 'Requisitos de Segurança em Altura (NR-35)', duration: '45 min', completed: false }
+    ],
+    quiz: {
+      question: 'Em quais condições superficiais a ancoragem química por ampola de vinil é recomendada em detrimento ao chumbador mecânico tradicional?',
+      options: [
+        'Em superfícies plásticas leves que requerem parafusos autorroscantes comuns.',
+        'Em bases porosas, alvenaria oca ou concreto de baixa dureza, pois distribui a força de adesão na parede interna do furo por adesão química.',
+        'Em gesso cartonado comum para fixação de quadros internos leves.',
+        'Em chapas finas de alumínio ACM.'
+      ],
+      correctIndex: 1,
+      explanation: 'A ancoragem química injetável ou por ampola preenche vazios em blocos ocos e adere quimicamente ao concreto sem gerar forças de expansão mecânica que poderiam estourar ou trincar bases fracas e porosas.'
+    }
+  },
+  {
+    id: 'cv-letras-led',
+    title: 'Letra Caixa Premium, Iluminação LED e Neon Flex',
+    sector: 'comunicacao-visual',
+    level: 'Intermediador',
+    time: '8h',
+    xp: 350,
+    desc: 'Montagem de caixas tridimensionais, soldagem invisível de acrílicos, colagem de fitas de Neon LED flexíveis e dimensionamento elétrico de fontes chaveadas 12V e 24V.',
+    img: 'https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&q=80&w=600',
+    progress: 0,
+    lessons: [
+      { id: '1', title: 'Corte e Dobra de Acrílico Cristal em Soprador Térmico', duration: '20 min', completed: false },
+      { id: '2', title: 'Soldagem Química Molecular de Peças Acrílicas', duration: '30 min', completed: false },
+      { id: '3', title: 'Dimensionamento Elétrico e Margem Protetiva de Fontes LED', duration: '35 min', completed: false }
+    ],
+    quiz: {
+      question: 'Qual o adesivo ideal para a união de acrílico cristal que promove uma solda química de fusão molecular pura, sem bolhas?',
+      options: [
+        'Cola de cianoacrilato comum.',
+        'Fita adesiva dupla face transparente comum.',
+        'Adesivo monômero por polimerização (solvente clorofórmio estabilizado).',
+        'Silicone acético comum.'
+      ],
+      correctIndex: 2,
+      explanation: 'O adesivo monômero à base de solvente dissolve temporariamente a superfície do acrílico. Ao secar, as duas partes se unem de maneira monolítica em fusão molecular límpida e resistente.'
+    }
+  },
+
+  // ==================== IMPRESSÃO DIGITAL (5 Cursos) ====================
+  {
+    id: 'id-operacao-plotter',
+    title: 'Operação e Calibração de Plotters Eco-Solvente',
+    sector: 'impressao-digital',
+    level: 'Iniciante',
+    time: '8h',
+    xp: 300,
+    desc: 'Alinhamento milimétrico de cabeças de impressão piezoelétricas, calibração dinâmica do passo de avanço de mídia para eliminar bandeamentos, e carregamento de perfis de materiais.',
+    img: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&q=80&w=600',
+    progress: 0,
+    lessons: [
+      { id: '1', title: 'Limpeza de Wipers, Capping Station e Cabeças de Impressão', duration: '30 min', completed: false },
+      { id: '2', title: 'Teste de Nozzles e Ajuste Bi-Direcional Cruzado', duration: '35 min', completed: false },
+      { id: '3', title: 'Resolução de Banding por Correção de Step da Mídia', duration: '40 min', completed: false }
+    ],
+    quiz: {
+      question: 'O que caracteriza o defeito conhecido como "Banding" na impressão digital e qual sua principal causa eletrônica/mecânica?',
+      options: [
+        'É a variação térmica na estufa de secagem rápida do vinil adesivo.',
+        'São linhas horizontais claras ou escuras paralelas no sentido da impressão, causadas pelo avanço de mídia descalibrado ou bicos entupidos na cabeça de impressão.',
+        'É o deslocamento de cores primárias CMYK nas bordas da lona.',
+        'É o enrugamento físico por excesso de tração elástica da mídia.'
+      ],
+      correctIndex: 1,
+      explanation: 'O banding ocorre quando o avanço do rolo de mídia não está perfeitamente sincronizado com o deslocamento do carro, ou por bicos da cabeça sem disparar jato (nozzles obstruídos), gerando marcas no impresso.'
+    }
+  },
+  {
+    id: 'id-impressao-uv',
+    title: 'Impressão Direta UV e UV Gel em Substratos Rígidos',
+    sector: 'impressao-digital',
+    level: 'Intermediador',
+    time: '10h',
+    xp: 380,
+    desc: 'Operação de impressoras de mesa plana (Flatbed) para impressão direta em chapas de PVC, MDF e acrílico. Configurações de branco localizado, máscaras de verniz epóxi e cura por LED UV.',
+    img: 'https://images.unsplash.com/photo-1562259949-e8e7689d7828?auto=format&fit=crop&q=80&w=600',
+    progress: 0,
+    lessons: [
+      { id: '1', title: 'Diferenças de Cura por Lâmpadas de Mercúrio vs. LED UV', duration: '25 min', completed: false },
+      { id: '2', title: 'Promotores de Adesão (Primer) para Vidro e Metais Rígidos', duration: '35 min', completed: false },
+      { id: '3', title: 'Geração de Camada de Fundo Branco Sombreado em Arquivos de Arte', duration: '45 min', completed: false }
+    ],
+    quiz: {
+      question: 'Qual é o papel fundamental dos promotores de adesão (primers) na impressão digital direta por cura UV sobre materiais inorgânicos lisos como vidro ou aço?',
+      options: [
+        'Acelerar a velocidade de deslocamento horizontal do carro de impressão.',
+        'Aumentar o brilho final do verniz protetor.',
+        'Gerar afinidade química entre as tintas acriladas da cura UV e a superfície inerte do substrato, evitando descascamentos ao toque.',
+        'Diminuir a densidade de tinta por centímetro quadrado.'
+      ],
+      correctIndex: 2,
+      explanation: 'O primer em superfícies sem porosidade, como vidro e metal, faz uma ponte química que permite à tinta acrílica curada por radiação ultravioleta fixar-se sem se soltar com facilidade por abrasão ou umidade.'
+    }
+  },
+  {
+    id: 'id-laminacao-refile',
+    title: 'Acabamento, Refile de Precisão e Laminação',
+    sector: 'impressao-digital',
+    level: 'Iniciante',
+    time: '6h',
+    xp: 250,
+    desc: 'Técnicas de laminação de proteção contra raios solares UV e arranhões, prevenção de bolhas físicas e refile em mesa de corte pneumática para banners e adesivos.',
+    img: 'https://images.unsplash.com/photo-1541535650810-10d26f5c2ab3?auto=format&fit=crop&q=80&w=600',
+    progress: 0,
+    lessons: [
+      { id: '1', title: 'Ajuste de Pressão de Rolos em Laminadoras Industriais', duration: '20 min', completed: false },
+      { id: '2', title: 'Técnicas de Laminação a Frio vs. Laminação Térmica', duration: '30 min', completed: false },
+      { id: '3', title: 'Solda Eletrônica de Bainhas com Ar Quente para Banners', duration: '40 min', completed: false }
+    ],
+    quiz: {
+      question: 'Como evitar o surgimento de rugas e a inclusão indesejada de bolhas de ar ao aplicar um vinil de laminação transparente em plotagens de comunicação visual de grande formato?',
+      options: [
+        'Aumentar a temperatura do aquecedor para mais de 150°C instantaneamente.',
+        'Aplicar álcool líquido abundante sobre o adesivo e rolo.',
+        'Garantir paralelismo mecânico e ajuste correto de pressão igualitária nos eixos de rotação da calandra laminadora, mantendo a película sob tração suave.',
+        'Utilizar uma espátula de feltro em movimentos circulares rápidos sem firmeza.'
+      ],
+      correctIndex: 2,
+      explanation: 'A perfeita regulagem de pressão nas bordas dos cilindros de laminação, associada a uma tração uniforme na saída do rolo de revestimento, impede o engrupamento localizado da película adesiva.'
+    }
+  },
+  {
+    id: 'id-envelopamento-veicular',
+    title: 'Envelopamento Automotivo e Aplicação de Vinil',
+    sector: 'impressao-digital',
+    level: 'Avançado',
+    time: '14h',
+    xp: 550,
+    desc: 'Técnicas profissionais de envelopamento de veículos. Uso regulado do soprador térmico, eliminação de memória elástica de películas de vinil fundido, e cortes seguros com fitas Knifeless de precisão.',
+    img: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&q=80&w=600',
+    progress: 0,
+    lessons: [
+      { id: '1', title: 'Características de Películas de Vinil: Calandrado Monomérico, Polimérico vs. Cast', duration: '35 min', completed: false },
+      { id: '2', title: 'Tratamento de Curvaturas Profundas e Ponto de Quebra de Memória Térmica', duration: '40 min', completed: false },
+      { id: '3', title: 'Uso de Fitas Adesivas de Corte Knifeless para Preservar Pinturas Originais', duration: '45 min', completed: false }
+    ],
+    quiz: {
+      question: 'Qual o procedimento físico obrigatório para garantir que películas adesivas do tipo Cast revestidas em curvas complexas de lataria veicular não sofram retração e levantem nas canaletas com o tempo?',
+      options: [
+        'Molhar as canaletas com querosene antes da aplicação de vinis.',
+        'Realizar pós-aquecimento uniforme utilizando termômetro infravermelho de controle, alcançando de 85°C a 95°C para quebrar a memória molecular do filme estrutural.',
+        'Esticar o material ao máximo em temperatura ambiente sem aquecimento.',
+        'Aplicar adesivo instantâneo de contato em toda a extensão do parachoques.'
+      ],
+      correctIndex: 1,
+      explanation: 'Vinis moldáveis necessitam alcançar a temperatura crítica de pós-aquecimento (geralmente entre 85°C e 95°C, conforme marca). Esse calor altera definitivamente a disposição molecular do polímero, fixando o novo formato e evitando forças de retração mecânica.'
+    }
+  },
+  {
+    id: 'id-gerenciamento-cores',
+    title: 'Gerenciamento de Cores e Perfis ICC',
+    sector: 'impressao-digital',
+    level: 'Especialista',
+    time: '12h',
+    xp: 500,
+    desc: 'Criação de curvas de linearização para tintas corporativas, calibração contra escalas de tons Pantone com auxílio de espectrofotômetro, e ajuste de limites físicos de tinta no software RIP.',
+    img: 'https://images.unsplash.com/photo-1513542789411-b6a5d4f31634?auto=format&fit=crop&q=80&w=600',
+    progress: 0,
+    lessons: [
+      { id: '1', title: 'Fundamentos de Espectrofotometria e Cores L*a*b* na Indústria', duration: '40 min', completed: false },
+      { id: '2', title: 'Linearização Física de Cabeças de Plotters de Impressão', duration: '50 min', completed: false },
+      { id: '3', title: 'Construção de Perfis de Cores ICC com Alvos de Teste IT8/9.7', duration: '45 min', completed: false }
+    ],
+    quiz: {
+      question: 'No gerenciamento de cores industrial, qual a principal diferença de atuação conceitual entre a etapa de "Linearização" e a criação do "Perfil de Cor (ICC)" de um material no software RIP?',
+      options: [
+        'A linearização é feita apenas para mídias brilhosas; o perfil é exclusivo para envelopamentos foscos.',
+        'A linearização calibra a resposta física da passagem gradual de densidade de tinta em escalas de cinza de 0 a 100%; o perfil mapeia estatisticamente as gamas cromáticas máximas para prever a correspondência exata de tons de cor.',
+        'A linearização altera a velocidade física do motor do carro; o perfil mexe na viscosidade química solvente da cor preta.',
+        'Ambos se referem precisamente à mesma função, e mudar os parâmetros de um não afeta as propriedades mecânicas do outro.'
+      ],
+      correctIndex: 1,
+      explanation: 'A linearização garante que incrementos eletrônicos de 10% na lona reflitam fisicamente 10% de cobertura linear homogênea. Já o perfil de cor traduz matematicamente o gamut cromático limite do papel combinado com essa lona específica.'
+    }
+  },
+
+  // ==================== IMPRESSÃO 3D (5 Cursos) ====================
+  {
+    id: 'i3d-modelagem-fatiamento',
+    title: 'Fatiamento e Configuração no Cura/PrusaSlicer',
+    sector: 'impressao-3d',
+    level: 'Iniciante',
+    time: '8h',
+    xp: 300,
+    desc: 'Controle de parâmetros chaves de fatiamento: altura de camadas, porcentagem do miolo de infill, velocidade linear, ventiladores de resfriamento e suportes inteligentes.',
+    img: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&q=80&w=600',
+    progress: 0,
+    lessons: [
+      { id: '1', title: 'Fundamentos de Fatiadores: Cura vs PrusaSlicer vs Bambu Studio', duration: '25 min', completed: false },
+      { id: '2', title: 'Cálculo de Infill: Padrões Reticular, Giroide e Cúbico 3D', duration: '35 min', completed: false },
+      { id: '3', title: 'Parâmetros de Retração no Bico para Prevenir Delaminação e Fiapos (Stringing)', duration: '40 min', completed: false }
+    ],
+    quiz: {
+      question: 'Por que o padrão de preenchimento mecânico "Giroide" (Gyroid) é altamente elogiado em peças estruturais submetidas a esforços tridimensionais constantes?',
+      options: [
+        'Por ser o modelo que consome mais filamentos, resultando em peças pesadas nativamente.',
+        'Por prover resistência mecânica isótropa multidirecional uniforme, com rápida transição rotativa sem sobreposição de linhas e com alta drenagem de calor dinâmico.',
+        'Pois gasta menos da metade de energia da mesa aquecida.',
+        'Por extinguir de forma nativa e sem ventiladores o defeito de banding horizontal na impressora.'
+      ],
+      correctIndex: 1,
+      explanation: 'O padrão Giroide apresenta curvas em relevos alternados tridimensionalmente. Diferente de grades lineares quadradas que são fortes apenas axialmente, o giroide suporta cargas incidentes diretas de todos os lados igualmente.'
+    }
+  },
+  {
+    id: 'i3d-calibracao-fdm',
+    title: 'Impressão FDM: Calibração Mecânica e Extrusão',
+    sector: 'impressao-3d',
+    level: 'Intermediador',
+    time: '10h',
+    xp: 350,
+    desc: 'Medições e calibração fina de motores de avanço de passos das polias, retificação mecânica de eixos lineares, configuração do sensor do Z-Offset da mesa de impressão.',
+    img: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=600',
+    progress: 0,
+    lessons: [
+      { id: '1', title: 'Cálculo e Calibração Fina de E-Steps de Extrusoras Direct Drive e Bowden', duration: '30 min', completed: false },
+      { id: '2', title: 'Nivelamento Manual com Folha de Calibração e Criação de Malhas ABL', duration: '40 min', completed: false },
+      { id: '3', title: 'Retificação Física e Lubrificação dos Fusos Trapezoidais do Eixo Z', duration: '35 min', completed: false }
+    ],
+    quiz: {
+      question: 'Qual o sintoma técnico visual que indica que a distância física do bico extrusor com relação à cama de impressão (Z-offset) está muito próxima na primeira camada de impressão?',
+      options: [
+        'O bico se move acima e a fita derretida voa de forma randômica ou flutua sem adesão básica à mesa.',
+        'O filamento sai achatado de forma extrema e sem brilho, em canais semi-transparentes ou com estalos mecânicos audíveis da extrusora por contra-pressão insuportável no bloco de fusão.',
+        'A ventoinha do cabeçote reduz sua rotação eletrônica em tempo de execução.',
+        'O motor de passos do eixo horizontal Y trava bruscamente deixando marcas de queima de cor.'
+      ],
+      correctIndex: 1,
+      explanation: 'Ao posicionar a saída do bico encostada em demasia, a abertura física para a saída do plástico derretido fica restrita. O material tenta escapar gerando canais transparentes muito esparros e forçando a extrusora física, que estala de forma nítida pulando dentes no arame de tração.'
+    }
+  },
+  {
+    id: 'i3d-resina-msla',
+    title: 'Impressão MSLA/SLA em Resina: Segurança e Operação',
+    sector: 'impressao-3d',
+    level: 'Avançado',
+    time: '12h',
+    xp: 450,
+    desc: 'Uso seguro de fotopolímeros reativos, calibração exata de tempo de exposição por camada sob telas LCD monocromáticas, e segurança sanitária contra vapores nocivos baseados em resinas orgânicas líquidas.',
+    img: 'https://images.unsplash.com/photo-1541535650810-10d26f5c2ab3?auto=format&fit=crop&q=80&w=600',
+    progress: 0,
+    lessons: [
+      { id: '1', title: 'Uso Rigoroso de EPIs: Máscaras de Carvão Ativo VOC, Luvas de Nitrila e Óculos UV', duration: '30 min', completed: false },
+      { id: '2', title: 'Teste de Matriz de Validação de Exposição de Imagens de Padrão Micrométrico', duration: '35 min', completed: false },
+      { id: '3', title: 'Prevenção de Trincas Internas por Orientação Física de Modelos Ocos em Software Slicer', duration: '40 min', completed: false }
+    ],
+    quiz: {
+      question: 'Durante a lavagem de peças recém impressas em resina química MSLA, por que luvas de látex comuns devem ser severamente evitadas e substituídas por luvas de Nitrila de boa densidade?',
+      options: [
+        'Porque luvas de látex são caras no varejo médico comum.',
+        'Porque monômeros acrilados ativos das resinas líquidas penetram facilmente atravessando a barreira molecular do látex fino em poucos minutos de exposição mecânica contínua, causando dermatites severas e alergias de contato de longo prazo.',
+        'Porque o látex derrete a tela LCD monocromática em temperatura operacional fria.',
+        'Pois mídias de nitrila aderem de forma estática às bordas de metal da mesa.'
+      ],
+      correctIndex: 1,
+      explanation: 'Conforme literaturas de segurança química ocupacional de polímeros, resinas de impressão 3D permeiam a parede microporosa do látex, ao passo que as luvas de Nitrila oferecem resistência superior e duradoura aos monômeros perigosos.'
+    }
+  },
+  {
+    id: 'i3d-pos-processamento',
+    title: 'Pós-Processamento e Acabamento de Peças 3D',
+    sector: 'impressao-3d',
+    level: 'Intermediador',
+    time: '8h',
+    xp: 300,
+    desc: 'Sequenciamento seguro pós-impressão: banhos de diluição de resíduos com Álcool Isopropílico (IPA), cura UV complementar em câmaras de radiação, cura de filamentos em estufa de desumidificação, e técnicas de lixamento.',
+    img: 'https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&q=80&w=600',
+    progress: 0,
+    lessons: [
+      { id: '1', title: 'Ciclos Desumidificadores de Filamentos Higroscópicos (Nylon, PETG, TPU)', duration: '25 min', completed: false },
+      { id: '2', title: 'Remoção sem Marcas de Suportes FDM por Banho Térmico e Alicates de Bico Curvo', duration: '35 min', completed: false },
+      { id: '3', title: 'Aplicação de Primer PU, Massa Rápida e Polimento Molhado de Linhas de Camada', duration: '40 min', completed: false }
+    ],
+    quiz: {
+      question: 'O Nylon é considerado um material de engenharia 3D com propriedades mecânicas extraordinárias operando sob desgaste, porém extremamente "higroscópico". Qual o comportamento do material e o procedimento de pré-impressão indicado?',
+      options: [
+        'É higroscópico pois derrete com luz solar. Deve-se resfriar o material a menos de 0°C antes de rodar.',
+        'Ele atrai e absorve com extrema facilidade a umidade do ar ambiente. Deve ser desidratado em pequenas estufas térmicas por 6 a 12 horas a ~70°C antes de alimentar a impressora para evitar porosidades e sopros de vapor.',
+        'Higroscopia se refere ao comportamento de repelir graxas industriais. Deve-se untar o fio com silicone para rodar.',
+        'Indica que o filamento expande seu tamanho ao contato com o plástico ABS derretido.'
+      ],
+      correctIndex: 1,
+      explanation: 'Filamentos hidrófilos como Nylon, PETG e PVA absorvem vapor de água molecular da atmosfera local. No bloco de aquecimento, a água ferve virando vapor e estourando na saída, gerando porosidades microcríticas e falhas na coesão de camadas.'
+    }
+  },
+  {
+    id: 'i3d-engenharia-reversa',
+    title: 'Engenharia Reversa e Peças de Alta Resistência',
+    sector: 'impressao-3d',
+    level: 'Especialista',
+    time: '14h',
+    xp: 600,
+    desc: 'Replicação científica de engrenagens, polias e protótipos mecânicos reais. Seleção estrutural de filamentos industriais de engenharia avançados (ABS, ASA, PETG e Nylon Carbon) com simulação extrema de esforços físicos.',
     img: 'https://images.unsplash.com/photo-1535223289827-42f1e9919769?auto=format&fit=crop&q=80&w=600',
     progress: 0,
     lessons: [
-      { id: '1', title: 'Afiação e Escolhas de Eletrodo de Tungstênio de Lantanio', duration: '30 min', completed: false },
-      { id: '2', title: 'Tratamento de Proteção no Verso com Gás de Purga', duration: '40 min', completed: false },
-      { id: '3', title: 'Técnica de Toque Livre e Solda Autógena Perfeita', duration: '55 min', completed: false }
+      { id: '1', title: 'Análise de Peças Danificadas com Paquímetro Digital, Goniômetros e Raio de Curvaturas', duration: '40 min', completed: false },
+      { id: '2', title: 'Modelagem CAD Inteligente com Tolerância Dinâmica nos Eixos de Ajustes', duration: '45 min', completed: false },
+      { id: '3', title: 'Efeitos Climatológicos e Proteção UV Estendida por ASA e PETG', duration: '35 min', completed: false }
     ],
     quiz: {
-      question: 'Ao soldar letreiros em aço inox fino por processo TIG autógeno, qual gás de purga (escoamento) é indicado para proteger as costas do cordão de solda interno contra contaminações e oxidação "flor de enxofre"?',
+      question: 'Ao projetar uma engrenagem mecânica de reposição industrial que ficará exposta à luz solar e intempéries externas constantes, qual material plástico polímero deve ser selecionado devido a sua resistência estendida no campo físico a raios UV e impactos?',
       options: [
-        'Oxigênio Puro',
-        'Argônio Inerte fluído purificado',
-        'Ar comprimido desumidificado',
-        'Mistura de CO2 com Acetileno'
+        'PLA comum biodegradável básico.',
+        'ASA (Acrilonitrila Estireno Acrilato), pois possui aditivação de elastômeros acrílicos que previnem o ressecamento, amarelamento e rachaduras por radiação ultravioleta.',
+        'Resina de maquete clássica de cura rápida por luz fria.',
+        'Filamento flexível tipo TPU de alta maciez.'
       ],
       correctIndex: 1,
-      explanation: 'O argônio flui cobrindo fisicamente a raiz interna da chapa de inox para expulsar o oxigênio atmosférico. Sem a purga, o aço inox superaquecido nas costas do ponto reage violentamente com o oxigênio do ar, oxidando brutalmente resultando em uma solda porosa, quebradiça e esteticamente inviabilizada.'
+      explanation: 'O filamento ASA destaca-se da família do ABS por contar com resistência extrema ao ultravioleta. Não perde rigidez mecânica ou racha ao tempo por exposição à chuva e calor agressivo de fachadas externas.'
     }
   }
 ];
 
-export function EducaCV() {
+export function EducaCV({ initialTab }: { initialTab?: string }) {
+  const [notification, setNotification] = useState<{
+    message: string;
+    type: 'success' | 'error' | 'info';
+  } | null>(null);
+
+  const showNotification = (message: string, type: 'success' | 'error' | 'info' = 'success') => {
+    setNotification({ message, type });
+    setTimeout(() => {
+      setNotification(null);
+    }, 4500);
+  };
+
+  // Load and persist courses locally inside Korteck Flow system
+  const [courses, setCourses] = useState<Course[]>(() => {
+    const saved = localStorage.getItem('korteck_educa_courses');
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (e) {
+        console.error("Erro ao carregar cursos do localStorage:", e);
+      }
+    }
+    return VISUAL_COMMUNICATION_COURSES;
+  });
+
+  const saveCourses = (newCourses: Course[]) => {
+    setCourses(newCourses);
+    localStorage.setItem('korteck_educa_courses', JSON.stringify(newCourses));
+  };
+
   const [activeTab, setActiveTab] = useState('cursos');
+
+  useEffect(() => {
+    if (!initialTab) return;
+    if (initialTab === 'edu-cursos') {
+      setActiveTab('cursos');
+    } else if (initialTab === 'edu-trein') {
+      setActiveTab('cursos');
+    } else if (initialTab === 'edu-cert') {
+      setActiveTab('certifica');
+    } else if (initialTab === 'edu-carreira') {
+      setActiveTab('badges');
+    }
+  }, [initialTab]);
+
   const [selectedCategory, setSelectedCategory] = useState<string>('todos');
   const [searchQuery, setSearchQuery] = useState('');
   
@@ -358,6 +542,13 @@ export function EducaCV() {
   const [quizSubmitted, setQuizSubmitted] = useState(false);
   const [quizScore, setQuizScore] = useState<number | null>(null); // null if not completed/failed, 100 if correct
   
+  // Course/Quiz editing & AI state variables
+  const [isEditingMode, setIsEditingMode] = useState(false);
+  const [editingCourse, setEditingCourse] = useState<Course | null>(null);
+  const [isGeneratingAI, setIsGeneratingAI] = useState(false);
+  const [aiError, setAiError] = useState<string | null>(null);
+  const [aiSelectedLessonIndex, setAiSelectedLessonIndex] = useState<number>(0);
+
   // Local Training tracker & stats
   const [extraXP, setExtraXP] = useState(0);
   const [completedQuizzes, setCompletedQuizzes] = useState<string[]>([]);
@@ -365,7 +556,7 @@ export function EducaCV() {
   // Custom Certifications / Supervisor floor evaluation Form
   const [supervisorName, setSupervisorName] = useState('');
   const [candidateName, setCandidateName] = useState('Bruno Alves');
-  const [evaluationSector, setEvaluationSector] = useState('corte');
+  const [evaluationSector, setEvaluationSector] = useState('comunicacao-visual');
   const [criteria1, setCriteria1] = useState(3); // 1-5
   const [criteria2, setCriteria2] = useState(3); // 1-5
   const [criteria3, setCriteria3] = useState(3); // 1-5
@@ -385,7 +576,7 @@ export function EducaCV() {
   const handleCreateEvaluation = (e: React.FormEvent) => {
     e.preventDefault();
     if (!supervisorName.trim() || !candidateName.trim()) {
-      alert("Por favor, informe o nome do supervisor avaliador e o candidato antes de gerar a certificação.");
+      showNotification("Por favor, informe o nome do supervisor avaliador e o candidato antes de gerar a certificação.", "error");
       return;
     }
     
@@ -393,34 +584,41 @@ export function EducaCV() {
     const newCert = {
       id: Math.random().toString(36).substr(2, 9),
       candidate: candidateName,
-      sector: evaluationSector === 'corte' ? 'Setor de Corte (Router e Laser)' :
-              evaluationSector === 'montagem' ? 'Setor de Montagem e Fachada' :
-              evaluationSector === 'eletrica' ? 'Sistemas Elétricos e Luminosos' :
-              evaluationSector === 'pintura' ? 'Setor de Cabine de Pintura PU' : 'Serralheria e Soldagem MIG/TIG',
+      sector: evaluationSector === 'comunicacao-visual' ? 'Comunicação Visual' :
+              evaluationSector === 'impressao-digital' ? 'Impressão Digital' : 'Impressão 3D',
       score: finalScore,
       supervisor: supervisorName,
       date: new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' })
     };
     
     setCustomCertificates([newCert, ...customCertificates]);
-    alert(`Certificado Técnico de Visualização emitido para ${candidateName}! Média final de competência avaliada de ${finalScore}%.`);
+    showNotification(`Certificado Técnico de Visualização emitido para ${candidateName}! Média final de competência avaliada de ${finalScore}%.`, "success");
     setSupervisorName('');
     setEvaluationNotes('');
   };
 
   const getSectorMeta = (sector: string) => {
     switch(sector) {
-      case 'corte': return { label: 'Setor de Corte', icon: <Cpu size={14} />, color: 'bg-indigo-600 text-indigo-100 border-indigo-500/20' };
-      case 'montagem': return { label: 'Montagem / Acabamento', icon: <Layers size={14} />, color: 'bg-emerald-600 text-emerald-100 border-emerald-500/20' };
-      case 'eletrica': return { label: 'Elétrica / Luminosos', icon: <Lightbulb size={14} />, color: 'bg-amber-600 text-amber-500/10 border-amber-500/30' };
-      case 'pintura': return { label: 'Pintura Especial', icon: <Paintbrush size={14} />, color: 'bg-rose-600 text-rose-100 border-rose-500/20' };
-      case 'solda': return { label: 'Solda e Chapas', icon: <Flame size={14} />, color: 'bg-purple-600 text-purple-100 border-purple-500/20' };
-      default: return { label: 'Segurança Geral', icon: <Construction size={14} />, color: 'bg-zinc-600 text-zinc-100 border-zinc-500/20' };
+      case 'comunicacao-visual': return { label: 'Comunicação Visual', icon: <Layers size={14} />, color: 'bg-indigo-600/10 text-indigo-400 border border-indigo-500/20' };
+      case 'impressao-digital': return { label: 'Impressão Digital', icon: <Cpu size={14} />, color: 'bg-emerald-600/10 text-emerald-400 border border-emerald-500/20' };
+      case 'impressao-3d': return { label: 'Impressão 3D', icon: <Sparkles size={14} />, color: 'bg-amber-600/10 text-amber-500 border border-amber-500/30' };
+      default: return { label: 'Segurança Geral', icon: <Construction size={14} />, color: 'bg-zinc-600 text-zinc-100 border-none/20' };
     }
   };
 
-  // Filter logic
-  const filteredCourses = VISUAL_COMMUNICATION_COURSES.filter(c => {
+  // YouTube video link to iframe converter
+  const getYouTubeEmbedUrl = (url: string): string | null => {
+    if (!url) return null;
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+    const match = url.match(regExp);
+    if (match && match[2].length === 11) {
+      return `https://www.youtube.com/embed/${match[2]}?autoplay=0&rel=0`;
+    }
+    return null;
+  };
+
+  // Filter logic based on editable courses array
+  const filteredCourses = courses.filter(c => {
     const matchesCat = selectedCategory === 'todos' || c.sector === selectedCategory;
     const matchesSearch = c.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
                           c.desc.toLowerCase().includes(searchQuery.toLowerCase());
@@ -445,6 +643,156 @@ export function EducaCV() {
     };
     
     setCurrentPlayingCourse(updatedCourse);
+
+    // Save update inside courses list and sync localStorage
+    const updatedCourses = courses.map(c => c.id === courseId ? updatedCourse : c);
+    saveCourses(updatedCourses);
+  };
+
+  // Create empty course template for customization
+  const handleCreateNewCourse = () => {
+    const newId = 'treinamento-' + Math.random().toString(36).substr(2, 9);
+    const blankCourse: Course = {
+      id: newId,
+      title: 'Novo Treinamento de Capacitação',
+      sector: 'comunicacao-visual',
+      level: 'Iniciante',
+      time: '5h',
+      xp: 200,
+      desc: 'Descreva aqui os objetivos técnicos desse treinamento para a equipe...',
+      img: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=600',
+      progress: 0,
+      lessons: [
+        { id: '1', title: 'Introdução e Normas do Setor', duration: '15 min', completed: false, youtubeUrl: '' }
+      ],
+      quiz: {
+        question: 'Qual a principal prática de segurança industrial ao operar neste setor?',
+        options: [
+          'Usar corretamento os EPIs exigidos (como óculos, luvas e protetores).',
+          'Limpar os maquinários apenas com o motor ainda rotacionando.',
+          'Ignorar as sinalizações térmicas ou de bloqueio elétrico.',
+          'Aumentar o ritmo de avanço sem calibragem de fusos ou fresas.'
+        ],
+        correctIndex: 0,
+        explanation: 'A utilização rígida dos Equipamentos de Proteção Individual (EPI) é a maior barreira contra impactos de cavacos, choques elétricos ou riscos de corte no chão de fábrica.'
+      }
+    };
+    
+    setEditingCourse(blankCourse);
+    setIsEditingMode(true);
+  };
+
+  // Delete a customized course from list
+  const handleDeleteCourse = (courseId: string) => {
+    if (window.confirm("Deseja realmente excluir este treinamento de capacitação do sistema?")) {
+      const updated = courses.filter(c => c.id !== courseId);
+      saveCourses(updated);
+      if (currentPlayingCourse && currentPlayingCourse.id === courseId) {
+        setCurrentPlayingCourse(null);
+      }
+      showNotification("Treinamento excluído de forma definitiva.", "info");
+    }
+  };
+
+  // Compile and save modifications back to local state & storage
+  const handleSaveCourse = (updatedCourse: Course) => {
+    if (!updatedCourse.title.trim() || !updatedCourse.desc.trim()) {
+      showNotification("Por favor, preencha o título e a descrição do treinamento.", "error");
+      return;
+    }
+    if (updatedCourse.lessons.length === 0) {
+      showNotification("Adicione pelo menos uma lição ou vídeo-tutorial ao conteúdo programático.", "error");
+      return;
+    }
+
+    const index = courses.findIndex(c => c.id === updatedCourse.id);
+    let updatedCourses = [...courses];
+    
+    if (index >= 0) {
+      updatedCourses[index] = updatedCourse;
+    } else {
+      updatedCourses.push(updatedCourse);
+    }
+    
+    saveCourses(updatedCourses);
+
+    // Update active player details if currently selected
+    if (currentPlayingCourse && currentPlayingCourse.id === updatedCourse.id) {
+      // Recalculate progress based on updated lessons
+      const completedCount = updatedCourse.lessons.filter(l => l.completed).length;
+      const progress = Math.round((completedCount / updatedCourse.lessons.length) * 100);
+      setCurrentPlayingCourse({ ...updatedCourse, progress });
+    }
+
+    setIsEditingMode(false);
+    setEditingCourse(null);
+    showNotification(`Treinamento "${updatedCourse.title}" e seus respectivos testes foram estruturados com sucesso.`, "success");
+  };
+
+  // Make an AI call to generate and automatically format tests / quizzes or titles
+  const handleGenerateQuizWithAI = async () => {
+    if (!editingCourse) return;
+    
+    if (editingCourse.lessons.length === 0) {
+      showNotification("Adicione uma lição programática ao curso antes de ativar o gerador por Inteligência Artificial.", "error");
+      return;
+    }
+
+    const targetLesson = editingCourse.lessons[aiSelectedLessonIndex] || editingCourse.lessons[0];
+    
+    setIsGeneratingAI(true);
+    setAiError(null);
+
+    try {
+      const res = await fetch("/api/gemini/generate-training-quiz", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          courseTitle: editingCourse.title,
+          lessonTitle: targetLesson.title,
+          sector: editingCourse.sector,
+          level: editingCourse.level,
+          youtubeUrl: targetLesson.youtubeUrl || ""
+        })
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.error || "O servidor de IA retornou uma falha.");
+      }
+
+      const data = await res.json();
+
+      // Overwrite corresponding lesson title if suggested
+      const updatedLessons = [...editingCourse.lessons];
+      if (data.lessonTitle) {
+        updatedLessons[aiSelectedLessonIndex] = {
+          ...updatedLessons[aiSelectedLessonIndex],
+          title: data.lessonTitle
+        };
+      }
+
+      // Update quiz values with highly structured technical options
+      const updatedCourse: Course = {
+        ...editingCourse,
+        lessons: updatedLessons,
+        quiz: {
+          question: data.quizQuestion || editingCourse.quiz.question,
+          options: data.options || editingCourse.quiz.options,
+          correctIndex: typeof data.correctIndex === 'number' ? data.correctIndex : editingCourse.quiz.correctIndex,
+          explanation: data.explanation || editingCourse.quiz.explanation
+        }
+      };
+
+      setEditingCourse(updatedCourse);
+      showNotification("Sucesso! O agente de Inteligência Artificial preencheu a lição e estruturou perguntas inovadoras para o teste.", "success");
+    } catch (err: any) {
+      console.error(err);
+      setAiError(err.message || "Falha na conexão com o agente cognitivo.");
+      showNotification("A Inteligência Artificial KORTECK teve problemas temporários para formular o teste.", "error");
+    } finally {
+      setIsGeneratingAI(false);
+    }
   };
 
   const handleQuizSubmit = () => {
@@ -479,7 +827,7 @@ export function EducaCV() {
   return (
     <div className="p-4 md:p-8 space-y-6 md:space-y-8 animate-in fade-in duration-700 max-w-[1600px] mx-auto pb-24">
       {/* Mesh Education Header */}
-      <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-6 border-b border-white/5 pb-6">
+      <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-6 border-b border-transparent pb-6">
         <div className="space-y-2">
           <div className="flex items-center gap-3">
              <div className="p-2.5 bg-amber-600/10 rounded-xl border border-amber-500/20">
@@ -495,7 +843,7 @@ export function EducaCV() {
         </div>
 
         <div className="flex flex-wrap items-center gap-4">
-           <div className="hidden xl:flex items-center gap-10 px-8 border-r border-white/5 mr-3">
+           <div className="hidden xl:flex items-center gap-10 px-8 border-r border-transparent mr-3">
               <div className="text-right">
                  <p className="text-[9px] font-black text-zinc-600 uppercase tracking-widest mb-1">CERTIFICADOS IMPRESSOS</p>
                  <p className="text-xl font-black text-white italic tracking-tighter">{customCertificates.length} ATIVOS</p>
@@ -528,7 +876,7 @@ export function EducaCV() {
             <TabsTrigger 
               key={tab.id}
               value={tab.id}
-              className="data-[state=active]:bg-blue-600 data-[state=active]:text-white text-zinc-400 bg-zinc-900/60 hover:bg-zinc-800/80 hover:text-zinc-200 border border-zinc-800/85 data-[state=active]:border-blue-500 text-xs font-semibold px-4 h-11 rounded-xl transition-all whitespace-nowrap flex items-center justify-center gap-2.5 cursor-pointer shadow-sm relative"
+              className="data-[state=active]:bg-blue-600 data-[state=active]:text-white text-zinc-400 bg-zinc-900/60 hover:bg-zinc-800/80 hover:text-zinc-200 border-none/85 data-[state=active]:border-blue-500 text-xs font-semibold px-4 h-11 rounded-xl transition-all whitespace-nowrap flex items-center justify-center gap-2.5 cursor-pointer shadow-sm relative"
             >
               {tab.icon} {tab.label}
             </TabsTrigger>
@@ -538,7 +886,359 @@ export function EducaCV() {
         {/* 1. CURSOS DETALHADOS E ATIVAÇÕES */}
         <TabsContent value="cursos" className="mt-0 outline-none space-y-6">
           <AnimatePresence mode="wait">
-            {!currentPlayingCourse ? (
+            {isEditingMode && editingCourse ? (
+              <motion.div
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -15 }}
+                className="bg-white dark:bg-zinc-900 border-none rounded-3xl p-6 md:p-8 space-y-8 text-left text-zinc-300"
+              >
+                {/* Editor Header */}
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-transparent pb-4">
+                  <div className="space-y-1">
+                    <span className="text-[10px] font-black text-amber-500 uppercase tracking-widest font-mono">// PAINEL DE COORDENAÇÃO DE ENSINO KORTECK</span>
+                    <h2 className="text-2xl font-black text-white uppercase italic tracking-tight font-sans">
+                      Configurar Treinamento Técnico
+                    </h2>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      variant="ghost"
+                      onClick={() => {
+                        setIsEditingMode(false);
+                        setEditingCourse(null);
+                      }}
+                      className="text-zinc-400 hover:text-white uppercase text-[10px] font-black tracking-widest h-10 cursor-pointer"
+                    >
+                      Cancelar
+                    </Button>
+                    <Button
+                      onClick={() => handleSaveCourse(editingCourse)}
+                      className="bg-amber-600 hover:bg-amber-500 text-black font-black uppercase text-[10px] tracking-widest h-10 px-6 shrink-0 cursor-pointer"
+                    >
+                      Salvar Treinamento
+                    </Button>
+                  </div>
+                </div>
+
+                {/* Form Panels Grid */}
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                  {/* General settings (Left Column) */}
+                  <div className="lg:col-span-12 xl:col-span-7 space-y-6">
+                    <h3 className="text-sm font-black text-white uppercase tracking-wider border-b border-transparent pb-2">
+                      1. Informações do Curso
+                    </h3>
+                    
+                    <div className="space-y-4">
+                      <div className="space-y-1.5">
+                        <label className="text-[10px] font-black uppercase text-zinc-400 block">Título do Treinamento</label>
+                        <Input
+                          value={editingCourse.title}
+                          onChange={(e) => setEditingCourse({ ...editingCourse, title: e.target.value })}
+                          className="bg-black border-transparent text-xs text-white uppercase font-bold"
+                          placeholder="EX: Dobra e Montagem de Fachadas ACM"
+                        />
+                      </div>
+
+                      <div className="space-y-1.5">
+                        <label className="text-[10px] font-black uppercase text-zinc-400 block">Descrição do Curso</label>
+                        <textarea
+                          value={editingCourse.desc}
+                          onChange={(e) => setEditingCourse({ ...editingCourse, desc: e.target.value })}
+                          rows={3}
+                          className="w-full text-xs font-bold uppercase p-3 rounded-xl bg-black border-none text-white outline-none active:border-zinc-700 focus:border-zinc-700"
+                          placeholder="Descreva detalhadamente o que o operador aprenderá..."
+                        />
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div className="space-y-1.5">
+                          <label className="text-[10px] font-black uppercase text-zinc-400 block">Setor Industrial</label>
+                          <select
+                            value={editingCourse.sector}
+                            onChange={(e) => setEditingCourse({ ...editingCourse, sector: e.target.value as any })}
+                            className="w-full h-10 px-3 rounded-xl bg-black border-none text-xs text-white font-bold"
+                          >
+                            <option value="comunicacao-visual">Comunicação Visual</option>
+                            <option value="impressao-digital">Impressão Digital</option>
+                            <option value="impressao-3d">Impressão 3D</option>
+                          </select>
+                        </div>
+
+                        <div className="space-y-1.5">
+                          <label className="text-[10px] font-black uppercase text-zinc-400 block">Nível Técnico</label>
+                          <select
+                            value={editingCourse.level}
+                            onChange={(e) => setEditingCourse({ ...editingCourse, level: e.target.value as any })}
+                            className="w-full h-10 px-3 rounded-xl bg-black border-none text-xs text-white font-bold"
+                          >
+                            <option value="Iniciante">Iniciante</option>
+                            <option value="Intermediador">Intermediador</option>
+                            <option value="Avançado">Avançado</option>
+                            <option value="Especialista">Especialista</option>
+                          </select>
+                        </div>
+
+                        <div className="space-y-1.5">
+                          <label className="text-[10px] font-black uppercase text-zinc-400 block">XP e Carga Horária</label>
+                          <div className="flex gap-2">
+                            <Input
+                              type="number"
+                              value={editingCourse.xp}
+                              onChange={(e) => setEditingCourse({ ...editingCourse, xp: Number(e.target.value) })}
+                              className="bg-black border-transparent text-xs text-white font-black"
+                              placeholder="XP"
+                            />
+                            <Input
+                              value={editingCourse.time}
+                              onChange={(e) => setEditingCourse({ ...editingCourse, time: e.target.value })}
+                              className="bg-black border-transparent text-xs text-white font-black uppercase"
+                              placeholder="Carga (ex: 12h)"
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="space-y-1.5">
+                        <label className="text-[10px] font-black uppercase text-zinc-400 block">URL da Imagem Capa</label>
+                        <Input
+                          value={editingCourse.img}
+                          onChange={(e) => setEditingCourse({ ...editingCourse, img: e.target.value })}
+                          className="bg-black border-transparent text-xs text-white font-medium"
+                          placeholder="https://images.unsplash.com/photo-..."
+                        />
+                      </div>
+                    </div>
+
+                    {/* Section 2: Programmatic Lesson Content */}
+                    <div className="space-y-4 pt-4">
+                      <div className="flex items-center justify-between border-b border-transparent pb-2">
+                        <h3 className="text-sm font-black text-white uppercase tracking-wider">
+                          2. Conteúdo Programático &amp; Tutoriais (Aulas)
+                        </h3>
+                        <Button
+                          type="button"
+                          onClick={() => {
+                            const newLessonId = (editingCourse.lessons.length + 1).toString();
+                            const newLessons = [
+                              ...editingCourse.lessons,
+                              { id: newLessonId, title: 'Nova Lição Técnica', duration: '20 min', completed: false, youtubeUrl: '' }
+                            ];
+                            setEditingCourse({ ...editingCourse, lessons: newLessons });
+                          }}
+                          className="bg-zinc-900 hover:bg-zinc-850 text-white uppercase text-[9px] font-black tracking-widest h-8 px-3 cursor-pointer"
+                        >
+                          + Adicionar Aula
+                        </Button>
+                      </div>
+
+                      <div className="space-y-3 max-h-[420px] overflow-y-auto pr-2 scrollbar-thin">
+                        {editingCourse.lessons.map((lesson, idx) => (
+                          <div
+                            key={lesson.id}
+                            className="bg-black/40 border-none rounded-xl p-4 space-y-3"
+                          >
+                            <div className="flex items-center justify-between">
+                              <span className="text-[10px] font-black text-amber-500 font-mono">LIÇÃO #{idx + 1}</span>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  const updated = editingCourse.lessons.filter((_, lIdx) => lIdx !== idx);
+                                  setEditingCourse({ ...editingCourse, lessons: updated });
+                                }}
+                                className="text-red-500 hover:text-red-400 text-[9px] uppercase font-black tracking-widest cursor-pointer"
+                              >
+                                Excluir Aula
+                              </button>
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-12 gap-3">
+                              <div className="md:col-span-8 space-y-1.5">
+                                <label className="text-[9px] uppercase font-bold text-zinc-400 block">Título da Lição</label>
+                                <Input
+                                  value={lesson.title}
+                                  onChange={(e) => {
+                                    const updated = [...editingCourse.lessons];
+                                    updated[idx] = { ...updated[idx], title: e.target.value };
+                                    setEditingCourse({ ...editingCourse, lessons: updated });
+                                  }}
+                                  className="bg-black border-transparent text-xs text-white font-bold"
+                                />
+                              </div>
+                              <div className="md:col-span-4 space-y-1.5">
+                                <label className="text-[9px] uppercase font-bold text-zinc-400 block">Duração (Texto)</label>
+                                <Input
+                                  value={lesson.duration}
+                                  onChange={(e) => {
+                                    const updated = [...editingCourse.lessons];
+                                    updated[idx] = { ...updated[idx], duration: e.target.value };
+                                    setEditingCourse({ ...editingCourse, lessons: updated });
+                                  }}
+                                  className="bg-black border-transparent text-xs text-white font-bold"
+                                />
+                              </div>
+                            </div>
+
+                            <div className="space-y-1.5">
+                              <label className="text-[9px] uppercase font-bold text-zinc-400 block">Link de Vídeo do YouTube (Treinamento)</label>
+                              <Input
+                                value={lesson.youtubeUrl || ''}
+                                onChange={(e) => {
+                                  const updated = [...editingCourse.lessons];
+                                  updated[idx] = { ...updated[idx], youtubeUrl: e.target.value };
+                                  setEditingCourse({ ...editingCourse, lessons: updated });
+                                }}
+                                className="bg-black border-transparent text-xs text-zinc-300 font-mono"
+                                placeholder="E.G: https://www.youtube.com/watch?v=ABC123xyz"
+                              />
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Teste de Proficiência & AI (Right Column) */}
+                  <div className="lg:col-span-12 xl:col-span-5 space-y-6">
+                    <h3 className="text-sm font-black text-white uppercase tracking-wider border-b border-transparent pb-2">
+                      3. Teste de Proficiência Técnica
+                    </h3>
+
+                    {/* AI Generator Integration Panel */}
+                    <div className="p-4 rounded-2xl border border-amber-500/20 bg-amber-500/5 space-y-4">
+                      <div className="flex items-center gap-2">
+                        <Sparkles className="text-amber-500 animate-pulse shrink-0" size={18} />
+                        <h4 className="text-xs font-black text-white uppercase tracking-wider italic">
+                          Assistente de Capacitação com IA
+                        </h4>
+                      </div>
+                      
+                      <p className="text-[11px] text-zinc-400 leading-normal font-sans">
+                        Nossa IA criará perguntas técnicas do setor de comunicação visual sob medida. Selecione uma das lições ao lado como contexto e deixe a IA formular tudo!
+                      </p>
+
+                      <div className="space-y-3 pt-1">
+                        <div className="space-y-1.5">
+                          <label className="text-[9px] uppercase font-black tracking-wider text-zinc-400 block">Focar na Aula Contexto:</label>
+                          <select
+                            value={aiSelectedLessonIndex}
+                            onChange={(e) => setAiSelectedLessonIndex(Number(e.target.value))}
+                            className="w-full h-10 px-3 rounded-lg bg-black border-none text-xs text-white font-black"
+                          >
+                            {editingCourse.lessons.map((l, i) => (
+                              <option key={l.id} value={i}>
+                                Aula {i + 1}: {l.title || "Sem título"}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+
+                        <Button
+                          type="button"
+                          disabled={isGeneratingAI}
+                          onClick={handleGenerateQuizWithAI}
+                          className="w-full bg-amber-500 hover:bg-amber-600 text-black text-[10px] font-black uppercase tracking-wider h-11 cursor-pointer"
+                        >
+                          {isGeneratingAI ? "Gerando Teste Operacional Sênior..." : "✨ Gerar Pergunta e Título com IA"}
+                        </Button>
+
+                        {aiError && (
+                          <div className="text-[10px] text-red-400 bg-red-950/20 border border-red-500/10 p-2 rounded-lg font-mono">
+                            {aiError}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Manual Correction Fields */}
+                    <div className="space-y-4 pt-2">
+                      <div className="space-y-1.5">
+                        <label className="text-[10px] font-black uppercase text-zinc-400 block">Pergunta do Teste</label>
+                        <textarea
+                          value={editingCourse.quiz.question}
+                          onChange={(e) => {
+                            const updatedQuiz = { ...editingCourse.quiz, question: e.target.value };
+                            setEditingCourse({ ...editingCourse, quiz: updatedQuiz });
+                          }}
+                          rows={3}
+                          className="w-full text-xs font-bold uppercase p-3 rounded-xl bg-black border-none text-white outline-none active:border-zinc-700"
+                          placeholder="Escreva a hipótese operacional real..."
+                        />
+                      </div>
+
+                      {/* Options listing */}
+                      <div className="space-y-2.5">
+                        <label className="text-[10px] font-black uppercase text-zinc-400 block">Alternativas do Teste</label>
+                        {editingCourse.quiz.options.map((opt, oIdx) => (
+                          <div key={oIdx} className="flex items-center gap-2">
+                            <span className="text-zinc-600 font-mono font-black text-xs shrink-0">{String.fromCharCode(65 + oIdx)}.</span>
+                            <Input
+                              value={opt}
+                              onChange={(e) => {
+                                const newOpts = [...editingCourse.quiz.options];
+                                newOpts[oIdx] = e.target.value;
+                                setEditingCourse({
+                                  ...editingCourse,
+                                  quiz: { ...editingCourse.quiz, options: newOpts }
+                                });
+                              }}
+                              className="bg-black border-transparent text-xs text-white"
+                              placeholder={`Alternativa ${String.fromCharCode(65 + oIdx)}`}
+                            />
+                          </div>
+                        ))}
+                      </div>
+
+                      <div className="space-y-1.5">
+                        <label className="text-[10px] font-black uppercase text-zinc-400 block">Índice da Alternativa Correta</label>
+                        <select
+                          value={editingCourse.quiz.correctIndex}
+                          onChange={(e) => {
+                            setEditingCourse({
+                              ...editingCourse,
+                              quiz: { ...editingCourse.quiz, correctIndex: Number(e.target.value) }
+                            });
+                          }}
+                          className="w-full h-10 px-3 rounded-xl bg-black border-none text-xs text-white font-bold"
+                        >
+                          <option value={0}>A (Alternativa 1)</option>
+                          <option value={1}>B (Alternativa 2)</option>
+                          <option value={2}>C (Alternativa 3)</option>
+                          <option value={3}>D (Alternativa 4)</option>
+                        </select>
+                      </div>
+
+                      <div className="space-y-1.5">
+                        <label className="text-[10px] font-black uppercase text-zinc-400 block">Explicação Didática de Aprendizado</label>
+                        <textarea
+                          value={editingCourse.quiz.explanation}
+                          onChange={(e) => {
+                            const updatedQuiz = { ...editingCourse.quiz, explanation: e.target.value };
+                            setEditingCourse({ ...editingCourse, quiz: updatedQuiz });
+                          }}
+                          rows={3}
+                          className="w-full text-xs font-bold uppercase p-3 rounded-xl bg-black border-none text-white outline-none active:border-zinc-700"
+                          placeholder="Explique tecnicamente por que essa alternativa é a correta..."
+                        />
+                      </div>
+                    </div>
+
+                    {/* Delete training block if needed */}
+                    {courses.some(c => c.id === editingCourse.id) && (
+                      <div className="pt-6 border-t border-transparent text-right">
+                        <button
+                          type="button"
+                          onClick={() => handleDeleteCourse(editingCourse.id)}
+                          className="text-red-500 hover:text-red-400 text-[10px] uppercase font-black tracking-widest cursor-pointer"
+                        >
+                          Excluir este Treinamento do Sistema
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </motion.div>
+            ) : !currentPlayingCourse ? (
               <motion.div 
                 initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -546,22 +1246,20 @@ export function EducaCV() {
                 className="space-y-6"
               >
                 {/* Sector Tabs Bar Filters */}
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-[#0c0c10] border border-white/5 p-3 rounded-2xl">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 zinc-900 border-none p-3 rounded-2xl">
                   {/* Category badgess */}
                   <div className="flex flex-wrap items-center gap-2">
                     {[
                       { id: 'todos', label: 'Ver Todos' },
-                      { id: 'corte', label: 'Corte (Router & Laser)' },
-                      { id: 'montagem', label: 'Montagem' },
-                      { id: 'eletrica', label: 'Elétrica / LED' },
-                      { id: 'pintura', label: 'Pintura' },
-                      { id: 'solda', label: 'Soldagem / Serralheria' }
+                      { id: 'comunicacao-visual', label: 'Comunicação Visual' },
+                      { id: 'impressao-digital', label: 'Impressão Digital' },
+                      { id: 'impressao-3d', label: 'Impressão 3D' }
                     ].map(cat => (
                       <button
                         key={cat.id}
                         onClick={() => setSelectedCategory(cat.id)}
                         className={cn(
-                          "px-4 h-9 rounded-xl text-xs font-black uppercase tracking-tight transition-all border border-transparent",
+                          "px-4 h-9 rounded-xl text-xs font-black uppercase tracking-tight transition-all border-none",
                           selectedCategory === cat.id 
                             ? "bg-amber-600 text-white shadow-md shadow-amber-600/10 border-amber-500/20 font-bold"
                             : "bg-zinc-900/50 text-zinc-400 hover:text-white hover:bg-zinc-800 border-zinc-800/85"
@@ -572,15 +1270,23 @@ export function EducaCV() {
                     ))}
                   </div>
 
-                  {/* Search box for visual filter */}
-                  <div className="relative w-full md:w-80">
-                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-600 animate-pulse" size={14} />
-                     <Input 
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        className="bg-black/40 border-white/10 pl-9 h-10 w-full text-[10px] text-white uppercase font-black tracking-widest placeholder:text-zinc-600 placeholder:normal-case font-mono" 
-                        placeholder="Filtrar treinamentos..." 
-                     />
+                  {/* Action group with Search & Creator */}
+                  <div className="flex items-center gap-3 w-full md:w-auto flex-wrap sm:flex-nowrap">
+                     <div className="relative w-full md:w-64">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-600 animate-pulse" size={14} />
+                        <Input 
+                           value={searchQuery}
+                           onChange={(e) => setSearchQuery(e.target.value)}
+                           className="bg-black/40 border-transparent pl-9 h-10 w-full text-[10px] text-white uppercase font-black tracking-widest placeholder:text-zinc-600 placeholder:normal-case font-mono" 
+                           placeholder="Filtrar treinamentos..." 
+                        />
+                     </div>
+                     <Button
+                       onClick={handleCreateNewCourse}
+                       className="bg-amber-600 hover:bg-amber-500 text-black font-black text-[10px] uppercase tracking-wider h-10 px-4 whitespace-nowrap flex items-center gap-1.5 cursor-pointer"
+                     >
+                       + Novo Treinamento
+                     </Button>
                   </div>
                 </div>
 
@@ -601,7 +1307,7 @@ export function EducaCV() {
                             setQuizSubmitted(false);
                             setQuizScore(null);
                           }}
-                          className="bg-[#0c0c10] border-white/5 overflow-hidden group hover:border-amber-500/20 transition-all cursor-pointer flex flex-col justify-between h-full relative"
+                          className="bg-white dark:bg-zinc-900 border-transparent overflow-hidden group hover:border-amber-500/20 transition-all cursor-pointer flex flex-col justify-between h-full relative"
                         >
                           <div>
                             <div className="aspect-video relative overflow-hidden">
@@ -647,7 +1353,7 @@ export function EducaCV() {
                             </div>
 
                             {/* bottom actions info */}
-                            <div className="flex justify-between items-center pt-3 border-t border-white/5">
+                            <div className="flex justify-between items-center pt-3 border-t border-transparent">
                               <div className="flex items-center gap-1.5">
                                 <Zap size={12} className="text-amber-500" />
                                 <span className="text-[10px] font-black text-amber-500 tracking-tight italic font-mono">
@@ -682,7 +1388,7 @@ export function EducaCV() {
                 {/* Center Lecture area */}
                 <div className="xl:col-span-8 space-y-6">
                   {/* Player header */}
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-center justify-between flex-wrap gap-4">
                     <Button 
                       variant="ghost" 
                       onClick={() => { setCurrentPlayingCourse(null); }}
@@ -690,9 +1396,21 @@ export function EducaCV() {
                     >
                       <ArrowRight size={14} className="rotate-180" /> Voltar ao Catálogo
                     </Button>
-                    <Badge className={cn("border-0 font-black px-3.5 py-1.5 text-[9px] tracking-widest uppercase", getSectorMeta(currentPlayingCourse.sector).color)}>
-                      {getSectorMeta(currentPlayingCourse.sector).label}
-                    </Badge>
+                    
+                    <div className="flex items-center gap-2">
+                      <Button
+                        onClick={() => {
+                          setEditingCourse(currentPlayingCourse);
+                          setIsEditingMode(true);
+                        }}
+                        className="bg-zinc-900 hover:bg-zinc-800 text-amber-500 border-none hover:border-amber-500/20 text-[10px] font-black uppercase tracking-widest h-9 px-4 flex items-center gap-2"
+                      >
+                        <Wrench size={12} /> Editar Curso &amp; Teste
+                      </Button>
+                      <Badge className={cn("border-0 font-black px-3.5 py-1.5 text-[9px] tracking-widest uppercase", getSectorMeta(currentPlayingCourse.sector).color)}>
+                        {getSectorMeta(currentPlayingCourse.sector).label}
+                      </Badge>
+                    </div>
                   </div>
 
                   {/* Simulated Visual Screen Player */}
@@ -706,6 +1424,29 @@ export function EducaCV() {
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/20" />
                       
+                      {/* Embed real YouTube Video context if playing and available */}
+                      {isPlaying && getYouTubeEmbedUrl(currentPlayingCourse.lessons[activeLessonIndex]?.youtubeUrl || '') ? (
+                        <div className="absolute inset-0 w-full h-full z-20">
+                          <iframe
+                            src={getYouTubeEmbedUrl(currentPlayingCourse.lessons[activeLessonIndex]?.youtubeUrl || '') + "?autoplay=1"}
+                            className="w-full h-full border-0"
+                            title={currentPlayingCourse.lessons[activeLessonIndex]?.title}
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowFullScreen
+                            referrerPolicy="no-referrer"
+                          />
+                          <div className="absolute top-2 right-2 z-30 opacity-80 hover:opacity-100 transition-opacity">
+                            <Button 
+                              onClick={() => setIsPlaying(false)}
+                              size="sm"
+                              className="bg-black/90 hover:bg-zinc-900 border-none text-white text-[9px] font-black tracking-widest uppercase h-8 px-4 flex items-center gap-1.5"
+                            >
+                              Parar Vídeo
+                            </Button>
+                          </div>
+                        </div>
+                      ) : null}
+
                       {/* Interactive overlay based on play state */}
                       <div className="absolute z-10 text-center px-12 max-w-lg">
                         {!isPlaying ? (
@@ -746,7 +1487,7 @@ export function EducaCV() {
                              <Button 
                                onClick={() => setIsPlaying(false)}
                                variant="outline" 
-                               className="border-white/10 text-white hover:bg-white/5 h-10 px-6 text-[9px] font-black tracking-widest uppercase"
+                               className="border-transparent text-white hover:bg-white/5 h-10 px-6 text-[9px] font-black tracking-widest uppercase"
                              >
                                  Pausar Aula
                              </Button>
@@ -756,14 +1497,14 @@ export function EducaCV() {
 
                       {/* Course bottom progress line inside player */}
                       <div className="absolute bottom-4 left-6 right-6 flex items-center justify-between z-10 text-[10px] text-zinc-400 font-bold font-mono">
-                         <span className="bg-black/70 px-2.5 py-1 rounded border border-white/5 uppercase">Aula {activeLessonIndex + 1} de {currentPlayingCourse.lessons.length}</span>
+                         <span className="bg-black/70 px-2.5 py-1 rounded border-none uppercase">Aula {activeLessonIndex + 1} de {currentPlayingCourse.lessons.length}</span>
                          <span className="bg-amber-600 font-black text-black px-2 py-1 rounded">VÍDEO HD 1080P // ATIVO</span>
                       </div>
                     </div>
                   </Card>
 
                   {/* Course Details Text section */}
-                  <div className="bg-[#0c0c10] border border-white/5 rounded-2xl p-6 md:p-8 space-y-4">
+                  <div className="bg-white dark:bg-zinc-900 border-none rounded-2xl p-6 md:p-8 space-y-4">
                      <div className="flex flex-wrap items-center justify-between gap-4">
                         <div className="space-y-1">
                            <span className="text-[9px] text-zinc-500 font-mono uppercase tracking-widest">Currículo Profissional Realizado pela Diretoria Industrial</span>
@@ -776,7 +1517,7 @@ export function EducaCV() {
                      </div>
                      <p className="text-zinc-400 text-sm leading-relaxed">{currentPlayingCourse.desc}</p>
                      
-                     <div className="p-4 rounded-xl border border-white/5 bg-white/[0.01] flex items-center gap-3">
+                     <div className="p-4 rounded-xl border-none bg-white/[0.01] flex items-center gap-3">
                         <Info size={16} className="text-amber-500 shrink-0" />
                         <p className="text-xs text-zinc-500 leading-normal">
                            Assista ao vídeo para responder ao quiz de capacitação. Acertar o quiz concede o bônus de <strong>{currentPlayingCourse.xp} XP</strong> para seu perfil e atualiza sua pontuação dentro do Hall de Rankings industriais DHO.
@@ -788,8 +1529,8 @@ export function EducaCV() {
                 {/* Right Side: Chapter check and sector Quiz Evaluator */}
                 <div className="xl:col-span-4 space-y-6">
                   {/* Playlist Lectures check */}
-                  <Card className="bg-[#0c0c10] border-white/5">
-                    <CardHeader className="border-b border-white/5 pb-4 bg-white/[0.01]">
+                  <Card className="bg-white dark:bg-zinc-900 border-transparent">
+                    <CardHeader className="border-b border-transparent pb-4 bg-white/[0.01]">
                        <CardTitle className="text-xs font-black text-white uppercase tracking-widest italic flex items-center gap-2">
                           <BookOpen size={14} className="text-amber-500" /> Conteúdo Curricular
                        </CardTitle>
@@ -840,13 +1581,13 @@ export function EducaCV() {
                   </Card>
 
                   {/* Interactive Quiz container */}
-                  <Card className="bg-[#0c0c10] border-white/5">
-                     <CardHeader className="border-b border-white/5 pb-4 bg-white/[0.01]">
+                  <Card className="bg-white dark:bg-zinc-900 border-transparent">
+                     <CardHeader className="border-b border-transparent pb-4 bg-white/[0.01]">
                         <div className="flex items-center justify-between">
                            <CardTitle className="text-xs font-black text-white uppercase tracking-widest italic flex items-center gap-2">
                               <Sparkles size={14} className="text-amber-500" /> Teste de Proficiência
                            </CardTitle>
-                           <Badge variant="outline" className="border-white/10 text-[9px] font-black uppercase text-zinc-500">
+                           <Badge variant="outline" className="border-transparent text-[9px] font-black uppercase text-zinc-500">
                              DHO Avalia
                            </Badge>
                         </div>
@@ -866,7 +1607,7 @@ export function EducaCV() {
                                "w-full text-left p-3.5 rounded-xl border text-xs font-bold transition-all leading-relaxed",
                                userSelectedOption === oIdx
                                  ? "bg-amber-600/10 border-amber-500 text-white"
-                                 : "bg-black/50 border-white/5 text-zinc-400 hover:bg-zinc-900/60 hover:text-white",
+                                 : "bg-black/50 border-transparent text-zinc-400 hover:bg-zinc-900/60 hover:text-white",
                                quizSubmitted && oIdx === currentPlayingCourse.quiz.correctIndex
                                  ? "bg-emerald-950/40 border-emerald-500/80 text-emerald-400"
                                  : "",
@@ -922,7 +1663,7 @@ export function EducaCV() {
                            <Button 
                              onClick={handleResetQuiz}
                              variant="outline"
-                             className="w-full border-white/5 text-zinc-400 hover:text-white h-12 text-xs font-black uppercase tracking-widest flex items-center justify-center gap-2"
+                             className="w-full border-transparent text-zinc-400 hover:text-white h-12 text-xs font-black uppercase tracking-widest flex items-center justify-center gap-2"
                            >
                               <RotateCcw size={14} /> Refazer Teste
                            </Button>
@@ -941,8 +1682,8 @@ export function EducaCV() {
            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
               {/* Floor evaluation manual Form */}
               <div className="lg:col-span-7">
-                 <Card className="bg-[#0c0c10] border-white/5 p-6 md:p-8 space-y-6">
-                    <div className="space-y-1.5 border-b border-white/5 pb-4">
+                 <Card className="bg-white dark:bg-zinc-900 border-transparent p-6 md:p-8 space-y-6">
+                    <div className="space-y-1.5 border-b border-transparent pb-4">
                        <h3 className="text-lg font-black text-white uppercase italic tracking-tighter">
                           Ficha de Avaliação Prática no Chão de Fábrica
                        </h3>
@@ -958,7 +1699,7 @@ export function EducaCV() {
                              <Input 
                                 value={supervisorName}
                                 onChange={(e) => setSupervisorName(e.target.value)}
-                                className="bg-black border-white/5 text-xs text-white uppercase font-bold" 
+                                className="bg-black border-transparent text-xs text-white uppercase font-bold" 
                                 placeholder="E.G. ADAMS LEANDRO" 
                              />
                           </div>
@@ -968,7 +1709,7 @@ export function EducaCV() {
                              <select
                                 value={candidateName}
                                 onChange={(e) => setCandidateName(e.target.value)}
-                                className="w-full h-10 px-3 rounded-lg bg-black border border-white/5 text-xs text-white uppercase font-bold"
+                                className="w-full h-10 px-3 rounded-lg bg-black border-none text-xs text-white uppercase font-bold"
                              >
                                 <option value="Bruno Alves">Bruno Alves (Corte CNC)</option>
                                 <option value="Marcos Paulo">Marcos Paulo (Montador)</option>
@@ -983,11 +1724,9 @@ export function EducaCV() {
                           <label className="text-[9px] font-black uppercase tracking-widest text-zinc-500 font-bold">Setor Operativo Avaliado</label>
                           <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                              {[
-                               { id: 'corte', label: 'Corte (CNC/Laser)' },
-                               { id: 'montagem', label: 'CV Montagem' },
-                               { id: 'eletrica', label: 'Elétrica LED' },
-                               { id: 'pintura', label: 'Pintura Especial' },
-                               { id: 'solda', label: 'Serralheria / Solda' }
+                               { id: 'comunicacao-visual', label: 'Comunicação Visual' },
+                               { id: 'impressao-digital', label: 'Impressão Digital' },
+                               { id: 'impressao-3d', label: 'Impressão 3D' }
                              ].map((sec) => (
                                <button
                                  key={sec.id}
@@ -997,7 +1736,7 @@ export function EducaCV() {
                                    "py-3 rounded-xl border text-[10px] uppercase font-black transition-all",
                                    evaluationSector === sec.id
                                      ? "bg-amber-600/20 border-amber-500 text-amber-400"
-                                     : "bg-black/40 border-white/5 text-zinc-400 hover:text-white"
+                                     : "bg-black/40 border-transparent text-zinc-400 hover:text-white"
                                  )}
                                >
                                  {sec.label}
@@ -1007,8 +1746,8 @@ export function EducaCV() {
                        </div>
 
                        {/* Evaluation Criteria Sliders */}
-                       <div className="p-5 rounded-2xl border border-white/5 bg-white/[0.01] space-y-4">
-                          <h4 className="text-[10px] font-black text-amber-500 uppercase tracking-widest italic pb-2 border-b border-white/5">Critérios de Avaliação Prática (1 a 5 estrelas)</h4>
+                       <div className="p-5 rounded-2xl border-none bg-white/[0.01] space-y-4">
+                          <h4 className="text-[10px] font-black text-amber-500 uppercase tracking-widest italic pb-2 border-b border-transparent">Critérios de Avaliação Prática (1 a 5 estrelas)</h4>
                           
                           <div className="space-y-4">
                              {[
@@ -1044,7 +1783,7 @@ export function EducaCV() {
                              onChange={(e) => setEvaluationNotes(e.target.value)}
                              rows={3}
                              placeholder="Destaque pontos técnicos apurados na auditoria presencial nos painéis, fontes LED, de segurança ou acabamentos ..."
-                             className="w-full text-xs font-bold uppercase p-3 rounded-xl bg-black border border-white/5 text-white active:border-zinc-700 focus:border-zinc-700 outline-none"
+                             className="w-full text-xs font-bold uppercase p-3 rounded-xl bg-black border-none text-white active:border-zinc-700 focus:border-zinc-700 outline-none"
                           />
                        </div>
 
@@ -1086,7 +1825,7 @@ export function EducaCV() {
                                </div>
                             </div>
 
-                            <div className="flex justify-between items-center text-[9px] font-bold uppercase text-zinc-650 pt-4 border-t border-white/5 tracking-wider">
+                            <div className="flex justify-between items-center text-[9px] font-bold uppercase text-zinc-650 pt-4 border-t border-transparent tracking-wider">
                                <span>Resp: <strong className="text-zinc-400">{cert.supervisor}</strong></span>
                                <span>Emitido em {cert.date}</span>
                             </div>
@@ -1103,8 +1842,8 @@ export function EducaCV() {
            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 text-left">
               {/* Leaderboard stats */}
               <div className="lg:col-span-8">
-                 <Card className="bg-[#0c0c10] border-white/5 overflow-hidden">
-                    <CardHeader className="border-b border-white/5 pb-4 bg-white/[0.01]">
+                 <Card className="bg-white dark:bg-zinc-900 border-transparent overflow-hidden">
+                    <CardHeader className="border-b border-transparent pb-4 bg-white/[0.01]">
                        <div className="flex justify-between items-center">
                           <div>
                              <CardTitle className="text-xs font-black text-white uppercase tracking-[0.2em] italic">Ranqueamento de Produtividade Técnica</CardTitle>
@@ -1128,7 +1867,7 @@ export function EducaCV() {
                                   </span>
 
                                   <div className="flex items-center gap-3">
-                                     <div className="w-10 h-10 rounded-full bg-zinc-800 flex items-center justify-center text-white border border-white/10 overflow-hidden font-bold">
+                                     <div className="w-10 h-10 rounded-full bg-zinc-800 flex items-center justify-center text-white border-none overflow-hidden font-bold">
                                         <img src={`https://i.pravatar.cc/100?u=trainee-${user.avatar}`} alt={user.name} referrerPolicy="no-referrer" />
                                      </div>
                                      <div>
@@ -1154,8 +1893,8 @@ export function EducaCV() {
 
               {/* gamification goals panel */}
               <div className="lg:col-span-4 space-y-6">
-                 <Card className="bg-[#0c0c10] border-white/5 p-6 space-y-6">
-                    <h4 className="text-lg font-black text-white uppercase italic tracking-tighter border-b border-white/5 pb-3">Objetivos Ativos de Time</h4>
+                 <Card className="bg-white dark:bg-zinc-900 border-transparent p-6 space-y-6">
+                    <h4 className="text-lg font-black text-white uppercase italic tracking-tighter border-b border-transparent pb-3">Objetivos Ativos de Time</h4>
                     
                     <div className="space-y-5">
                        {[
@@ -1194,8 +1933,8 @@ export function EducaCV() {
 
         {/* 4. NR COMPLIANCE OBRIGATÓRIOS */}
         <TabsContent value="cursos-grade" className="mt-0 outline-none space-y-6 text-left">
-           <Card className="bg-[#0c0c10] border-white/5 p-6 md:p-8">
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-white/5 pb-4 mb-6">
+           <Card className="bg-white dark:bg-zinc-900 border-transparent p-6 md:p-8">
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-transparent pb-4 mb-6">
                  <div>
                     <h3 className="text-lg font-black text-white uppercase italic tracking-tighter">Normas Regulamentadoras Obrigatórias (NRs)</h3>
                     <p className="text-[9px] font-bold text-zinc-500 uppercase mt-1">Sincronização de segurança de saúde ocupacional na comunicação visual</p>
@@ -1211,7 +1950,7 @@ export function EducaCV() {
                    { nr: 'NR-10', label: 'Eletricidade & Luminosos', status: 'Obrigatório para Elétrica', desc: 'Certificação exigida para toda equipe responsável em conectar fontes chaveadas, fiação, barramento elétrico geral e energizar fachadas e letreiros no campo comercial.', color: 'border-amber-500/20 bg-amber-500/5 text-amber-400' },
                    { nr: 'NR-06', label: 'Uso Correto de EPI Industrial', status: 'Obrigatório para todos os setores', desc: 'Instruções para o uso impecável de máscaras faciais contra vapores PU e pó de acrílico/MDF, óculos anti-raios de solda/laser, protetores auriculares robustos no chão de fábrica.', color: 'border-emerald-500/20 bg-emerald-500/5 text-emerald-400' }
                  ].map((nrNode, idx) => (
-                   <Card key={idx} className="bg-zinc-950 border-white/5 p-6 space-y-4">
+                   <Card key={idx} className="bg-zinc-950 border-transparent p-6 space-y-4">
                       <div className="flex items-center justify-between">
                          <span className="text-2xl font-black text-white italic font-mono leading-none">{nrNode.nr}</span>
                          <Badge variant="outline" className={cn("border-0 text-[8px] font-black uppercase shadow-xs px-2.5 h-6", nrNode.color)}>
@@ -1221,7 +1960,7 @@ export function EducaCV() {
                       <h4 className="text-sm font-black text-zinc-300 uppercase italic tracking-wide">{nrNode.label}</h4>
                       <p className="text-xs text-zinc-500 leading-normal font-medium">{nrNode.desc}</p>
                       
-                      <div className="pt-4 border-t border-white/5 flex justify-between items-center">
+                      <div className="pt-4 border-t border-transparent flex justify-between items-center">
                          <span className="text-[10px] text-emerald-500 font-bold flex items-center gap-1">
                             <CheckCircle2 size={12} /> Exigência em Dia
                          </span>
@@ -1233,6 +1972,31 @@ export function EducaCV() {
            </Card>
         </TabsContent>
       </Tabs>
+
+      {/* Dynamic Toast Notification Panel */}
+      <AnimatePresence>
+        {notification && (
+          <motion.div
+            initial={{ opacity: 0, y: 50, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 0.9 }}
+            className={cn(
+              "fixed bottom-6 right-6 z-50 p-4 rounded-2xl shadow-xl flex items-center gap-3 border max-w-sm backdrop-blur-md animate-in slide-in-from-bottom duration-200 text-left",
+              notification.type === 'success' ? "bg-emerald-950/90 border-emerald-500/30 text-emerald-100" :
+              notification.type === 'error' ? "bg-red-950/90 border-red-500/30 text-red-100" :
+              "bg-zinc-950/90 border-zinc-700 text-zinc-100"
+            )}
+          >
+            {notification.type === 'success' && <CheckCircle2 className="text-emerald-500 shrink-0" size={18} />}
+            {notification.type === 'error' && <AlertTriangle className="text-red-500 shrink-0" size={18} />}
+            {notification.type === 'info' && <Info className="text-purple-500 shrink-0" size={18} />}
+            
+            <p className="text-xs font-bold leading-tight flex-1 text-left uppercase">
+              {notification.message}
+            </p>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
